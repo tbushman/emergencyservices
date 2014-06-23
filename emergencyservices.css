@@ -1,0 +1,348 @@
+/* Change the styles below in order to customize your template */
+
+html, body {
+	height: 100%;
+	}
+
+body{
+	font-family: Helvetica, Arial;
+	font-weight: regular;
+	font-size: 14px;
+	line-height: 18px;
+	color: #999;
+	background-color: #333;
+	margin: 0;
+	}
+*:focus {
+	outline: none; 
+	}
+h3{
+	font-weight: bold;
+	font-size: 12px;
+	color: #CCC;
+	text-transform: uppercase;
+	margin: 10px 0 0 0;
+	line-height: 15px;
+}
+
+.graybar {
+    position: relative;
+    display: inline-block;
+    float: right;
+    background: none;
+    margin: 0px 0px -7px 0px;
+    width: 33%;
+    padding: 0px;
+}
+.map{
+	background-color:#333;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 67%;
+	float: left;
+	*height:100%;
+    z-index: 1;
+	}
+
+.footer {
+    width: 100%;
+    display: inline-block;
+    height: 40.75%;
+    padding: 0px;
+    margin:0 auto;
+}
+.image { 
+   position: relative; 
+   height: 100%; /* for IE 6 */
+}
+.image a{ 
+   margin: 0px;
+ 
+}
+.image-here {
+  width: 100%;
+  height: auto;
+  top: 0px;
+}
+.sidepanel h2 { 
+    color: #fff;
+    position: absolute;
+    text-decoration: none;
+	padding: 30px 20px 0px 30px;
+    top: 0px; 
+	font-size: 22px;
+	line-height: 26px;
+    text-decoration: none;
+    width: 90%;
+    text-shadow: 1px 2px 2px #333;
+}
+.sidepanel{
+	background-color:#333;
+	position: relative;
+	top: 0px;
+	width: 33%;
+	float: right;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	padding: 0px;
+	z-index: 1;
+	height: 100%;
+    display: block;
+    margin: 0px;
+	}
+.sidepanel a {
+    color: #fff;
+    text-decoration: none;
+    left: 30px;
+}
+.sidepanel h2 a:visited{
+	color: #fff;
+	text-decoration: none;
+	}
+.wrapper {
+  position: absolute;
+  float: right;
+  width: 33%;
+  right: 0;
+  top: 250px;
+  height: 60%;
+}
+.sidepanel2{
+	background-color:#333;
+	position: relative;
+	width: 50%;
+	float: left;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	margin: 0px;
+	padding: 0px;
+	z-index: 1;
+	height: 100%;
+    display: block;
+    border-top: 7px solid #333;
+    top: 5%;
+	}
+.sidepanel3{
+	background-color:#333;
+	position: relative;
+	width: 50%;
+	float: right;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	margin: 0px;
+	padding: 0px;
+	z-index: 1;
+	height: 100%;
+    display: inline-block;
+    border-top: 7px solid #333;
+    top: 5%;
+	}
+.sidepanel2 li{
+	font-size: 15px;
+	margin: 8px 0 10px 0;
+	line-height: 18px;
+    text-decoration: none;
+    list-style: none;
+}
+
+.sidepanel2 p{
+	font-size: 15px;
+	margin: 8px 0 10px 0;
+	line-height: 18px;
+    text-decoration: none;
+}
+
+.sidepanel2 a, a:visited{
+	color: #497f90;
+	text-decoration: none;
+    line-height: 20px;
+    list-style: none;
+    margin-left: 0px;
+    text-indent: -15;
+	}
+
+.sidepanel2 a:hover{
+	text-decoration: none;}
+
+.sidepanel2 h3{
+	font-weight: bold;
+	font-size: 12px;
+	color: #CCC;
+	text-transform: uppercase;
+	margin: 10px 0 0 0;
+	line-height: 15px;
+	padding: 0px 20px 0px 30px;
+}
+
+.here-title {padding-left: 10px;}
+.here {padding-left: 30px; padding-right: 20px}
+.here2 {padding-left: 30px; padding-right: 20px}
+.here h3 {padding-left: 0;}
+.here ol li {list-style-type:decimal; padding-left: 0px;}
+.here ul li {list-style-type:square; padding-left: 0px;}
+
+.credits {
+	bottom: 0;
+	right:0;
+	position: absolute;
+	z-index: 9999999999999;
+	background: #333;
+	width: 33%;
+	margin: 0;
+    height: 8%;
+	}
+
+.credits p{
+	padding: 0px 10px 0px 10px;
+	line-height: 11px;
+	font-size: 11.5px;
+	color: #888; 
+    margin-top: 0px;
+}
+.credits a{
+	color: #497f90;
+    text-decoration: none;
+}
+
+
+
+
+@media only screen and (max-width: 1000px) {
+.wrapper {
+  position: absolute;
+  float: right;
+  width: 50%;
+  right: 0;
+  top: 50%;
+  height: 28%;
+  margin: 0px;
+}
+.graybar {
+    width: 100%;
+    position: relative;
+}
+.map {
+	position: relative;
+	height: 55%;
+	width: 100%;
+	display: block;
+	}
+.footer {
+    display: inline-block;
+    height: 32%
+}
+  
+.image { 
+   position: relative; 
+   width: 100%; /* for IE 6 */
+   height: auto;
+}
+.image-here {
+  width: auto;
+  height: 100%;
+}
+.sidepanel {
+	width: 49.5%;
+    display: inline-block;
+    position: relative;
+	overflow-y: hidden;
+	overflow-x: hidden;
+    float: none;
+	}
+.here {
+  padding-left: 20px; 
+  padding-right: 20px
+}
+.here h3 {
+  padding-left: 0px; 
+  margin-left: -20px;
+}
+.here-title h3 {
+  padding-left: 0px; 
+  margin-left: 0px;
+}
+
+.sidepanel h2 {
+	padding: 30px 20px 0px 20px;
+	}
+
+.sidepanel2 {
+	width: 49.9%;
+    float: left;
+    display: inline-block;
+    position: relative;
+	overflow-y: scroll;
+	overflow-x: hidden;
+    z-index: 0;
+    top: 0px;
+    margin-top: 30px;
+}
+.sidepanel3 {
+	width: 49.9%;
+    float: right;
+    display: inline-block;
+    position: relative;
+	overflow-y: scroll;
+	overflow-x: hidden;
+    z-index: 0;
+    top: 0px;
+    margin-top: 30px;
+}
+.sidepanel2 h3 {
+    padding-left: 20px;
+}
+.credits {
+	bottom: 0px;
+	position: absolute;
+	z-index: 9999999999999;
+	background: none;
+	width: 100%;
+	height: 8%;
+}
+  
+ .clear{
+  clear:both;
+ }
+  
+@media only screen and (max-width: 480px) {
+
+.image { 
+    width: 0px;
+  
+        }
+.image-here {
+    opacity: 0%;
+    height: 0px;
+    width: 0px;
+  }
+.sidepanel {
+    width: 100%;
+    height: 50%;
+    
+	}
+.wrapper {
+  position: absolute;
+  margin: 0px;
+  width: 100%;
+  right: 0;
+  top: 60%;
+  height: 24%;
+}
+.sidepanel2 {
+	width: 49%;
+    height: 100%;
+	}
+.sidepanel2 {
+	width: 49%;
+    height: 100%;
+	}
+.footer {
+    height: 21%;
+    width: 100%;
+}
+  
+.sidepanel h2 {
+    font-size: 18px;
+    line-height: 20px;
+  }
