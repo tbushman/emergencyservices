@@ -1,47 +1,145 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Emergency Services in Salt Lake City</title>
+	<meta name="Description" content="Collaborative map. Email thex@pu.bli.sh for login.">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<link rel="stylesheet" href="http://asset.geosprocket.com/leaflet/cluster/MarkerCluster.Default.css" />
+	<link rel="stylesheet"
+	href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css"/>
+    
     <!--[if lte IE 8]>
       <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
     <![endif]-->
-    <!--Switch between the different themes changing the stylesheet below - light-theme.css |dark-theme.css -->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-	    <link rel="stylesheet" href="emergencyservices.css"/>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:200,400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+	
+	<link rel="stylesheet" href="emergencyservices.css"/>
 	</style>
 </head>
+
 <body>
-<div class="map" id="map"></div>
-      
-     
-</div>
+	
+	<div class="map" id="map"></div>
+	<searchbox>
+		<buttonbox>
+			<btn><a href="#" id="hous" class="button hous"><h4>housing</h4><img src="images/housing.svg"></img></a></btn>
+			<btn><a href="#" id="med" class="button med"><h4>medical</h4><img src="images/medical.svg"></img></a></btn>
+			<btn><a href="#" id="food" class="button food"><h4>food</h4><img src="images/food.svg"></img></a></btn>
+			<btn><a href="#" id="trav" class="button trav"><h4>travel</h4><img src="images/travel.svg"></img></a></btn>
+			<btn><a href="#" id="all" class="button all"><h4>ALL</h4></a></btn>
+		</buttonbox>
+		
+		<div class="ui-widget">
+	    	<label for="input"><h4>Search: </label>
+	    	<input id="input" type="text" name="search" value="" />  	
+		</div>
+	</searchbox>
+	<sidebar>
+		<image>
+			<h1 class="title">Emergency Services in Salt Lake City</h1><h6>Greetings, participate at-will in the perpetual updating of the information in this map. Email <a href="mailto:thex@pu.bli.sh?Subject=Design%20Services%20Request" target="_top">thex@pu.bli.sh</a> for login.</h6>
+			<div class="gradient"></div>
+		</image>
+		<infobox>
+			<info>
+				<contact>
+				</contact>
+			</info>
+			<hours>
+				<wrapper>
+					<day>
+						<mo><h5>Mo:</h5></mo>
+						<tu><h5>Tu:</h5></tu>
+						<we><h5>We:</h5></we>
+						<thu><h5>Th:</h5></thu>
+						<fr><h5>Fr:</h5></fr>
+						<sa><h5>Sa:</h5></sa>
+						<su><h5>Su:</h5></su>
+					</day>
+					<times>
+					</times>
+				</wrapper>
+			</hours>
+		</infobox>
+		<leftlist>
+		<div id="services"><h2>Services at this location:</h2></div>
+		<here>
+		</here>
+		
+		</leftlist>
+		<rightlist>
+		<div id="providers"><h2>Providers at this location:</h2></div>
+		<list>
+		</list>
+		
+		</rightlist>
+	</sidebar>
 
-<div class="footer">
-  <div class="sidepanel">
-    <div id="image">
-      <img class ="image-here" src="" alt="">
-</img>
-<h2 id="here-label">Emergency Services in Salt Lake City</h2>
-  </div>
-  </div>
-<div class = "wrapper">
-  <div class="sidepanel2">
-    <h3 class="here-title">Services in this area</h3>
-    <div class="here">Zoom in to narrow your results.</div>
-  </div>
-  <div class="sidepanel3">
-    <div class="here2"></div>
-</div>
-</div>
-</div>
-<div class="credits">
-</div>
-</div>
-
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false&v=3.8"></script>
 <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!--<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<script src ="https://github.com/leaflet-extras/leaflet-providers/blob/master/leaflet-providers.js"></script>
+<script src='http://asset.geosprocket.com/leaflet/cluster/leaflet.markercluster.js'> </script> <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+<script src="http://pu.bli.sh/maps/web_map/markercluster/Scripts/leaflet.active-layers.min.js"></script>
+<script src="http://pu.bli.sh/maps/web_map/markercluster/Scripts/leaflet.groupedlayercontrol.js"></script>
+<script src="http://pu.bli.sh/maps/web_map/markercluster/Scripts/leaflet.select-layers.min.js"></script>
+<script src="http://pu.bli.sh/maps/web_map/Leaflet.markercluster-0.4.0/dist/L.Wax.js"></script>-->
 <script src="emergencyservices.js" type="text/javascript"></script> 
+<!--<script type="sql/html" id="sql_template">
+
+/*select * from emergency_services where st_distance( the_geom, st_GeomFromText('POINT("+lon+" "+lat+")', 4326), true ) < (SELECT CDB_XYZ_Resolution("+zoom+")*(("+zoom+")*1.75)) ORDER BY label*/
+
+WITH proxpoints AS (SELECT cartodb_id, the_geom, the_geom_webmercator, label, array_agg(cartodb_id) AS id_list, cartodb_id::text cdb_list FROM emergency_services ORDER BY the_geom <-> ST_SetSRID(ST_MakePoint("+lon+","+lat+"),4326) ASC LIMIT "+total+") SELECT null as cartodb_id, ST_MakeLine(ST_Transform(ST_SetSRID(ST_MakePoint("+lon+","+lat+"),4326),3857),the_geom_webmercator) as the_geom_webmercator FROM proxpoints UNION ALL SELECT cartodb_id, the_geom_webmercatorFROM proxpoints
+
+       /* WITH meta AS (
+          SELECT ext, ST_XMin(ext) xmin, ST_YMin(ext) ymin FROM (SELECT ST_SetSRID(!bbox!::box3d, 3857) as ext) a
+        ),
+        filtered_table AS (
+          SELECT t.*, the_geom_webmercator g FROM emergency_services t, meta m WHERE t.the_geom_webmercator && m.ext
+        ),
+        b as (
+         select st_collect(g) as g, count(*) as points_count, 1 as cartodb_id, array_agg(cartodb_id) AS id_list
+         FROM filtered_table
+         GROUP BY st_snaptogrid(g, greatest(!pixel_width!,!pixel_height!) * {0}, greatest(!pixel_width!,!pixel_height!) * {0})
+         HAVING count(*) > {0} )
+        
+        SELECT g the_geom_webmercator, 1 points_count, cartodb_id, ARRAY[cartodb_id] as id_list, 'origin' as src, cartodb_id::text cdb_list FROM filtered_table WHERE cartodb_id NOT IN (SELECT unnest(id_list) FROM b)
+        UNION ALL
+        SELECT ST_Centroid(g) the_geom_webmercator, points_count, cartodb_id, id_list, 'bigs' as src, array_to_string(id_list, ',') cdb_list FROM b*/
+        
+    </script>-->
+
+<!--<script type="sql/html" id="cartocss_template">
+      Map {buffer-size: 256;}
+      #layer {
+        marker-width: 12;
+        marker-fill: #cc0000;
+        marker-opacity: 0.6;
+        marker-line-width: 0;
+        marker-allow-overlap: true;
+        marker-comp-op: dst-atop;
+      }
+	  #layer::labels { 
+	        text-size: 0; 
+	        text-fill: black; 
+	        text-opacity: 0.8;
+	        text-name: [points_count]; 
+	        text-face-name: 'DejaVu Sans Book'; 
+	        text-halo-fill: #fff; 
+	        text-halo-radius: 0; 
+	        // if points_count >= 100 we should also make text smaller //
+	        [src = 'smalls'] {text-size: {0} * 0.2; text-halo-radius: 1; } 
+	        // if points_count >= 1000 we should also make text smaller //
+	        [src = 'mids'] {text-size: {0} * 0.3; text-halo-radius: 1; } 
+	        // if points_count >= 10000 we should also make text smaller //
+	        [src = 'bigs'] { text-size: {0} * 0.5; text-halo-radius: 1; } 
+	        text-allow-overlap: true;
+	      }
+    </script>-->
+
 </body>
 </html>
