@@ -475,7 +475,7 @@ function main(){
 				mainlabel.addClass('search');
 
 				$('#mainlabel').append('<here><h6>'+list.length + ' matching search results:</h6></here>');
-	        	$('#mainlabel').append('<list><ul></ul></list>');
+	        	$('#mainlabel').append('<there><ul></ul></there>');
 				var i = 0;
 				for (i in list) {
 
@@ -570,8 +570,8 @@ function main(){
 						var i = 0;
 
 						mainlabel.addClass('list');
-						mainlabel.append('<text><here><h6>'+list.length + ' records in this area:</h6></here></text>');
-			        	$('text').append('<list><ul></ul></list>');
+						mainlabel.append('<here><h6>'+list.length + ' records in this area:</h6></here>');
+			        	mainlabel.append('<there><ul></ul></there>');
 						for (i in list) {
 
 							var item = ret.rows[i];
