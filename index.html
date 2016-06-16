@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
   	<![endif]-->
 	<link rel="stylesheet" type="text/css" href="main.css"/>
-  	<title>Customize Your Timeline</title>
+  	<title>Publicize Emergency Services</title>
 </head>
 <body>
-	<form name="testform" onsubmit="main(this)">
+	<form name="testform" style="display: none">
 	    <input type="text" name="user" id="user_id" placeholder="saltlakecity" value="saltlakecity"/>
 	    <input type="text" name="table" id="table_name" placeholder="emergency_services"  value="emergency_services"/>
 	    <input type="text" name="url" id="json_url" placeholder="https://saltlakecity.cartodb.com/api/v2/viz/248cae7e-c103-11e3-a511-0e230854a1cb/viz.json" value="https://saltlakecity.cartodb.com/api/v2/viz/248cae7e-c103-11e3-a511-0e230854a1cb/viz.json"/>
@@ -25,7 +25,484 @@
   		<a href="" id="link" download="code.js">Download Code</a>	
 	</form>
 	
-<textarea id="txt"></textarea>
+	<form name="checkform" id="visibleform" onsubmit="main()">
+		<input type="button" value="Button" id="geolocate" class="notbutton" data-mini="true" data-inline="true"></input>
+  		<div class="ui-field-contain" data-type="vertical">
+    		<legend>Administrator</legend>
+			<div class="ui-field-contain">
+				<fieldset data-type="vertical">
+	        		<input type="text" name="fname" id="fname" placeholder="Name">
+					<input type="text" name="address" id="address" placeholder="Street Address">
+	        		<input type="text" name="place" id="place"  placeholder="City">
+	        		<input type="text" name="state" id="state"  placeholder="State">
+	        		<input type="number" name="zip" id="zip"  placeholder="ZIP Code">
+	        		<input type="geometry" name="the_geom" id="the_geom" >
+	        		<input type="geometry" name="lat" id="lat" >
+	        		<input type="geometry" name="lon" id="lon" >
+	
+      			</fieldset>
+			</div>
+			<div class="ui-field-contain">
+				<fieldset data-role="controlgroup" data-type="vertical">
+		    		<legend>Which services do you offer?</legend>
+	      			<label for="available_clothing">Clothing</label>
+	      			<input type="checkbox" name="available_clothing" id="available_clothing" value="Clothing">
+	      			<label for="available_computer_access">Computer Access</label>
+	      			<input type="checkbox" name="available_computer_access" id="available_computer_access" value="Computer Access">
+	      			<label for="available_day_room">Day Room</label>
+	      			<input type="checkbox" name="available_day_room" id="available_day_room" value="Day Room">
+	      			<label for="available_dental_services">Dental Services</label>
+	      			<input type="checkbox" name="available_dental_services" id="available_dental_services" value="Dental Services">
+	      			<label for="available_food_pantry">Food Pantry</label>
+	      			<input type="checkbox" name="available_food_pantry" id="available_food_pantry" value="Food Pantry">
+	      			<label for="available_housing_assistance">Housing Assistance</label>
+	      			<input type="checkbox" name="available_housing_assistance" id="available_housing_assistance" value="Housing Assistance">
+	      			<label for="available_meals">Meals</label>
+	      			<input type="checkbox" name="available_meals" id="available_meals" value="Meals">
+	      			<label for="available_medical_services">Medical Services</label>
+	      			<input type="checkbox" name="available_medical_services" id="available_medical_services" value="Medical Services">
+	      			<label for="available_personal_care_items">Personal Care Items</label>
+	      			<input type="checkbox" name="available_personal_care_items" id="available_personal_care_items" value="Personal Care Items">
+	      			<label for="available_showers">Showers</label>
+	      			<input type="checkbox" name="available_showers" id="available_showers" value="Showers">
+	      			<label for="available_shelter">Shelter</label>
+	      			<input type="checkbox" name="available_shelter" id="available_shelter" value="Shelter">
+	      			<label for="available_transportation_assistance">Transportation Assistance</label>
+	      			<input type="checkbox" name="available_transportation_assistance" id="available_transportation_assistance" value="Transportation Assistance">
+	
+  				</fieldset>
+			</div>
+		</div>
+		<div class="ui-field-contain">
+			<fieldset data-type="horizontal">
+	    		<legend>Hours of Operation</legend>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="mondaybegin">Monday</label>
+				    <select name="mondaybegin" id="mondaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="mondayend">to</label>
+			    	<select name="mondayend" id="mondayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="tuesdaybegin">Tuesday</label>
+				    <select name="tuesdaybegin" id="tuesdaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="tuesdayend">to</label>
+			    	<select name="tuesdayend" id="tuesdayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="wednesdaybegin">Wednesday</label>
+				    <select name="wednesdaybegin" id="wednesdaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="wednesdayend">to</label>
+			    	<select name="wednesdayend" id="wednesdayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="thursdaybegin">Thursday</label>
+				    <select name="thursdaybegin" id="thursdaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="thursdayend">to</label>
+			    	<select name="thursdayend" id="thursdayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="fridaybegin">Friday</label>
+				    <select name="fridaybegin" id="fridaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="fridayend">to</label>
+			    	<select name="fridayend" id="fridayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="saturdaybegin">Saturday</label>
+				    <select name="saturdaybegin" id="saturdaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="saturdayend">to</label>
+			    	<select name="saturdayend" id="saturdayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+				<div class="ui-field-contain" class="select" data-type="horizontal">
+					<label for="sundaybegin">Sunday</label>
+				    <select name="sundaybegin" id="sundaybegin" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+				    </select>
+
+			    	<label for="sundayend">to</label>
+			    	<select name="sundayend" id="sundayend" data-mini="true" data-inline="true">
+						<option value="00:00:00"></option>
+						<option value="00:00:00">12:00 am</option>
+						<option value="01:00:00">1:00 am</option>
+						<option value="02:00:00">2:00 am</option>
+						<option value="03:00:00">3:00 am</option>
+						<option value="04:00:00">4:00 am</option>
+						<option value="05:00:00">5:00 am</option>
+						<option value="06:00:00">6:00 am</option>
+						<option value="07:00:00">7:00 am</option>
+						<option value="08:00:00">8:00 am</option>
+						<option value="09:00:00">9:00 am</option>
+						<option value="10:00:00">10:00 am</option>
+						<option value="11:00:00">11:00 am</option>
+						<option value="12:00:00">12:00 am</option>
+						<option value="13:00:00">1:00 pm</option>
+						<option value="14:00:00">2:00 pm</option>
+						<option value="15:00:00">3:00 pm</option>
+						<option value="16:00:00">4:00 pm</option>
+						<option value="17:00:00">5:00 pm</option>
+						<option value="18:00:00">6:00 pm</option>
+			      		<option value="19:00:00">7:00 pm</option>
+			      		<option value="20:00:00">8:00 pm</option>
+			      		<option value="21:00:00">9:00 pm</option>
+			      		<option value="22:00:00">10:00 pm</option>
+			      		<option value="23:00:00">11:00 pm</option>
+					</select>
+
+			  	</div>
+			</fieldset>
+		</div>
+  		<input type="submit" data-inline="true" id="#submit2" value="Submit">
+    </form>
+
+
+	</div>
 
 <top>	
 	<why>
@@ -41,10 +518,7 @@
 		    	<input id="input" type="text" name="search" placeholder="search" />  	
 		</searchbox>
 		<div id="mainlabel">
-			<img src="images/publish_logo.svg"></img>
 		</div>
-		<a href="#24" class="cartodb_id go" id="24" title="instantiate"></a>
-		<div id="helplabel"></div>
 		<a href="https://github.com/tbushman/pu.bli.sh" id="publish" target="_blank"><img src="images/publish_logo.svg"></img></a>
 	</why>
 </top>

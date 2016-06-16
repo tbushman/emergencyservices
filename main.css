@@ -36,9 +36,18 @@ a {
 	
 }
 
-form, #txt {
+#visibleform {
 	
-	display: none;
+	display: block;
+	position: fixed;
+	margin: 0 auto;
+	float: left;
+	width: 30%;
+	z-index: 9999;
+	pointer-events: auto;
+	background-color: #fff;
+	height: 100%;
+	overflow: scroll;
 	
 }
 

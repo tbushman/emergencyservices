@@ -1,221 +1,164 @@
 
-window.onload = function() {
+function initiate_geolocation() {
+    navigator.geolocation.getCurrentPosition(handle_geolocation_query);
+};
+function handle_geolocation_query(position){
+
+	var lat = position.coords.latitude;
+	console.log(lat);
+	var lon = position.coords.longitude;
+	console.log(lon);
+	var geom = $('#the_geom');
+	geom.val(''+lat+','+lon + '');
 	
-	main();
-	
-  	
-	var txt = document.getElementById('txt');
-	txt.value = main + '';
-
-	$('#link').click(function(code){
-
-	  	this.href = 'data:text/javascript;charset=utf-8,'
-	    + encodeURIComponent(txt.value);
-
-	});
-
-	$("#submit").click(function(){
-
-		var txt = $('#txt');
-		txt.html('');
-				
-		main(this);
-
-		txt.value = main + '';
-		txt.text(txt.value);
-
-
-	});
+	var latinput = $('#lat');
+	latinput.val(''+lat+'');
+	var loninput = $('#lon');
+	loninput.val(''+lon+'');
+	//$('visibleform').show();
+	//	
+	//$(window).load(main);
+	//return false;
+};
+document.ready = function() {
+	$('#geolocate').click(function(){
+		initiate_geolocation();
+		//$('submit2').click(updateMap);
+	});	
 };
 
+//var lat = 40;
+//var lon = -111;
+
+//Global vars from hidden html form
+var user_id = $("#user_id").val();
+console.log(user_id);
+var table_name = $("#table_name").val();
+console.log(table_name);
+var json_url = $("#json_url").val();
+console.log(json_url);
+
+$('#map').click(function(e){ //click on map to close gallery
+	var mainlabel = $('#mainlabel');
+	mainlabel.removeClass('search');
+	mainlabel.removeClass('point');
+	mainlabel.removeClass('expand');
+	mainlabel.removeClass('list');
+	mainlabel.addClass('point');
+	$('#mainlabel').css('width',  'auto');
+	$('h1').css('height', 'auto');
+	$('lightbox').html('');
+	$('#map').css('z-index', '0');
+});
+$('#submit2').click(function(e){
+	e.preventDefault();
+});
 
 
-function main(){
+function main() {	
 	
-	//Global vars from html form values
-  	var user_id = $("#user_id").val();
-	console.log(user_id);
-  	var table_name = $("#table_name").val();
-	console.log(table_name);
- 	var json_url = $("#json_url").val();
-	console.log(json_url);
-	//
-	
-	////////////////////////////////////////////////////////////////////////////////////////////
-	//UI Setup _________________________________________________________________________________
-
-	var cdbidlist = document.getElementsByClassName("tltab");
-
-	for (var i=0; i<cdbidlist.length; i++) {
-
-		cdbidlist[i].onmouseover=function() { //tl hover
-			this.title+=" sfhover"; //tl hover
-		};
-		cdbidlist[i].onmouseout=function() {
-			this.title=this.title.replace(new RegExp(" sfhover\\\\b"), "");
-		};
-	}
-	var map = $('#map'); 
-	map.click(function(e){ //click on map to close gallery
-		var mainlabel = $('#mainlabel');
-		mainlabel.removeClass('search');
-		mainlabel.removeClass('point');
-		mainlabel.removeClass('expand');
-		mainlabel.removeClass('list');
-		mainlabel.addClass('point');
-		$('#mainlabel').css('width',  'auto');
-		$('h1').css('height', 'auto');
-		$('lightbox').html('');
-		$('#map').css('z-index', '0');
-	});
-	$('#info').click(function(e, data){
-		
-		var mainlabel = $('#mainlabel');
-		mainlabel.html('');
-		mainlabel.removeClass('search');
-		mainlabel.removeClass('point');
-		mainlabel.removeClass('expand');
-		mainlabel.removeClass('list');
-		var helplabel = $('#helplabel');
-		helplabel.removeClass('one');
-		helplabel.removeClass('two');
-		helplabel.removeClass('three');
-		helplabel.addClass('one');
-		helplabel.html('');
-		helplabel.append('<help><h3 id="title"></h3><h4 id="blurb">Three ways to navigate the site</h4><br><hide><h6> The code for running the pu.bli.sh framework is on <a href="https://github.com/tbushman/pu.bli.sh" target="_blank" >GitHub</a>.</h6></hide></help><a href="#" id="about" class="info"></a><steps><one><a href="#" id="one"><h1>1</h1></a></one><two><a href="#" id="two"><h1>2</h1></a></two><three><a href="#" id="three"><h1>3</h1></a></three><four><a href="#" id="four"><h7>x</h7></a></four></steps>');
-		$('hide').hide();
-		$('#about').click(function(){
-			
-			helplabel.removeClass('one');
-			helplabel.removeClass('two');
-			helplabel.removeClass('three');
-			helplabel.addClass('one');
-			$('hide').show();
-			
-		});
-		$('#one').click(function(){
-			
-			$('.leaflet-control-zoom-in')[0].click();
-			$('hide').hide();
-			helplabel.removeClass('one');
-			helplabel.removeClass('two');
-			helplabel.removeClass('three');
-			helplabel.addClass('one');
-			$('#two').removeClass('highlight');
-			$('#three').removeClass('highlight');
-			$('#one').removeClass('highlight');
-			$('#one').addClass('highlight');
-			$('#blurb').html('');
-			$('#title').html('');
-			$('#blurb').append('Use zoom, click on map features');
-			$('#title').append('MAP');
-			$('.leaflet-control-zoom-out')[0].click();
-			
-		});
-		$('#two').click(function(){
-			
-			$('hide').hide();
-			helplabel.removeClass('one');
-			helplabel.removeClass('two');
-			helplabel.removeClass('three');
-			helplabel.addClass('two');
-			$('#two').removeClass('highlight');
-			$('#three').removeClass('highlight');
-			$('#one').removeClass('highlight');
-			$('#two').addClass('highlight');
-			$('#blurb').html('');
-			$('#title').html('');
-			$('#blurb').append('Click timeline / Arrows');
-			$('#title').append('TIMELINE');
-			$('.go').click();
-			
-		});
-		$('#three').click(function(){
-			
-			$('hide').hide();
-			helplabel.removeClass('one');
-			helplabel.removeClass('two');
-			helplabel.removeClass('three');
-			helplabel.addClass('three');
-			$('#two').removeClass('highlight');
-			$('#three').removeClass('highlight');
-			$('#one').removeClass('highlight');
-			$('#three').addClass('highlight');
-			$('#blurb').html('');
-			$('#title').html('');
-			$('#blurb').append('Menu / Search functions');
-			$('#title').append('MENU');
-			
-		});
-		$('#four').click(function(){
-		
-			$('hide').hide();
-			helplabel.removeClass('one');
-			helplabel.removeClass('two');
-			helplabel.removeClass('three');
-			helplabel.html('');
-		});
-		e.stopPropagation();
-	});
-	$('.go').click(function(){ //click on the refresh symbol to instantiate timeline.
-
-		var mainlabel = $('#mainlabel');
-		mainlabel.removeClass('search');
-		mainlabel.removeClass('point');
-		mainlabel.removeClass('expand');
-		mainlabel.removeClass('list');
-		$('#mainlabel').html('');
-		var cdbid = [$(this).attr('id')];
-
-		$("#"+cdbid+"")[0].click();
-
-	});
-
-	var wrapper = $('#wrapper');
-	console.log(wrapper);
-	wrapper.css('left', 50+'%'); //'#wrapper' encloses the moving timeline, with initiation mid-screen
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//MAP/TL setup/functions__________________________________________________________________________________________
+	// vars from html form values
+	var lat = $('#lat').val();
+	console.log(lat);
+	var lon = $('#lon').val();
+	console.log(lon);
+	var name = $("#fname").val();
+	console.log(name);
+	var address = $('#address').val();
+	console.log(address);
+	var place = $("#place").val();
+	console.log(place);
+	var state = $("#state").val();
+	console.log(state);
+	var zip = $("#zip").val();
+	console.log(zip);
+	var mondaybegin = $("#mondaybegin").val();
+	console.log(mondaybegin);
+	var tuesdaybegin = $("#tuesdaybegin").val();
+	console.log(tuesdaybegin);
+	var wednesdaybegin = $("#wednesdaybegin").val();
+	console.log(wednesdaybegin);
+	var thursdaybegin = $("#thursdaybegin").val();
+	console.log(thursdaybegin);
+	var thursdaybegin = $("#mondaybegin").val();
+	console.log(thursdaybegin);
+	var fridaybegin = $("#fridaybegin").val();
+	console.log(fridaybegin);
+	var saturdaybegin = $("#saturdaybegin").val();
+	console.log(saturdaybegin);
+	var sundaybegin = $("#sundaybegin").val();
+	console.log(sundaybegin);
+	var mondayend = $("#mondayend").val();
+	console.log(mondayend);
+	var tuesdayend = $("#tuesdayend").val();
+	console.log(tuesdayend);
+	var wednesdayend = $("#wednesdayend").val();
+	console.log(wednesdayend);
+	var thursdayend = $("#thursdayend").val();
+	console.log(thursdayend);
+	var thursdayend = $("#mondayend").val();
+	console.log(thursdayend);
+	var fridayend = $("#fridayend").val();
+	console.log(fridayend);
+	var saturdayend = $("#saturdayend").val();
+	console.log(saturdayend);
+	var sundayend = $("#sundayend").val();
+	console.log(sundayend);
+	//e.preventDefault();
+	var the_geom = $('#the_geom').val();
+	console.log(the_geom);
+	var sql_post = "INSERT INTO "+table_name+" (hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday, the_geom) VALUES ('"+mondaybegin+"-"+mondayend+"', '"+tuesdaybegin+"-"+tuesdayend+"', '"+wednesdaybegin+"-"+wednesdayend+"', '"+thursdaybegin+"-"+thursdayend+"', '"+fridaybegin+"-"+fridayend+"', '"+saturdaybegin+"-"+saturdayend+"', '"+sundaybegin+"-"+sundayend+"', ST_SetSRID(ST_MakePoint("+the_geom+"), 4326) )";
+	console.log(sql_post);
+	var url = "https://"+user_id+".cartodb.com/api/v2/sql?q="+sql_post+"&api_key=e9f63b1eb60017c6d4007471d378ce917560be05";
+	console.log(url);
+	//var sublayer;
+	$.post(url);
 
 	var map;
+
+	//var lat = 40.75;
+	//var lon = -111.9;
 
 	//leaflet map
 	map = new L.map('map', { //Leaflet map
 	  	zoomControl: true,
-	  	center: [40.75, -111.9],
+	  	center: [''+lat+'', ''+lon+''],
 	  	zoom: 11,
 		minZoom: 2,
 	  	maxZoom: 14
 	});
 
-	// add a base layer with transit layer
-	L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-	  attribution: '</a>'
-	}).addTo(map);
-	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
 
-	//define CartoDB api url
-	var layerUrl = json_url; //CartoDB .json from global var
-	console.log(layerUrl);
-	var testLayer = new L.LayerGroup();
-	var lyr1 = [];
-	cartodb.createLayer(map, layerUrl)
+	//Mapbox option (courtesy acct tbushman)
+	var options3 = {
+		attribution: 'Map tiles by <a href="http://mapbox.com/">Mapbox</a><a href="http://cartodb.com/attributions"</a>'
+	};  
+	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); //Mapbox Terrain Attribution
+	//L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
+
+	//
+	// Clear the sublayers
+	var sublayers = [];
+	cartodb.createLayer(map, json_url)
 	.addTo(map)
 	.on('done', function(layer){
+
 		var subLayerOptions = {
-			sql: "SELECT * FROM "+table_name+"",
-			interactivity: 'cartodb_id'
-		};
-		var sublayer = layer.getSubLayer(0);
+		sql: "SELECT * FROM "+table_name+"",
+		interactivity: 'cartodb_id'
+		}
+		// When the layers inputs change fire this
+	    var sublayer = layer.getSubLayer(0);
 		sublayer.setInteraction(true);
 		addCursorInteraction(sublayer);
-
-		lyr1.push(sublayer);
+		sublayers.push(sublayer);
 
 		var sql = new cartodb.SQL({ user: ''+user_id+'' });
 
 	    //wire buttons (drop-down menu)
+	    //$("#submit2").click(function(e, data, latlon, pxPos, layer){
+
+	    //});
 	    $('.button').click(function(e, latlon, pxPos, data, layer) {
 
 	       	$('.button').removeClass('selected');
@@ -227,9 +170,22 @@ function main(){
 			mainlabel.removeClass('point');
 			mainlabel.removeClass('expand');
 			mainlabel.removeClass('list');
-	   	});
+
+		});	
 	});
-	//lyr1 createD
+
+
+	//#ID actions
+	var LayerActions = { 
+		cdbid: function() { LayerSelect("SELECT * FROM emergency_services WHERE cartodb_id = '"+data.cartodb_id+"'") },
+		all: function() { LayerSelect("SELECT * FROM emergency_services") },
+		hous: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'H'") },
+		trav: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'B'") },
+		med: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'M'") },
+		food: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'F'") },
+	};
+
+
 	function LayerSelect(sql_select) {
 
 		var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
@@ -237,21 +193,21 @@ function main(){
 
 		   	var zoom = map.getZoom(zoom);
 		   	console.log(zoom);
-     		map.fitBounds(bounds);
+	 		map.fitBounds(bounds);
 
-//		 	map.setView(new L.LatLng(lat, lon), 11); //initial zoom/latlon
+			//other option is get ret vars for lat and lon: 
+			//map.setView(new L.LatLng(lat, lon), 11); //initial zoom/latlon
 			uiActions(sql_select);
 
 		});
-		lyr1[0].setSQL(sql_select);					
+		sublayers[0].setSQL(sql_select);					
 		return true;
 	};
-	
 	function uiActions(sql_get) {
-		
+
 		var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 		sql_init.execute(sql_get).done(function(ret){
-			
+
 			var item = ret.rows[0];
 			console.log(item);
 			var lat = item.lat;
@@ -266,9 +222,9 @@ function main(){
 			console.log(latlong);
 			var resolution = size*20;
 			console.log(resolution);
-		 	
+
 			map.setView(latlong, zoom+1); //zoom to single feature
-			
+
 
 			$('h1').css('height', 'auto');
 			var mainlabel = $('#mainlabel');
@@ -293,62 +249,62 @@ function main(){
 			console.log(phone);
 			var address = item.address;
 			console.log(address);
-          	var monday = item.hours_monday;
-          	console.log(monday);
-          	var tuesday = item.hours_tuesday;
-          	console.log(tuesday);
-          	var wednesday = item.hours_wednesday;
-          	console.log(wednesday);
-          	var thursday = item.hours_thursday;
-          	console.log(thursday);
-          	var friday = item.hours_friday;
-          	console.log(friday);
-          	var saturday = item.hours_saturday;
-          	console.log(saturday);
-         	var sunday = item.hours_sunday;
-          	console.log(sunday);
+	      	var monday = item.hours_monday;
+	      	console.log(monday);
+	      	var tuesday = item.hours_tuesday;
+	      	console.log(tuesday);
+	      	var wednesday = item.hours_wednesday;
+	      	console.log(wednesday);
+	      	var thursday = item.hours_thursday;
+	      	console.log(thursday);
+	      	var friday = item.hours_friday;
+	      	console.log(friday);
+	      	var saturday = item.hours_saturday;
+	      	console.log(saturday);
+	     	var sunday = item.hours_sunday;
+	      	console.log(sunday);
 
 			var header = $('<text><h1 class="title">'+label+'</h1><lightbox></lightbox><infobox><info><contact><h2>'+phone+'</h2><p>'+address+'</p></contact></info><hours><wrapper><day><mo><h5>Mo:</h5></mo><tu><h5>Tu:</h5></tu><we><h5>We:</h5></we><thu><h5>Th:</h5></thu><fr><h5>Fr:</h5></fr><sa><h5>Sa:</h5></sa><su><h5>Su:</h5></su></day><times><mo><h5>' + monday + '</h5></mo><tu><h5>' + tuesday + '</h5></tu><we><h5>' + wednesday + '</h5></we><thu><h5>' + thursday + '</h5></thu><fr><h5>' + friday + '</h5></fr><sa><h5>' + saturday + '</h5></sa><su><h5>' + sunday + '</h5></su></times></wrapper></hours></infobox></text><leftlist><list><ul id="services"></ul></list></leftlist><rightlist><list><ul id="nearby"></ul></list></rightlist><images><a href="#'+cdbid+'" class="items pic" id="'+cdbid+'"><img src="'+image+'"></img></a></images>');
 			console.log(header);
 			$('#mainlabel').append(header); //Single feature attribute appendage
-			
-          	var clothing = item.available_clothing;
-          	console.log(clothing);
-          	var computer = item.available_computer_access;
-          	console.log(computer);
-          	var day = item.available_day_room;
-          	console.log(day);
-          	var dental = item.available_dental_services;
-          	console.log(dental);
-          	var food = item.available_food_pantry;
-          	console.log(food);
-          	var housing = item.available_housing_assistance;
-          	console.log(housing);
-          	var meals = item.available_meals;
-          	console.log(meals);
-          	var medical = item.available_medical_services;
-          	console.log(medical);
-          	var personal = item.available_personal_care_items;
-          	console.log(personal);
-          	var showers = item.available_showers;
-          	console.log(showers);
-          	var shelter = item.available_shelter;
-          	console.log(shelter);
-          	var trans = item.available_transportation_assistance;
-          	console.log(trans);
 
-          	$('#services').append('<li>' +clothing +'</li><li>' + computer +'</li><li>' +day+'</li><li>' +dental+'</li><li>' +food+'</li><li>' +housing+'</li><li>' +meals+'</li><li>' +medical+'</li><li>' +personal+'</li><li>' +showers+'</li><li>' +shelter+'</li><li>' +trans+'</li>');
+	      	var clothing = item.available_clothing;
+	      	console.log(clothing);
+	      	var computer = item.available_computer_access;
+	      	console.log(computer);
+	      	var day = item.available_day_room;
+	      	console.log(day);
+	      	var dental = item.available_dental_services;
+	      	console.log(dental);
+	      	var food = item.available_food_pantry;
+	      	console.log(food);
+	      	var housing = item.available_housing_assistance;
+	      	console.log(housing);
+	      	var meals = item.available_meals;
+	      	console.log(meals);
+	      	var medical = item.available_medical_services;
+	      	console.log(medical);
+	      	var personal = item.available_personal_care_items;
+	      	console.log(personal);
+	      	var showers = item.available_showers;
+	      	console.log(showers);
+	      	var shelter = item.available_shelter;
+	      	console.log(shelter);
+	      	var trans = item.available_transportation_assistance;
+	      	console.log(trans);
+
+	      	$('#services').append('<li>' +clothing +'</li><li>' + computer +'</li><li>' +day+'</li><li>' +dental+'</li><li>' +food+'</li><li>' +housing+'</li><li>' +meals+'</li><li>' +medical+'</li><li>' +personal+'</li><li>' +showers+'</li><li>' +shelter+'</li><li>' +trans+'</li>');
 			$('li:empty').remove();
 			i = 0;
 			var services = $('#services li');
 			if ( services.length > 0 ) {
-				
+
 				$('leftlist').prepend('<a href="#"><h6>'+services.length+' services offered:</h6></a>');
 				$('#services').hide();
-				
+
 			}
 			$('leftlist > a').click(function(){
-				
+
 				var mainlabel = $('#mainlabel');
 				mainlabel.removeClass('search');
 				mainlabel.removeClass('point');
@@ -359,7 +315,7 @@ function main(){
 				$('h1').css('height', 'auto');
 				$('#mainlabel').css('width',  'auto');
 				$('#services').show();
-				
+
 			});
 			var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 			//pixel distance from selected feature sql query
@@ -369,9 +325,9 @@ function main(){
 
 				var list = ret.rows;
 				i = 0;
-				
+
 				if (list.length > 0) {
-					
+
 					$('rightlist').prepend('<a href="#"><h6>'+list.length+' services nearby:</h6></a>');
 					for (i in list) {
 
@@ -380,7 +336,7 @@ function main(){
 
 					}
 					$('rightlist > a').click(function(){
-					
+
 						var mainlabel = $('#mainlabel');
 						mainlabel.removeClass('search');
 						mainlabel.removeClass('point');
@@ -391,7 +347,7 @@ function main(){
 						$('h1').css('height', 'auto');
 						$('#mainlabel').css('width',  'auto');
 						$('#nearby').show();
-						
+
 						$('.cartodb_id').click(function(e, latlon, pxPos, data, layer) {
 
 							var cdbid = [$(this).attr('id')];
@@ -401,11 +357,11 @@ function main(){
 						});
 					});
 					$('#nearby').hide();
-					
+
 				}				
-				
+
 			});
-				
+
 			$('.pic').click(function(e){
 
 				var mainlabel = $('#mainlabel');
@@ -436,20 +392,11 @@ function main(){
 				e.preventDefault();
 				return false;
 			});
-		
+
 		});
-		
-	};
-	var LayerActions = { 
-  		cdbid: function() { LayerSelect("SELECT * FROM emergency_services WHERE cartodb_id = '"+data.cartodb_id+"'") },
-		all: function() { LayerSelect("SELECT * FROM emergency_services") },
-  		hous: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'H'") },
-		trav: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'B'") },
-		med: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'M'") },
-		food: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'F'") },
-	};
 
-
+	};
+	
 	//search///////////////////////////////////////////////////////////////////////////////////////
 	$( "#input" ).autocomplete({
 
@@ -490,7 +437,7 @@ function main(){
 				$('.cartodb_id').click(function(e, latlon, pxPos, data, layer) {
 
 					var cdbid = [$(this).attr('id')];
-					
+
 					var sql_get = 'select cartodb_id, label, image, phone, address, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, ST_X(the_geom) lon, ST_Y(the_geom) lat FROM '+table_name+' WHERE cartodb_id='+cdbid+'';
 					uiActions(sql_get);
 
@@ -501,7 +448,7 @@ function main(){
 		minLength: 2
 	});
 
-
+	//functions__________________________________________________________________________________________
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
@@ -511,7 +458,7 @@ function main(){
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	//*/ALWAYS KEEP THIS AT THE END!!*//*/*//*/*//
+	//*/ALWAYS KEEP THIS AT THE END, accessible by var map!!*//*/*//*/*//
 	function addCursorInteraction(sublayer){
 
 		var hovers = [];
@@ -616,9 +563,112 @@ function main(){
 			return true;
 
 		});
-	}
-};    
+		return true;
+	};
+};
+
+//function updateMap(){
+
+	/*, function(data) {
+
+			var replace = data.rows;
+			console.log(replace);
+
+
+			//var cdbid = data.rows[0].cartodb_id;
+			//console.log(cdbid);
+
+	}*/
+	//main();
+/*	var geo_data = L.geoJson(replace, {
+
+		onEachFeature: function(layer) {
+
+			layer.cartodb_id = data.rows[0].cartodb_id; 
+		},
+
+		pointToLayer: function(latlng) { 
+
+			return new L.CircleMarker(latlng, {
+	                radius: 8,
+	                fillColor: "#ff7800",
+	                color: "#000",
+	                weight: 1,
+	                opacity: 1,
+	                fillOpacity: 0.3
+	        });
+
+		}
+
+
+	}).addTo(map);*/
+	//$(window).load(main);
+
+//};
+
+//window.onload = main;
+
+	//sublayer.remove();
+/*	var geo_data;
+
+	$.post(url, function(data) {
+
+		//var sublayer?
+		cartodb.createSublayer(data, function(layer) {
+
+			var subLayerOptions = {
+			sql: "SELECT * FROM "+table_name+"",
+			interactivity: 'cartodb_id'
+			}
+			// When the layers inputs change fire this
+	        var sublayer = layer.getSubLayer(0);
+			sublayer.setInteraction(true);
+			addCursorInteraction(sublayer);
+			sublayers.push(sublayer);
+		    //layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+	        //layer.createSubLayer('submit2');
+			//sublayer.cartodb_id = data.rows[0].cartodb_id;
+			var item = data.rows[0];
+			console.log(item);
+			var lat = item.lat;
+		   	delete item.lat;
+		   	var lon = item.lon;
+		   	delete item.lon;
+		   	var zoom = map.getZoom(zoom);
+		   	console.log(zoom);
+			var cdbid = data.rows[0].cartodb_id;
+			$('#'+cdbid+'')[0].click();
+
+		}).addTo(map);
+	});*/
+	//$(window).load(sublayer)
+		//*//*//*Leaflet*//*//*/
+		/*
+		geo_data = L.geoJson(data, {
+
+			onEachFeature: function(layer) {
+
+				layer.cartodb_id = data.rows[0].cartodb_id; 
+			},
+
+			pointToLayer: function(latlng) { 
+
+				return new L.CircleMarker(latlng, {
+		                radius: 8,
+		                fillColor: "#ff7800",
+		                color: "#000",
+		                weight: 1,
+		                opacity: 1,
+		                fillOpacity: 0.3
+		        });
+
+			}
+
+
+		}).addTo(map);
+
+
+	/*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*///.addTo(map);
 
 
 
-	
