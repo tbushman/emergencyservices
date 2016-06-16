@@ -19,6 +19,10 @@ body::-webkit-scrollbar {
     display: none; 
 }
 
+form {
+	
+	display: none;
+}
 
 body {
 

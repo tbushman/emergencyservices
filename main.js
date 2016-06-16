@@ -21,12 +21,12 @@ function handle_geolocation_query(position){
 	//return false;
 };
 document.ready = function() {
-	$('#geolocate').click(function(){
-		initiate_geolocation();
+	initiate_geolocation();
+	main();
+//	$('#geolocate').click(function(){
 		//$('submit2').click(updateMap);
-	});	
+//	});	
 };
-
 //var lat = 40;
 //var lon = -111;
 
