@@ -29,10 +29,10 @@
 	<why>
 		<searchbox>
 			<buttonbox>
-				<btn class="H"><a href="#" id="H" class="button H"><h4>housing</h4><img src="images/housing.svg"></img></a></btn>
-				<btn class="M"><a href="#" id="M" class="button M"><h4>medical</h4><img src="images/medical.svg"></img></a></btn>
-				<btn class="F"><a href="#" id="F" class="button F"><h4>food</h4><img src="images/food.svg"></img></a></btn>
-				<btn class="B"><a href="#" id="B" class="button B"><h4>travel</h4><img src="images/travel.svg"></img></a></btn>
+				<btn><a href="#" id="H" class="button H"><h4>housing</h4><img src="images/housing.svg"></img></a></btn>
+				<btn><a href="#" id="M" class="button M"><h4>medical</h4><img src="images/medical.svg"></img></a></btn>
+				<btn><a href="#" id="F" class="button F"><h4>food</h4><img src="images/food.svg"></img></a></btn>
+				<btn><a href="#" id="B" class="button B"><h4>travel</h4><img src="images/travel.svg"></img></a></btn>
 				<btn><a href="#" id="all" class="button all"><h4>ALL</h4></a></btn>
 			</buttonbox>
 
@@ -46,9 +46,9 @@
 				<label for="B"> Travel</label>
 				<a href="#" id="close">X</a>
 					
-				<div id="type">Primary Emergency Service Type<br>
+				<div id="type"><h3>Primary Emergency Service Type</h3>
 					<fieldset data-role="controlgroup" data-type="vertical" style="display: none">
-						<input type="radio" name="type" id="hidden" value="" style="display: none">
+						<input type="radio" name="type" id="all" value="all" style="display: none">
 						<input type="radio" name="type" id="M" value="M" > <br>
 						<input type="radio" name="type" id="F" value="F" ><br>
 						<input type="radio" name="type" id="H" value="H" ><br>
@@ -60,7 +60,8 @@
 		  		<div class="ui-field-contain">
 					<div class="ui-field-contain">
 						<fieldset>
-			        		<input type="text" class="demo" name="fname" id="fname" placeholder="Name of Organization"><br>
+			        		<legend>Organization Information</legend>
+				    		<input type="text" class="demo" name="fname" id="fname" placeholder="Name of Organization"><br>
 							<input type="text" class="demo" name="address" id="address" placeholder="Street Address"><br>
 			        		<input type="text" class="demo" name="place" id="place"  placeholder="City"><br>
 			        		<input type="text" class="demo" name="state" id="state"  placeholder="State"><br>
@@ -68,9 +69,9 @@
 			        		<input type="text" class="demo" name="phone" id="phone"  placeholder="Phone Contact"><br>
 			        		<input type="text" class="demo" name="image" id="image" placeholder="Image URL"><br>
 			        		<input type="text" class="demo" name="website" id="website" placeholder="Relevant Link URL"><br>
-			        		<input type="geometry" class="demo" name="the_geom" id="the_geom" style="display: none"><br>
-			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none"><br>
-			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none"><br>
+			        		<input type="geometry" class="demo" name="the_geom" id="the_geom" style="display: none">
+			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none">
+			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none">
 			        		<input type="text" class="demo" name="apikey" id="apikey" placeholder="CartoDB api key" value="">
 
 
@@ -542,7 +543,9 @@
 	</why>
 </top>
 <where id="map">
-	<text>Welcome to pu.bli.sh/emergencyservices, a tool for information transfer to inform providers and customers alike. Contact thex@pu.bli.sh for the api key value required in the form. Other fields are not required, but text fields left blank will read 'null'. Click on the 'X' to launch the map without updating it.</text>
+	<text>Welcome to pu.bli.sh/emergencyservices, a tool for information transfer to inform providers and customers alike. If you are just visiting, click on the 'X' to launch the map without updating it. You will be prompted for your location. 
+		
+SERVICE PROVIDERS: Contact <a href="mailto:thex@pu.bli.sh?Subject=carto_es_api%20Request" target="_top">me</a> for the api key value required for submitting the form and help. </text>
 </where>
 
 

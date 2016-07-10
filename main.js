@@ -1,5 +1,7 @@
 function initiate_geolocation() {
 		
+	$('#apikey').val('');
+	$('#map').html('');
 	navigator.geolocation.getCurrentPosition(handle_geolocation_query);
 
 };
@@ -42,8 +44,6 @@ var table_name = $("#table_name").val();
 console.log(table_name);
 var json_url = $("#json_url").val();
 console.log(json_url);
-var mainlabel = $('#mainlabel');
-mainlabel.css('display','block');
 $('input:checkbox').change(function() {
 
 	
@@ -63,15 +63,9 @@ $('input:checkbox').change(function() {
 	
 }); 
 
-$('#close').click(function(){
-	
-	$('#apikey').val('');
-	$('#map').html('');
-	
-	initiate_geolocation();
-});
+$('#close').click(main);
 //var id = ['B', 'F', 'H', 'M', 'All'];
-
+$('#all').hide();
 $('.button').click(function(){
 
   	$('.button').removeClass('selected');
@@ -84,7 +78,7 @@ $('.button').click(function(){
 
 		if($(this).is(':checked')) {
 
-			$('.button '+radio).show();
+			$('.button '+radio).css('display', 'inline-block');
 			//$('#'+radio+':checked').prop(checked);	
 			//$('input#'+radio+'').prop('checked', true);
 			var radio = $(this).attr('id');
@@ -93,7 +87,7 @@ $('.button').click(function(){
 		}
 		else {
 
-			$('.button '+radio).hide();
+			$('.button '+radio).css('display', 'none');
 			$('#typeinput').val(''+[]+'');
 		}
 
@@ -112,10 +106,25 @@ $('.button').click(function(){
 function main() {	
 
 	
+	$('#all').show();
 	// vars from html form values
-	var lat = $('#lat').val();
+	
+	var lattest = $('#lat').val();
+	
+	if (lattest != null) {
+		
+		var lat = $('#lat').val();
+		var lon = $('#lon').val();
+		//return;
+
+	} else {
+		
+		var lat = 40.7;
+		var lon = -111.8;
+		//return;
+		
+	}
 	console.log(lat);
-	var lon = $('#lon').val();
 	console.log(lon);
 	var geom = $('#the_geom');
 	geom.val(''+lon+','+lat + '');
@@ -203,7 +212,6 @@ function main() {
 		mainlabel.removeClass('point');
 		mainlabel.removeClass('expand');
 		mainlabel.removeClass('list');	
-		mainlabel.addClass('point');
 		return;
 	});
 	//return;	
@@ -238,8 +246,8 @@ function main() {
 		}
 		// When the layers inputs change fire this
 	    var sublayer = layer.getSubLayer(0);
-		sublayer.setInteraction(true);
 		addCursorInteraction(sublayer);
+		sublayer.setInteraction(true);
 		sublayers.push(sublayer);
 
 		var sql = new cartodb.SQL({ user: ''+user_id+'' });
@@ -248,16 +256,7 @@ function main() {
 	    //$("#submit2").click(function(e, data, latlon, pxPos, layer){
 
 	    //});
-	    var bounds_select = "select cartodb_id, label, image, phone, address, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance from "+table_name+" where st_distance( the_geom, st_GeomFromText('POINT("+lon+" "+lat+")', 4326), true ) < (SELECT CDB_XYZ_Resolution("+zoom+")*(("+zoom+")*1.15)) ";
-		//query for euclidian nearby features
-		sql.execute(bounds_select).done(function(ret) {
-		
-			var cdbid = ret.rows[0].cartodb_id;
 
-			var sql_get = 'select cartodb_id, label, image, phone, address, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, ST_X(the_geom) lon, ST_Y(the_geom) lat FROM '+table_name+' WHERE cartodb_id='+cdbid+'';
-			uiActions(sql_get);
-		});
-		
 		$('.button').click(function(e, latlon, pxPos, data, layer) {
 
 	       	$('.button').removeClass('selected');
@@ -271,6 +270,8 @@ function main() {
 			mainlabel.removeClass('list');
 */
 		});	
+		$('.button#all').click();
+		
 	});	
 	//#ID actions
 	var LayerActions = { 
@@ -328,6 +329,7 @@ function main() {
 			mainlabel.removeClass('expand');
 			mainlabel.removeClass('list');
 			mainlabel.addClass('point');
+			mainlabel.show();
 			//'#mainlabel' becomes a map tooltip
 
 			var cdbid = item.cartodb_id;
@@ -561,12 +563,14 @@ function main() {
 				$('images').remove();
 				var item = ret.rows[0]; //return top-clicked feature attribute data
 		   		var lat = item.lat;
+				console.log(lat);
 		   		delete item.lat;
 		   		var lon = item.lon;
+				console.log(lon);
 		   		delete item.lon;
 		   		var zoom = map.getZoom(zoom);
 		   		console.log(zoom);
-		 		map.setView(new L.LatLng(lat, lon), 11); //zoom to top-clicked feature
+		 		map.setView(new L.LatLng(lat, lon), zoom+1); //zoom to top-clicked feature
 
 				var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 				//pixel distance from selected feature sql query
@@ -580,6 +584,10 @@ function main() {
 
 						var i = 0;
 
+						mainlabel.removeClass('search');
+						mainlabel.removeClass('point');
+						mainlabel.removeClass('expand');
+						mainlabel.removeClass('list');
 						mainlabel.addClass('list');
 						mainlabel.append('<here><h6>'+list.length + ' records in this area:</h6></here>');
 			        	mainlabel.append('<there><ul></ul></there>');
@@ -632,7 +640,6 @@ function main() {
 
 		});
 		return true;
-	}
-
+	};
 		
-}
+};

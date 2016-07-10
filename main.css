@@ -70,12 +70,20 @@ a, .ui-page-theme-a {
 	min-height: auto;
 	height: 30px;
 }
+fieldset {
+	
+	border: 0px solid #fff;
+	margin: 0, auto;
+	padding: 0;
+	
+}
 .ui-controlgroup, .ui-field-contain {
 	width: 100%!important;
 	margin: 0;
 	float: left;
 	height: auto;
 	position: relative;
+	margin-bottom: 10px;
 }
 h1 {
 	
@@ -282,8 +290,9 @@ where {
 
 #mainlabel {
 
-	left: auto;
-	width: 22.5em;
+	display: block;
+	margin-left: 50px;
+	width: auto;
 	right: 0;
 	float: none;
 	position: absolute;
@@ -293,7 +302,6 @@ where {
 	height: auto;
 	top: 7px;
 	bottom: 160px;
-	display: none;
 	pointer-events: none;
 	box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.3);
 	z-index: 11;
@@ -319,6 +327,7 @@ where {
 	pointer-events: none;
 	bottom: 50%;
 	max-height: 50%;
+	margin-left: 0;
 	z-index: 11;
 	-webkit-transform: translateZ(10);
 
@@ -384,6 +393,7 @@ where {
 	pointer-events: none;
 	bottom: 50%;
 	max-height: 50%;
+	margin-left: 0!important;
 	z-index: 11;
 	-webkit-transform: translateZ(10);
 	
@@ -747,11 +757,12 @@ images {
 searchbox {
 	background-color: none;
 	top: 0;
-	left: auto;
+	margin-left: 60px;
 	right: 0;
+	left: 50px;
 	display: inline-block;
 	position: absolute;
-	width: 22.5em;
+	width: auto;
 	height: 62px;
 	margin: 0;
 	padding: 0;
@@ -766,13 +777,9 @@ searchbox {
 	width: auto;
 	margin: 0, auto;
 	padding: 0;
+	font-size: 0.8em;
 	pointer-events: auto;
 	
-}
-#visibleform > label, #close {
-	
-	width: 19%;
-	text-align: right;
 }
 #close {
 	float: right;
@@ -803,6 +810,7 @@ buttonbox {
 	width: 100%;
 	}
 btn, #visibleform > label {
+
 	display: inline-block;
 	width: 19%;
 	height: 30px;
@@ -810,14 +818,27 @@ btn, #visibleform > label {
 	margin: 0;
 	padding: 0;
 	}
+
+#visibleform > label, #close {
+
+		display: inline-block;
+		width: 19%;
+		text-align: right;
+	}
+#close {
+	
+	width: 18%;
+}
+
 .activebutton {
 	z-index: 99999999999999999;
 }
 btn a h4 {
 	position: relative;
 	display: inline-block;
-	width: 50%;
-	font-size: .7em;
+	width: auto;
+	right: 18%;
+	left: 0;
 	padding-top: .25em;
 	padding-left: .5em;
 }
@@ -873,7 +894,23 @@ btn a img {
 a#H.selected, a#B.selected, a#F.selected, a#M.selected {
 	
 	z-index: 9999999999;
+	background: linear-gradient(to top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2),  #555 );
+}
+a#H.selected {
 	
+	background-color: #E79404;
+}
+a#M.selected {
+	
+	background-color: #DA1912;
+}
+a#F.selected {
+	
+	background-color: #229701;
+}
+a#B.selected {
+	
+	background-color: #3D7AB4;
 }
 #all {
 	background-color: #333;
@@ -921,7 +958,7 @@ a#H.selected, a#B.selected, a#F.selected, a#M.selected {
     /* Styles for Portrait screen */
 
 
-	@media all and (min-width: 400px) {
+	@media all and (min-width: 500px) {
 
 		#mainlabel.point {
 
@@ -936,13 +973,22 @@ a#H.selected, a#B.selected, a#F.selected, a#M.selected {
 
 		}
 		
-
+		searchbox, #mainlabel {
+			left: auto;
+			max-width: 22.5em;
+		}
 	}
 }
 
 @media all and (orientation:landscape) {
 
     /* Styles for Landscape screen */
+	searchbox, #mainlabel {
+		left: auto;
+		max-width: 22.5em;
+	}
+	
+
 
 	#mainlabel.point, #mainlabel.expand {
 
