@@ -68,7 +68,7 @@ $('#close').click(function(){
 	$('#apikey').val('');
 	$('#map').html('');
 	
-	main();
+	initiate_geolocation();
 });
 //var id = ['B', 'F', 'H', 'M', 'All'];
 
