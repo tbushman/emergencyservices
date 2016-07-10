@@ -24,7 +24,7 @@ function handle_geolocation_query(position){
 	main();
 }
 
-$('#geolocate').click(initiate_geolocation); //submit button decoy
+$('#geolocate').click(initiate_geolocation); //form submit button
 $('#map').click(function(e){ //click on map to close gallery
 	var mainlabel = $('#mainlabel');
 	mainlabel.removeClass('search');
@@ -50,10 +50,6 @@ $('input:checkbox').change(function() {
 	if($(this).is(':checked')) {
 		
 		var id = $(this).attr('id');
-		//var rowid = id + '';
-		//var label = rowid.replace('available_', ' ');
-		//var checked = $(this).prop('checked');
-		//$('#'+id+'').val(label);
 		$("#"+id+"").val(id.replace('available_'+'_', ' '));
 	}
 	else {
@@ -64,8 +60,7 @@ $('input:checkbox').change(function() {
 }); 
 
 $('#close').click(main);
-//var id = ['B', 'F', 'H', 'M', 'All'];
-$('#all').hide();
+$('#all').hide(); //Button 'ALL' is not used in the form
 $('.button').click(function(){
 
   	$('.button').removeClass('selected');
@@ -79,10 +74,7 @@ $('.button').click(function(){
 		if($(this).is(':checked')) {
 
 			$('.button '+radio).css('display', 'inline-block');
-			//$('#'+radio+':checked').prop(checked);	
-			//$('input#'+radio+'').prop('checked', true);
 			var radio = $(this).attr('id');
-			//console.log(radio);
 			$('#typeinput').val(radio);
 		}
 		else {
@@ -92,22 +84,12 @@ $('.button').click(function(){
 		}
 
 	});
-      	//LayerActions[$(this).attr('id')] ();
-		/*			var mainlabel = $('#mainlabel');
-		mainlabel.html('');
-		mainlabel.removeClass('search');
-		mainlabel.removeClass('point');
-		mainlabel.removeClass('expand');
-		mainlabel.removeClass('list');
-		*/
-		//$('.button').click(function() {
 });
 
 function main() {	
 
 	
 	$('#all').show();
-	// vars from html form values
 	
 	var lattest = $('#lat').val();
 	
@@ -129,12 +111,11 @@ function main() {
 	var geom = $('#the_geom');
 	geom.val(''+lon+','+lat + '');
 	
-	var image = $('#image').val();
+	// vars from html form values
+	var image = $('#image').val();//working on implementing an image importer. User submits an image url instead.
 
 	var type = $('#typeinput').val();
 	console.log(type);
-	//map.remove();
-	//var the_geom = [''+lat+','+lon+''];
 	var the_geom = $('#the_geom').val();
 	var name = $("#fname").val();
 	console.log(name);
@@ -197,14 +178,11 @@ function main() {
 	
 	var apikey = $('#apikey').val();
 	var sql_post = "INSERT INTO "+table_name+" (type, label, address, image, website, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday, the_geom) VALUES ('"+type+"', '"+name+"', '"+address+"', '"+image+"', '"+website+"', '"+available_computer_access+"', '"+available_day_room+"', '"+available_dental_services+"', '"+available_food_pantry+"', '"+available_housing_assistance+"', '"+available_meals+"', '"+available_medical_services+"', '"+available_personal_care_items+"', '"+available_showers+"', '"+available_shelter+"', '"+available_transportation_assistance+"', '"+mondaybegin+"-"+mondayend+"', '"+tuesdaybegin+"-"+tuesdayend+"', '"+wednesdaybegin+"-"+wednesdayend+"', '"+thursdaybegin+"-"+thursdayend+"', '"+fridaybegin+"-"+fridayend+"', '"+saturdaybegin+"-"+saturdayend+"', '"+sundaybegin+"-"+sundayend+"', ST_SetSRID(ST_MakePoint("+the_geom+"), 4326) )";
-	//console.log(sql_post);
 	var url = "https://"+user_id+".cartodb.com/api/v2/sql?q="+sql_post+"&api_key="+apikey+"";
-	//console.log(url);
 	
 
-	//if (apikey !== null){
 		
-	$.post(url).fail(function() {
+	$.post(url).fail(function() { //SQL post will fail if api key not present in form, then return to create map.
 	    //alert( "error" );
 		var mainlabel = $('#mainlabel');
 		mainlabel.html('');
@@ -214,10 +192,7 @@ function main() {
 		mainlabel.removeClass('list');	
 		return;
 	});
-	//return;	
-	//} else {
-	//	return false;
-	//}
+
 	var zoom = 11;
 	var map;
 	map = new L.map('map', { //Leaflet map
@@ -252,25 +227,13 @@ function main() {
 
 		var sql = new cartodb.SQL({ user: ''+user_id+'' });
 
-	    //wire buttons (drop-down menu)
-	    //$("#submit2").click(function(e, data, latlon, pxPos, layer){
-
-	    //});
-
 		$('.button').click(function(e, latlon, pxPos, data, layer) {
 
 	       	$('.button').removeClass('selected');
 	       	$(this).addClass('selected');
 	       	LayerActions[$(this).attr('id')] ();
-/*			var mainlabel = $('#mainlabel');
-			mainlabel.html('');
-			mainlabel.removeClass('search');
-			mainlabel.removeClass('point');
-			mainlabel.removeClass('expand');
-			mainlabel.removeClass('list');
-*/
 		});	
-		$('.button#all').click();
+		$('.button#all').click();//Fit bounds of all records
 		
 	});	
 	//#ID actions
@@ -293,8 +256,6 @@ function main() {
 		   	console.log(zoom);
 	 		map.fitBounds(bounds);
 
-			//other option is get ret vars for lat and lon: 
-			//map.setView(new L.LatLng(lat, lon), 11); //initial zoom/latlon
 			uiActions(sql_select);
 
 		});
