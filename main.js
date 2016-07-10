@@ -1,7 +1,11 @@
-
 function initiate_geolocation() {
-    navigator.geolocation.getCurrentPosition(handle_geolocation_query);
+		
+	$('#apikey').val('');
+	$('#map').html('');
+	navigator.geolocation.getCurrentPosition(handle_geolocation_query);
+
 };
+
 function handle_geolocation_query(position){
 
 	var lat = position.coords.latitude;
@@ -10,34 +14,17 @@ function handle_geolocation_query(position){
 	console.log(lon);
 	var geom = $('#the_geom');
 	geom.val(''+lat+','+lon + '');
+	var the_geom = geom.val();
 	
 	var latinput = $('#lat');
 	latinput.val(''+lat+'');
 	var loninput = $('#lon');
 	loninput.val(''+lon+'');
-	//$('visibleform').show();
-	//	
-	//$(window).load(main);
-	//return false;
-};
-document.ready = function() {
-	$('#geolocate').click(function(){
-		initiate_geolocation();
-		//$('submit2').click(updateMap);
-	});	
-};
+	
+	main();
+}
 
-//var lat = 40;
-//var lon = -111;
-
-//Global vars from hidden html form
-var user_id = $("#user_id").val();
-console.log(user_id);
-var table_name = $("#table_name").val();
-console.log(table_name);
-var json_url = $("#json_url").val();
-console.log(json_url);
-
+$('#geolocate').click(initiate_geolocation); //form submit button
 $('#map').click(function(e){ //click on map to close gallery
 	var mainlabel = $('#mainlabel');
 	mainlabel.removeClass('search');
@@ -46,22 +33,90 @@ $('#map').click(function(e){ //click on map to close gallery
 	mainlabel.removeClass('list');
 	mainlabel.addClass('point');
 	$('#mainlabel').css('width',  'auto');
-	$('h1').css('height', 'auto');
 	$('lightbox').html('');
 	$('#map').css('z-index', '0');
 });
-$('#submit2').click(function(e){
-	e.preventDefault();
+
+//Global vars from hidden html form
+var user_id = $("#user_id").val();
+console.log(user_id);
+var table_name = $("#table_name").val();
+console.log(table_name);
+var json_url = $("#json_url").val();
+console.log(json_url);
+$('input:checkbox').change(function() {
+
+	
+	if($(this).is(':checked')) {
+		
+		var id = $(this).attr('id');
+		$("#"+id+"").val(id.replace('available_'+'_', ' '));
+	}
+	else {
+		
+		$(this).val(''+[]+'');
+	}
+	
+}); 
+
+$('#close').click(main);
+$('#all').hide(); //Button 'ALL' is not used in the form
+$('.button').click(function(){
+
+  	$('.button').removeClass('selected');
+   	$(this).addClass('selected');
+	$('btn').removeClass('activebutton');
+	var radio = $(this).attr('id');
+	console.log(radio);
+	$('input#'+radio+'').click();
+	$('input:radio').change(function() {
+
+		if($(this).is(':checked')) {
+
+			$('.button '+radio).css('display', 'inline-block');
+			var radio = $(this).attr('id');
+			$('#typeinput').val(radio);
+		}
+		else {
+
+			$('.button '+radio).css('display', 'none');
+			$('#typeinput').val(''+[]+'');
+		}
+
+	});
 });
 
-
 function main() {	
+
+	
+	$('#all').show();
+	
+	var lattest = $('#lat').val();
+	
+	if (lattest != null) {
+		
+		var lat = $('#lat').val();
+		var lon = $('#lon').val();
+		//return;
+
+	} else {
+		
+		var lat = 40.7;
+		var lon = -111.8;
+		//return;
+		
+	}
+	console.log(lat);
+	console.log(lon);
+	var geom = $('#the_geom');
+	geom.val(''+lon+','+lat + '');
 	
 	// vars from html form values
-	var lat = $('#lat').val();
-	console.log(lat);
-	var lon = $('#lon').val();
-	console.log(lon);
+	var image = $('#image').val();//working on implementing an image importer. User submits an image url instead.
+
+	var type = $('#typeinput').val();
+	console.log(type);
+	var the_geom = $('#the_geom').val();
 	var name = $("#fname").val();
 	console.log(name);
 	var address = $('#address').val();
@@ -70,8 +125,12 @@ function main() {
 	console.log(place);
 	var state = $("#state").val();
 	console.log(state);
+	var phone = $("#phone").val();
+	console.log(phone);
 	var zip = $("#zip").val();
 	console.log(zip);
+	var website = $("#website").val();
+	console.log(website);
 	var mondaybegin = $("#mondaybegin").val();
 	console.log(mondaybegin);
 	var tuesdaybegin = $("#tuesdaybegin").val();
@@ -104,39 +163,52 @@ function main() {
 	console.log(saturdayend);
 	var sundayend = $("#sundayend").val();
 	console.log(sundayend);
-	//e.preventDefault();
-	var the_geom = $('#the_geom').val();
-	console.log(the_geom);
-	var sql_post = "INSERT INTO "+table_name+" (hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday, the_geom) VALUES ('"+mondaybegin+"-"+mondayend+"', '"+tuesdaybegin+"-"+tuesdayend+"', '"+wednesdaybegin+"-"+wednesdayend+"', '"+thursdaybegin+"-"+thursdayend+"', '"+fridaybegin+"-"+fridayend+"', '"+saturdaybegin+"-"+saturdayend+"', '"+sundaybegin+"-"+sundayend+"', ST_SetSRID(ST_MakePoint("+the_geom+"), 4326) )";
-	console.log(sql_post);
-	var url = "https://"+user_id+".cartodb.com/api/v2/sql?q="+sql_post+"&api_key=e9f63b1eb60017c6d4007471d378ce917560be05";
-	console.log(url);
-	//var sublayer;
-	$.post(url);
+	
+	var available_computer_access = $('#available_computer_access').val();
+	var available_day_room = $("#available_day_room").val();
+	var available_dental_services = $("#available_dental_services").val();
+	var available_food_pantry = $("#available_food_pantry").val();
+	var available_housing_assistance = $("#available_housing_assistance").val();
+	var available_meals = $("#available_meals").val();
+	var available_medical_services = $("#available_medical_services").val();
+	var available_personal_care_items = $("#available_personal_care_items").val();
+	var available_showers = $("#available_showers").val();
+	var available_shelter = $("#available_shelter").val();
+	var available_transportation_assistance = $("#available_transportation_assistance").val();
+	
+	var apikey = $('#apikey').val();
+	var sql_post = "INSERT INTO "+table_name+" (type, label, address, image, website, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday, the_geom) VALUES ('"+type+"', '"+name+"', '"+address+"', '"+image+"', '"+website+"', '"+available_computer_access+"', '"+available_day_room+"', '"+available_dental_services+"', '"+available_food_pantry+"', '"+available_housing_assistance+"', '"+available_meals+"', '"+available_medical_services+"', '"+available_personal_care_items+"', '"+available_showers+"', '"+available_shelter+"', '"+available_transportation_assistance+"', '"+mondaybegin+"-"+mondayend+"', '"+tuesdaybegin+"-"+tuesdayend+"', '"+wednesdaybegin+"-"+wednesdayend+"', '"+thursdaybegin+"-"+thursdayend+"', '"+fridaybegin+"-"+fridayend+"', '"+saturdaybegin+"-"+saturdayend+"', '"+sundaybegin+"-"+sundayend+"', ST_SetSRID(ST_MakePoint("+the_geom+"), 4326) )";
+	var url = "https://"+user_id+".cartodb.com/api/v2/sql?q="+sql_post+"&api_key="+apikey+"";
+	
 
+		
+	$.post(url).fail(function() { //SQL post will fail if api key not present in form, then return to create map.
+	    //alert( "error" );
+		var mainlabel = $('#mainlabel');
+		mainlabel.html('');
+		mainlabel.removeClass('search');
+		mainlabel.removeClass('point');
+		mainlabel.removeClass('expand');
+		mainlabel.removeClass('list');	
+		return;
+	});
+
+	var zoom = 11;
 	var map;
-
-	//var lat = 40.75;
-	//var lon = -111.9;
-
-	//leaflet map
 	map = new L.map('map', { //Leaflet map
 	  	zoomControl: true,
 	  	center: [''+lat+'', ''+lon+''],
-	  	zoom: 11,
+	  	zoom: zoom,
 		minZoom: 2,
 	  	maxZoom: 14
 	});
-
-
+	//console.log(map);
 	//Mapbox option (courtesy acct tbushman)
 	var options3 = {
 		attribution: 'Map tiles by <a href="http://mapbox.com/">Mapbox</a><a href="http://cartodb.com/attributions"</a>'
 	};  
 	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); //Mapbox Terrain Attribution
 	//L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
-
-	//
 	// Clear the sublayers
 	var sublayers = [];
 	cartodb.createLayer(map, json_url)
@@ -149,40 +221,29 @@ function main() {
 		}
 		// When the layers inputs change fire this
 	    var sublayer = layer.getSubLayer(0);
-		sublayer.setInteraction(true);
 		addCursorInteraction(sublayer);
+		sublayer.setInteraction(true);
 		sublayers.push(sublayer);
 
 		var sql = new cartodb.SQL({ user: ''+user_id+'' });
 
-	    //wire buttons (drop-down menu)
-	    //$("#submit2").click(function(e, data, latlon, pxPos, layer){
-
-	    //});
-	    $('.button').click(function(e, latlon, pxPos, data, layer) {
+		$('.button').click(function(e, latlon, pxPos, data, layer) {
 
 	       	$('.button').removeClass('selected');
 	       	$(this).addClass('selected');
 	       	LayerActions[$(this).attr('id')] ();
-			var mainlabel = $('#mainlabel');
-			mainlabel.html('');
-			mainlabel.removeClass('search');
-			mainlabel.removeClass('point');
-			mainlabel.removeClass('expand');
-			mainlabel.removeClass('list');
-
 		});	
-	});
-
-
+		$('.button#all').click();//Fit bounds of all records
+		
+	});	
 	//#ID actions
 	var LayerActions = { 
 		cdbid: function() { LayerSelect("SELECT * FROM emergency_services WHERE cartodb_id = '"+data.cartodb_id+"'") },
 		all: function() { LayerSelect("SELECT * FROM emergency_services") },
-		hous: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'H'") },
-		trav: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'B'") },
-		med: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'M'") },
-		food: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'F'") },
+		H: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'H'") },
+		B: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'B'") },
+		M: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'M'") },
+		F: function() { LayerSelect("SELECT * FROM emergency_services WHERE type = 'F'") },
 	};
 
 
@@ -195,8 +256,6 @@ function main() {
 		   	console.log(zoom);
 	 		map.fitBounds(bounds);
 
-			//other option is get ret vars for lat and lon: 
-			//map.setView(new L.LatLng(lat, lon), 11); //initial zoom/latlon
 			uiActions(sql_select);
 
 		});
@@ -215,18 +274,15 @@ function main() {
 		   	var lon = item.lon;
 		   	delete item.lon;
 		   	var zoom = map.getZoom(zoom);
-		   	console.log(zoom);
 			var size = zoom*1.5;
 			console.log(size);
 			var latlong = new L.LatLng(lat, lon);
 			console.log(latlong);
 			var resolution = size*20;
-			console.log(resolution);
 
 			map.setView(latlong, zoom+1); //zoom to single feature
 
 
-			$('h1').css('height', 'auto');
 			var mainlabel = $('#mainlabel');
 			mainlabel.html('');
 			mainlabel.removeClass('search');
@@ -234,64 +290,41 @@ function main() {
 			mainlabel.removeClass('expand');
 			mainlabel.removeClass('list');
 			mainlabel.addClass('point');
+			mainlabel.show();
 			//'#mainlabel' becomes a map tooltip
 
 			var cdbid = item.cartodb_id;
-			console.log(cdbid);
 
 			var label = item.label;
-			console.log(label);
 			var website = item.website;
-			console.log(website);
 			var image = item.image;
-			console.log(image);
 			var phone = item.phone;
-			console.log(phone);
 			var address = item.address;
-			console.log(address);
 	      	var monday = item.hours_monday;
-	      	console.log(monday);
 	      	var tuesday = item.hours_tuesday;
-	      	console.log(tuesday);
 	      	var wednesday = item.hours_wednesday;
-	      	console.log(wednesday);
 	      	var thursday = item.hours_thursday;
-	      	console.log(thursday);
 	      	var friday = item.hours_friday;
-	      	console.log(friday);
 	      	var saturday = item.hours_saturday;
-	      	console.log(saturday);
 	     	var sunday = item.hours_sunday;
-	      	console.log(sunday);
 
 			var header = $('<text><h1 class="title">'+label+'</h1><lightbox></lightbox><infobox><info><contact><h2>'+phone+'</h2><p>'+address+'</p></contact></info><hours><wrapper><day><mo><h5>Mo:</h5></mo><tu><h5>Tu:</h5></tu><we><h5>We:</h5></we><thu><h5>Th:</h5></thu><fr><h5>Fr:</h5></fr><sa><h5>Sa:</h5></sa><su><h5>Su:</h5></su></day><times><mo><h5>' + monday + '</h5></mo><tu><h5>' + tuesday + '</h5></tu><we><h5>' + wednesday + '</h5></we><thu><h5>' + thursday + '</h5></thu><fr><h5>' + friday + '</h5></fr><sa><h5>' + saturday + '</h5></sa><su><h5>' + sunday + '</h5></su></times></wrapper></hours></infobox></text><leftlist><list><ul id="services"></ul></list></leftlist><rightlist><list><ul id="nearby"></ul></list></rightlist><images><a href="#'+cdbid+'" class="items pic" id="'+cdbid+'"><img src="'+image+'"></img></a></images>');
-			console.log(header);
 			$('#mainlabel').append(header); //Single feature attribute appendage
+			$('h2:empty').remove();
+			$('p:empty').remove();
 
 	      	var clothing = item.available_clothing;
-	      	console.log(clothing);
 	      	var computer = item.available_computer_access;
-	      	console.log(computer);
 	      	var day = item.available_day_room;
-	      	console.log(day);
 	      	var dental = item.available_dental_services;
-	      	console.log(dental);
 	      	var food = item.available_food_pantry;
-	      	console.log(food);
 	      	var housing = item.available_housing_assistance;
-	      	console.log(housing);
 	      	var meals = item.available_meals;
-	      	console.log(meals);
 	      	var medical = item.available_medical_services;
-	      	console.log(medical);
 	      	var personal = item.available_personal_care_items;
-	      	console.log(personal);
 	      	var showers = item.available_showers;
-	      	console.log(showers);
 	      	var shelter = item.available_shelter;
-	      	console.log(shelter);
 	      	var trans = item.available_transportation_assistance;
-	      	console.log(trans);
 
 	      	$('#services').append('<li>' +clothing +'</li><li>' + computer +'</li><li>' +day+'</li><li>' +dental+'</li><li>' +food+'</li><li>' +housing+'</li><li>' +meals+'</li><li>' +medical+'</li><li>' +personal+'</li><li>' +showers+'</li><li>' +shelter+'</li><li>' +trans+'</li>');
 			$('li:empty').remove();
@@ -312,7 +345,6 @@ function main() {
 				mainlabel.removeClass('list');
 				mainlabel.addClass('expand');
 				$('lightbox').html('');
-				$('h1').css('height', 'auto');
 				$('#mainlabel').css('width',  'auto');
 				$('#services').show();
 
@@ -344,7 +376,6 @@ function main() {
 						mainlabel.removeClass('list');
 						mainlabel.addClass('expand');
 						$('lightbox').html('');
-						$('h1').css('height', 'auto');
 						$('#mainlabel').css('width',  'auto');
 						$('#nearby').show();
 
@@ -384,7 +415,6 @@ function main() {
 					var pic = item.image;
 					$('lightbox').append('<img src="'+pic+'"></img>');
 					var height = $('lightbox').css('height');
-					$('h1').css('height', height);
 					var width = $('lightbox > img').css('width');
 					$('#mainlabel').css('width', width);
 
@@ -396,7 +426,7 @@ function main() {
 		});
 
 	};
-	
+
 	//search///////////////////////////////////////////////////////////////////////////////////////
 	$( "#input" ).autocomplete({
 
@@ -427,9 +457,7 @@ function main() {
 				for (i in list) {
 
 					var item = ret.rows[i];
-					console.log(item);
 					var clicked = item.cartodb_id;
-					console.log(clicked);
 
 					var $listelement = $('<li><a href="#'+clicked+'" id="'+clicked+'" class="cartodb_id"><h5>'+item.label+'</h5><h6>'+item.phone+'</h6></a></li>');
 					$('ul').append($listelement); //list of matching search queries
@@ -486,7 +514,6 @@ function main() {
 
 			var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 			var sql_select = 'select cartodb_id, label, image, phone, address, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, ST_X(the_geom) lon, ST_Y(the_geom) lat FROM '+table_name+' WHERE cartodb_id='+ data.cartodb_id ;
-			console.log(sql_select);
 			sql_init.execute(sql_select).done(function(ret){
 
 				mainlabel.html('');
@@ -497,12 +524,14 @@ function main() {
 				$('images').remove();
 				var item = ret.rows[0]; //return top-clicked feature attribute data
 		   		var lat = item.lat;
+				console.log(lat);
 		   		delete item.lat;
 		   		var lon = item.lon;
+				console.log(lon);
 		   		delete item.lon;
 		   		var zoom = map.getZoom(zoom);
 		   		console.log(zoom);
-		 		map.setView(new L.LatLng(lat, lon), 11); //zoom to top-clicked feature
+		 		map.setView(new L.LatLng(lat, lon), zoom+1); //zoom to top-clicked feature
 
 				var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 				//pixel distance from selected feature sql query
@@ -516,22 +545,30 @@ function main() {
 
 						var i = 0;
 
+						mainlabel.removeClass('search');
+						mainlabel.removeClass('point');
+						mainlabel.removeClass('expand');
+						mainlabel.removeClass('list');
 						mainlabel.addClass('list');
 						mainlabel.append('<here><h6>'+list.length + ' records in this area:</h6></here>');
 			        	mainlabel.append('<there><ul></ul></there>');
 						for (i in list) {
 
 							var item = ret.rows[i];
-							console.log(item);
 
 							var clicked = item.cartodb_id;
-							console.log(clicked);
 
 							//build feature list
 							var $listelement = $('<li><a href="#'+clicked+'" id="'+clicked+'" class="cartodb_id"><h5>'+item.label+'</h5><h6>'+item.phone+'</h6></a></li>');
 							$('ul').append($listelement); //list of matching search queries
 							$('#'+clicked+'').click(function(e){
 
+								mainlabel.html('');
+								mainlabel.removeClass('search');
+								mainlabel.removeClass('point');
+								mainlabel.removeClass('expand');
+								mainlabel.removeClass('list');
+								mainlabel.addClass('point');
 								var cdbid = [$(this).attr('id')];
 								var sql_get = 'select cartodb_id, label, image, phone, address, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, ST_X(the_geom) lon, ST_Y(the_geom) lat FROM '+table_name+' WHERE cartodb_id='+cdbid+'';
 								uiActions(sql_get);
@@ -565,110 +602,5 @@ function main() {
 		});
 		return true;
 	};
+		
 };
-
-//function updateMap(){
-
-	/*, function(data) {
-
-			var replace = data.rows;
-			console.log(replace);
-
-
-			//var cdbid = data.rows[0].cartodb_id;
-			//console.log(cdbid);
-
-	}*/
-	//main();
-/*	var geo_data = L.geoJson(replace, {
-
-		onEachFeature: function(layer) {
-
-			layer.cartodb_id = data.rows[0].cartodb_id; 
-		},
-
-		pointToLayer: function(latlng) { 
-
-			return new L.CircleMarker(latlng, {
-	                radius: 8,
-	                fillColor: "#ff7800",
-	                color: "#000",
-	                weight: 1,
-	                opacity: 1,
-	                fillOpacity: 0.3
-	        });
-
-		}
-
-
-	}).addTo(map);*/
-	//$(window).load(main);
-
-//};
-
-//window.onload = main;
-
-	//sublayer.remove();
-/*	var geo_data;
-
-	$.post(url, function(data) {
-
-		//var sublayer?
-		cartodb.createSublayer(data, function(layer) {
-
-			var subLayerOptions = {
-			sql: "SELECT * FROM "+table_name+"",
-			interactivity: 'cartodb_id'
-			}
-			// When the layers inputs change fire this
-	        var sublayer = layer.getSubLayer(0);
-			sublayer.setInteraction(true);
-			addCursorInteraction(sublayer);
-			sublayers.push(sublayer);
-		    //layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
-	        //layer.createSubLayer('submit2');
-			//sublayer.cartodb_id = data.rows[0].cartodb_id;
-			var item = data.rows[0];
-			console.log(item);
-			var lat = item.lat;
-		   	delete item.lat;
-		   	var lon = item.lon;
-		   	delete item.lon;
-		   	var zoom = map.getZoom(zoom);
-		   	console.log(zoom);
-			var cdbid = data.rows[0].cartodb_id;
-			$('#'+cdbid+'')[0].click();
-
-		}).addTo(map);
-	});*/
-	//$(window).load(sublayer)
-		//*//*//*Leaflet*//*//*/
-		/*
-		geo_data = L.geoJson(data, {
-
-			onEachFeature: function(layer) {
-
-				layer.cartodb_id = data.rows[0].cartodb_id; 
-			},
-
-			pointToLayer: function(latlng) { 
-
-				return new L.CircleMarker(latlng, {
-		                radius: 8,
-		                fillColor: "#ff7800",
-		                color: "#000",
-		                weight: 1,
-		                opacity: 1,
-		                fillOpacity: 0.3
-		        });
-
-			}
-
-
-		}).addTo(map);
-
-
-	/*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*///.addTo(map);
-
-
-

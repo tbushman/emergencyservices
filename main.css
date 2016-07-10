@@ -19,6 +19,10 @@ body::-webkit-scrollbar {
     display: none; 
 }
 
+form {
+	
+	display: none;
+}
 
 body {
 
@@ -30,30 +34,63 @@ body {
 	display: block;
 }
 
-a {
+a, .ui-page-theme-a {
 	
-	text-decoration: none;
+	text-decoration: none!important;
+	text-shadow: 0 0 0 rgba(0,0,0,0)!important;
 	
 }
 
 #visibleform {
 	
 	display: block;
-	position: fixed;
+	position: relative;
 	margin: 0 auto;
 	float: left;
-	width: 30%;
+	width: 100%;
 	z-index: 9999;
 	pointer-events: auto;
 	background-color: #fff;
 	height: 100%;
 	overflow: scroll;
+	padding: 10px;
 	
 }
-
+.ui-input-text, .ui-input-search, .ui-input-text input {
+	
+	margin: auto;
+	border-width: 0;
+	border-style: solid;
+	border-color: none;
+	background-color: #EEF4DE;
+}
+#input {
+	
+	width: 8.8em;
+	min-height: auto;
+	height: 30px;
+}
+fieldset {
+	
+	border: 0px solid #fff;
+	margin: 0, auto;
+	padding: 0;
+	
+}
+.ui-controlgroup, .ui-field-contain {
+	width: 100%!important;
+	margin: 0;
+	float: left;
+	height: auto;
+	position: relative;
+	margin-bottom: 10px;
+}
 h1 {
 	
 	margin: 0;
+	min-width: 51%;
+	min-height: 2em;
+	line-height: 2em;
 	
 }
 
@@ -115,17 +152,17 @@ why a {
 	position: fixed;
 	left: auto;
 	top: auto;
-	bottom: 34px;
+	bottom: 0;
 	right: 10px;
 	display: block;
-	width: 150px;
-	height: auto;
+	width: auto;
+	height: 34px;
 	
 }
 #publish img {
 	
-	width: 100%;
-	height: auto;
+	width: auto;
+	height: 100%;
 	position: relative;
 	display: inline-block;
 	margin: 0;
@@ -253,19 +290,18 @@ where {
 
 #mainlabel {
 
-	left: 50%;
-	padding: 10px;
+	display: block;
+	margin-left: 50px;
 	width: auto;
-	right: 10px;
+	right: 0;
 	float: none;
-	position: fixed;
+	position: absolute;
 	background-color: none;
 	overflow-y: hidden;
 	overflow-x: hidden;
-	height: 0;
-	top: 10px;
-	bottom: 50%;
-	display: none;
+	height: auto;
+	top: 7px;
+	bottom: 160px;
 	pointer-events: none;
 	box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.3);
 	z-index: 11;
@@ -275,32 +311,32 @@ where {
 
 #mainlabel.point {
 
-	left: 50%;
+	left: 10px;
 	width: auto;
 	right: 10px;
 	float: none;
 	position: fixed;
 	background-color: none;
 	background-image:
-	radial-gradient(circle at 0 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
+	radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
 	overflow-y: hidden;
 	overflow-x: hidden;
 	height: auto;
-	top: 72px;
+	top: 78px;
 	display: block;
 	pointer-events: none;
 	bottom: 50%;
 	max-height: 50%;
+	margin-left: 0;
 	z-index: 11;
 	-webkit-transform: translateZ(10);
 
 }
-
 #mainlabel.expand {
 
 	right: 10px;
 	left: auto;
-	max-width: 470px;
+	max-width: 100%;
 	width: auto;
 	float: none;
 	position: fixed;
@@ -331,7 +367,7 @@ where {
 	overflow-y: hidden;
 	overflow-x: hidden;
 	height: auto;
-	top: 72px;
+	top: 78px;
 	display: block;
 	pointer-events: none;
 	max-height: 50%;
@@ -352,11 +388,12 @@ where {
 	overflow-y: hidden;
 	overflow-x: hidden;
 	height: auto;
-	top: 72px;
+	top: 78px;
 	display: block;
 	pointer-events: none;
 	bottom: 50%;
 	max-height: 50%;
+	margin-left: 0!important;
 	z-index: 11;
 	-webkit-transform: translateZ(10);
 	
@@ -380,7 +417,7 @@ day {
 	display: inline-block;
 	float: left;
 	margin: 0, auto;
-	width: 50px;	
+	width: 40px;	
 	}
 mo, tu, we, thu, fr, sa, su {
 	vertical-align: baseline;
@@ -396,7 +433,8 @@ info {
 	display: inline-block;
 	float: left;
 	margin: 0, auto;
-	width: 50%;
+	min-width: 48%;
+	max-width: 50%;
 	padding-top: .7em;
 	}
 contact {
@@ -424,20 +462,36 @@ text {
 	display: inline-block;
 	pointer-events: auto;
 	width: 100%;
-	float: left;		
+	float: left;
+	top: 0;		
 	margin: 0 auto;
 	height: auto;
 	bottom: 120px;
 	overflow: hidden;
-	padding: 10px 0 10px 0;	
+	padding: 10px 0 10px 10px;	
 	
 }
+
+where text {
 	
+	left: 0;
+	right: 0;
+	bottom: 36px;
+	top: auto;
+	max-height: 115px;
+	float: left;
+	margin: 0, auto;
+	width: auto!important;
+	position: absolute;
+	overflow-y: scroll;
+	
+}	
 
 leftlist {
 	display: inline-block;
 	width: 50%;
 	float: left;
+	padding-left: 10px;
 	padding-bottom: .75em;
 	height: auto;
 	max-height: 120px;
@@ -469,6 +523,7 @@ here {
 	overflow-y: hidden;
 	overflow-x: hidden;
 	pointer-events: auto;
+	padding-left: 10px;
 	z-index: 7;
 	-webkit-transform: translateZ(6);
 }
@@ -491,6 +546,7 @@ there {
 	position: relative;
 	width: 100%;
 	pointer-events: auto;
+	padding-left: 10px;
 }	
 there h6, list h6 {
 
@@ -701,15 +757,32 @@ images {
 searchbox {
 	background-color: none;
 	top: 0;
-	left: auto;
+	margin-left: 60px;
 	right: 0;
+	left: 50px;
 	display: inline-block;
 	position: absolute;
-	width: 22.5em;
+	width: auto;
 	height: 62px;
 	margin: 0;
 	padding: 0;
 	pointer-events: auto;
+}
+#type {
+	
+	top: 0;
+	left: auto;
+	right: 0;
+	display: inline-block;
+	width: auto;
+	margin: 0, auto;
+	padding: 0;
+	font-size: 0.8em;
+	pointer-events: auto;
+	
+}
+#close {
+	float: right;
 }
 .ui-widget {
 	width: 100%;
@@ -719,12 +792,14 @@ searchbox {
 }
 input {
 	position: relative;
-	width: 160px;
 	display: inline-block;
 	float: right;
 	right: 0;
 }
-
+input.demo {
+	
+	 width: 100%; 
+}
 buttonbox {
 	top:0;
 	left:0;
@@ -734,7 +809,8 @@ buttonbox {
 	display: inline-block;
 	width: 100%;
 	}
-btn {
+btn, #visibleform > label {
+
 	display: inline-block;
 	width: 19%;
 	height: 30px;
@@ -742,11 +818,27 @@ btn {
 	margin: 0;
 	padding: 0;
 	}
+
+#visibleform > label, #close {
+
+		display: inline-block;
+		width: 19%;
+		text-align: right;
+	}
+#close {
+	
+	width: 18%;
+}
+
+.activebutton {
+	z-index: 99999999999999999;
+}
 btn a h4 {
 	position: relative;
 	display: inline-block;
-	width: 50%;
-	font-size: .7em;
+	width: auto;
+	right: 18%;
+	left: 0;
 	padding-top: .25em;
 	padding-left: .5em;
 }
@@ -754,14 +846,14 @@ btn a h4 {
 btn a img {
 	position: relative;
 	display: inline-block;
-	width: 20%;
+	width: 17%;
 	height: auto;
 	float: right;
 	top: 10px;
 	z-index: 999;
 	right: .25em;
 }
-#hous {
+#H {
 	background-color: #E79404;
 	display: inline-block;
 	float: left;
@@ -771,7 +863,7 @@ btn a img {
 	text-decoration: none;
 	color: #fff;
 }
-#med {
+#M {
 	background-color: #DA1912;
 	display: inline-block;
 	float: left;
@@ -780,7 +872,7 @@ btn a img {
 	text-decoration: none;
 	color: #fff;
 }
-#food {
+#F {
 	background-color: #229701;
 	display: inline-block;
 	float: left;
@@ -789,7 +881,7 @@ btn a img {
 	text-decoration: none;
 	color: #fff;
 }
-#trav {
+#B {
 	background-color: #3D7AB4;
 	display: inline-block;
 	float: left;
@@ -797,6 +889,28 @@ btn a img {
 	height: 100%;
 	text-decoration: none;
 	color: #fff;
+}
+
+a#H.selected, a#B.selected, a#F.selected, a#M.selected {
+	
+	z-index: 9999999999;
+	background: linear-gradient(to top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2),  #555 );
+}
+a#H.selected {
+	
+	background-color: #E79404;
+}
+a#M.selected {
+	
+	background-color: #DA1912;
+}
+a#F.selected {
+	
+	background-color: #229701;
+}
+a#B.selected {
+	
+	background-color: #3D7AB4;
 }
 #all {
 	background-color: #333;
@@ -807,7 +921,6 @@ btn a img {
 	text-decoration: none;
 	color: #fff;
 }
-
 
 @media all and (min-width: 768px) {
 
@@ -830,6 +943,13 @@ btn a img {
 		right: 10px;
 
 	}
+	.ui-controlgroup, .ui-field-contain {
+
+		right: auto;
+		left: 0;
+		margin: 0, auto;
+		max-width: 100%;
+	}
 
 
 }
@@ -838,15 +958,44 @@ btn a img {
     /* Styles for Portrait screen */
 
 
+	@media all and (min-width: 500px) {
+
+		#mainlabel.point {
+
+			left: 50%;
+			background-image:
+			radial-gradient(circle at 0 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
+
+		}
+		#mainlabel.expand {
+
+			max-width: 470px;
+
+		}
+		
+		searchbox, #mainlabel {
+			left: auto;
+			max-width: 22.5em;
+		}
+	}
 }
 
 @media all and (orientation:landscape) {
 
     /* Styles for Landscape screen */
+	searchbox, #mainlabel {
+		left: auto;
+		max-width: 22.5em;
+	}
+	
+
 
 	#mainlabel.point, #mainlabel.expand {
 
 		right: 10px;
+		left: 50%;
+		background-image:
+		radial-gradient(circle at 0 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
 
 	}
 
