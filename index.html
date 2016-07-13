@@ -33,6 +33,7 @@
 				<btn><a href="#" id="M" class="button M"><h4>medical</h4><img src="images/medical.svg"></img></a></btn>
 				<btn><a href="#" id="F" class="button F"><h4>food</h4><img src="images/food.svg"></img></a></btn>
 				<btn><a href="#" id="B" class="button B"><h4>travel</h4><img src="images/travel.svg"></img></a></btn>
+<<<<<<< HEAD
 				<btn><a href="#" id="all" class="button all"><h4>ALL</h4></a>
 					</btn>
 				
@@ -56,6 +57,29 @@
 						<label for="B"> Travel</label>
 						<input type="radio" name="type" class= "type" id="B" value="B" ><br>
 						<input type="text" name="typeinput" id="typeinput" style="display: none" >
+=======
+				<btn><a href="#" id="all" class="button all"><h4>ALL</h4></a></btn>
+			</buttonbox>
+
+		    	<input id="input" type="text" name="search" placeholder="search" />  	
+		</searchbox>
+		<div id="mainlabel">
+			<form name="checkform" id="visibleform" onsubmit="main()">
+				<label for="H"> Housing</label>
+				<label for="M"> Medical</label>
+				<label for="F"> Food</label>
+				<label for="B"> Travel</label>
+				<a href="#" id="close">X</a>
+					
+				<div id="type"><h3>Primary Emergency Service Type</h3>
+					<fieldset data-role="controlgroup" data-type="vertical" style="display: none">
+						<input type="radio" name="type" id="all" value="all" style="display: none">
+						<input type="radio" name="type" id="M" value="M" > <br>
+						<input type="radio" name="type" id="F" value="F" ><br>
+						<input type="radio" name="type" id="H" value="H" ><br>
+						<input type="radio" name="type" id="B" value="B" ><br>
+						<input type="text" name="typeinput" id="typeinput" style="display: none" value="">
+>>>>>>> origin/master
 					</fieldset>
 				</div>
 				
@@ -65,6 +89,7 @@
 			        		<legend>Organization Information</legend>
 				    		<input type="text" class="demo" name="fname" id="fname" placeholder="Name of Organization"><br>
 							<input type="text" class="demo" name="address" id="address" placeholder="Street Address"><br>
+<<<<<<< HEAD
 			        		<input type="text" class="demo" name="state" id="state"  placeholder="State"><br>
 			        		<input type="text" class="demo" name="zip" id="zip"  placeholder="ZIP Code"><br>
 			        		<input type="text" class="demo" name="phone" id="phone"  placeholder="Phone Contact"><br>
@@ -75,6 +100,18 @@
 			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none">
 			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none">
 			        		<input type="text" class="demo" name="apikey" id="apikey"  style="display: none" placeholder="CartoDB api key" value="e9f63b1eb60017c6d4007471d378ce917560be05">
+=======
+			        		<input type="text" class="demo" name="place" id="place"  placeholder="City"><br>
+			        		<input type="text" class="demo" name="state" id="state"  placeholder="State"><br>
+			        		<input type="number" class="demo" name="zip" id="zip"  placeholder="ZIP Code"><br>
+			        		<input type="text" class="demo" name="phone" id="phone"  placeholder="Phone Contact"><br>
+			        		<input type="text" class="demo" name="image" id="image" placeholder="Image URL"><br>
+			        		<input type="text" class="demo" name="website" id="website" placeholder="Relevant Link URL"><br>
+			        		<input type="geometry" class="demo" name="the_geom" id="the_geom" style="display: none">
+			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none">
+			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none">
+			        		<input type="text" class="demo" name="apikey" id="apikey" placeholder="CartoDB api key" value="">
+>>>>>>> origin/master
 
 
 		      			</fieldset>
@@ -535,9 +572,15 @@
 					  	</div><br>
 					</fieldset>
 				</div>
+<<<<<<< HEAD
 		  		<input type="submit" id="submit2" value="Update Database" style="pointer-events: auto">
 				<input type="button" value="Add Map Feature" id="geolocate" class="notbutton" data-mini="true" data-inline="true"></input>
 				<h6 style="color: #555">If you are adding a new map feature, none of the fields are required, but you will be prompted for your lat/lon location.</h6><h4 style="color: #333"> If you are updating an existing entry, please be sure to include hours of operation and selected services at the location you are updating. <b>Empty values will overwrite existing database content.</b><br>Feature edits require prior map refresh.</h4>
+=======
+		  		<input type="submit" data-inline="true" id="submit2" style="display: none" value="Submit">
+				<input type="button" value="Submit" id="geolocate" class="notbutton" data-mini="true" data-inline="true"></input>
+		
+>>>>>>> origin/master
 		    </form>
 		  	
 		</div>
@@ -546,8 +589,14 @@
 	
 </top>
 <where id="map">
+<<<<<<< HEAD
 	<text>pu.bli.sh/emergencyservices is for information transfer. Edits are welcome. </text>
 		
+=======
+	<text>Welcome to pu.bli.sh/emergencyservices, a tool for information transfer to inform providers and customers alike. If you are just visiting, click on the 'X' to launch the map without updating it. You will be prompted for your location. 
+		
+SERVICE PROVIDERS: Contact <a href="mailto:thex@pu.bli.sh?Subject=carto_es_api%20Request" target="_top">me</a> for the api key value required for submitting the form and help. </text>
+>>>>>>> origin/master
 </where>
 
 
