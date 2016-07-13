@@ -15,18 +15,6 @@ html {
 
 }
 
-<<<<<<< HEAD
-=======
-body::-webkit-scrollbar { 
-    display: none; 
-}
-
-form {
-	
-	display: none;
-}
-
->>>>>>> origin/master
 body {
 
 	margin: 0;
@@ -37,69 +25,8 @@ body {
 	display: block;
 }
 
-<<<<<<< HEAD
 body::-webkit-scrollbar { 
     display: none; 
-=======
-a, .ui-page-theme-a {
-	
-	text-decoration: none!important;
-	text-shadow: 0 0 0 rgba(0,0,0,0)!important;
-	
-}
-
-#visibleform {
-	
-	display: block;
-	position: relative;
-	margin: 0 auto;
-	float: left;
-	width: 100%;
-	z-index: 9999;
-	pointer-events: auto;
-	background-color: #fff;
-	height: 100%;
-	overflow: scroll;
-	padding: 10px;
-	
-}
-.ui-input-text, .ui-input-search, .ui-input-text input {
-	
-	margin: auto;
-	border-width: 0;
-	border-style: solid;
-	border-color: none;
-	background-color: #EEF4DE;
-}
-#input {
-	
-	width: 8.8em;
-	min-height: auto;
-	height: 30px;
-}
-fieldset {
-	
-	border: 0px solid #fff;
-	margin: 0, auto;
-	padding: 0;
-	
-}
-.ui-controlgroup, .ui-field-contain {
-	width: 100%!important;
-	margin: 0;
-	float: left;
-	height: auto;
-	position: relative;
-	margin-bottom: 10px;
-}
-h1 {
-	
-	margin: 0;
-	min-width: 51%;
-	min-height: 2em;
-	line-height: 2em;
-	
->>>>>>> origin/master
 }
 
 top {
@@ -173,29 +100,13 @@ where {
 where a {
 	
 	pointer-events: auto;
-<<<<<<< HEAD
 	text-decoration: none;
 	color: #555;
-=======
-	position: fixed;
-	left: auto;
-	top: auto;
-	bottom: 0;
-	right: 10px;
-	display: block;
-	width: auto;
-	height: 34px;
-	
->>>>>>> origin/master
 }
 
 	
-<<<<<<< HEAD
 ul {
 	padding: 0 0 10px 0;
-=======
-	width: auto;
->>>>>>> origin/master
 	height: 100%;
 	position: relative;
 	display: inline-block;
@@ -341,7 +252,6 @@ searchbox {
 
 }
 
-<<<<<<< HEAD
 #type {
 	
 	top: 0;
@@ -354,32 +264,10 @@ searchbox {
 	font-size: 0.8em;
 	pointer-events: auto;
 	
-=======
-#mainlabel {
-
-	display: block;
-	margin-left: 50px;
-	width: auto;
-	right: 0;
-	float: none;
-	position: absolute;
-	background-color: none;
-	overflow-y: hidden;
-	overflow-x: hidden;
-	height: auto;
-	top: 7px;
-	bottom: 160px;
-	pointer-events: none;
-	box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.3);
-	z-index: 11;
-	-webkit-transform: translateZ(10);
-
->>>>>>> origin/master
 }
 
 #close {
 
-<<<<<<< HEAD
 	float: right;
 
 }
@@ -387,43 +275,6 @@ searchbox {
 .ui-widget {
 
 	width: 100%;
-=======
-	left: 10px;
-	width: auto;
-	right: 10px;
-	float: none;
-	position: fixed;
-	background-color: none;
-	background-image:
-	radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
-	overflow-y: hidden;
-	overflow-x: hidden;
-	height: auto;
-	top: 78px;
-	display: block;
-	pointer-events: none;
-	bottom: 50%;
-	max-height: 50%;
-	margin-left: 0;
-	z-index: 11;
-	-webkit-transform: translateZ(10);
-
-}
-#mainlabel.expand {
-
-	right: 10px;
-	left: auto;
-	max-width: 100%;
-	width: auto;
-	float: none;
-	position: fixed;
-	background-color: #111;
-	background-image: none;
-	overflow-y: hidden;
-	overflow-x: hidden;
-	height: auto;
-	top: auto;
->>>>>>> origin/master
 	display: block;
 	bottom: 0;
 	position: absolute;
@@ -431,31 +282,10 @@ searchbox {
 
 input {
 
-<<<<<<< HEAD
 	position: relative;
 	display: inline-block;
 	float: right;
 	right: 0;
-=======
-	left: auto;
-	width: 160px;
-	bottom: 50%;
-	right: 10px;
-	float: none;
-	position: fixed;
-	background-color: #111;
-	background-image: none;
-	overflow-y: hidden;
-	overflow-x: hidden;
-	height: auto;
-	top: 78px;
-	display: block;
-	pointer-events: none;
-	max-height: 50%;
-	z-index: 12;
-	-webkit-transform: translateZ(11);
-}
->>>>>>> origin/master
 
 }
 input.demo {
@@ -787,7 +617,6 @@ a#B.selected {
 	bottom: 50%;
 	max-height: 50%;
 	margin-left: 0!important;
-<<<<<<< HEAD
 	box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.3);
 	z-index: 11;
 	-webkit-transform: translateZ(10);
@@ -945,8 +774,6 @@ here > a {
 	bottom: auto;
 	left: auto;
 	pointer-events: auto;
-=======
->>>>>>> origin/master
 	z-index: 11;
 	-webkit-transform: translateZ(10);
 
@@ -1012,18 +839,11 @@ times {
 info {
 	display: inline-block;
 	float: left;
-<<<<<<< HEAD
 	margin: 0;
 	min-width: 46%;
 	max-width: 49%;
 	height: 100%;
 	margin: 0 0 10px 0;
-=======
-	margin: 0, auto;
-	min-width: 48%;
-	max-width: 50%;
-	padding-top: .7em;
->>>>>>> origin/master
 	}
 contact {
 	display: block;
@@ -1061,22 +881,16 @@ text {
 	position: relative;
 	width: 100%;
 	float: left;
-<<<<<<< HEAD
 	left: 0;
 	right: 0;
 	top: 16px!important;
 	margin: 10px auto auto auto;
-=======
-	top: 0;		
-	margin: 0 auto;
->>>>>>> origin/master
 	height: auto;
 	bottom: 0;
 	overflow: hidden;
 	padding: 10px 0 10px 10px;	
 	
 }
-<<<<<<< HEAD
 where text {
 	
 	left: 0;
@@ -1090,34 +904,11 @@ where text {
 	overflow-y: scroll;
 	max-height: 21%;
 	
-=======
-
-where text {
-	
-	left: 0;
-	right: 0;
-	bottom: 36px;
-	top: auto;
-	max-height: 115px;
-	float: left;
-	margin: 0, auto;
-	width: auto!important;
-	position: absolute;
-	overflow-y: scroll;
-	
->>>>>>> origin/master
 }	
 
 leftlist {
 	display: inline-block;
-<<<<<<< HEAD
 	width: 100%;
-=======
-	width: 50%;
-	float: left;
-	padding-left: 10px;
-	padding-bottom: .75em;
->>>>>>> origin/master
 	height: auto;
 	min-height: auto;
 	max-height: 100%;
@@ -1161,37 +952,9 @@ list {
 	
 	display: inline-block;
 	overflow-y: scroll;
-<<<<<<< HEAD
 	overflow-x: hidden;
 	margin: 0, auto;
 	height: auto;
-=======
-	margin: 0 auto;
-	height: 100px;
-	position: relative;
-	width: 100%;
-	pointer-events: auto;
-}	
-there {
-	
-	display: inline-block;
-	overflow-y: scroll;
-	margin: 0 auto;
-	max-height: 80%;
-	position: relative;
-	width: 100%;
-	pointer-events: auto;
-	padding-left: 10px;
-}	
-there h6, list h6 {
-
-	padding: 0 0 1.6em 0;	
-	
-}	
-ul {
-	padding: 0 0 10px 0;
-	height: 100%;
->>>>>>> origin/master
 	position: relative;
 	width: 100%;
 	bottom: 0;
@@ -1257,7 +1020,6 @@ there {
 
 }
 
-<<<<<<< HEAD
 #publish {
 	
 	pointer-events: auto;
@@ -1266,40 +1028,6 @@ there {
 	top: auto;
 	bottom: 13px;
 	right: 10px;
-=======
-searchbox {
-	background-color: none;
-	top: 0;
-	margin-left: 60px;
-	right: 0;
-	left: 50px;
-	display: inline-block;
-	position: absolute;
-	width: auto;
-	height: 62px;
-	margin: 0;
-	padding: 0;
-	pointer-events: auto;
-}
-#type {
-	
-	top: 0;
-	left: auto;
-	right: 0;
-	display: inline-block;
-	width: auto;
-	margin: 0, auto;
-	padding: 0;
-	font-size: 0.8em;
-	pointer-events: auto;
-	
-}
-#close {
-	float: right;
-}
-.ui-widget {
-	width: 100%;
->>>>>>> origin/master
 	display: block;
 	width: auto;
 	height: 21px;
@@ -1313,7 +1041,6 @@ searchbox {
 	display: inline-block;
 	margin: 0;
 }
-<<<<<<< HEAD
 
 #login, #launch {
 	
@@ -1330,73 +1057,12 @@ searchbox {
 	float: left;
 	margin: 0 0 auto 5px;
 	padding-left: 8px;
-=======
-input.demo {
-	
-	 width: 100%; 
-}
-buttonbox {
-	top:0;
-	left:0;
-	margin:0;
-	padding:0;
-	height: 30px;
-	display: inline-block;
-	width: 100%;
-	}
-btn, #visibleform > label {
-
-	display: inline-block;
-	width: 19%;
-	height: 30px;
-	font-size: .8em;
-	margin: 0;
-	padding: 0;
-	}
-
-#visibleform > label, #close {
-
-		display: inline-block;
-		width: 19%;
-		text-align: right;
-	}
-#close {
-	
-	width: 18%;
-}
-
-.activebutton {
-	z-index: 99999999999999999;
-}
-btn a h4 {
-	position: relative;
-	display: inline-block;
-	width: auto;
-	right: 18%;
-	left: 0;
-	padding-top: .25em;
-	padding-left: .5em;
->>>>>>> origin/master
 }
 
 #visibleform {
 	
 	position: relative;
-<<<<<<< HEAD
 	margin: 0 auto;
-=======
-	display: inline-block;
-	width: 17%;
-	height: auto;
-	float: right;
-	top: 10px;
-	z-index: 999;
-	right: .25em;
-}
-#H {
-	background-color: #E79404;
-	display: inline-block;
->>>>>>> origin/master
 	float: left;
 	width: 100%;
 	z-index: 9999;
@@ -1407,23 +1073,16 @@ btn a h4 {
 	padding: 10px;
 	
 }
-<<<<<<< HEAD
 
 #input {
 	
 	width: 76.5%;
 	min-height: 29px;
-=======
-#M {
-	background-color: #DA1912;
-	display: inline-block;
->>>>>>> origin/master
 	float: left;
 	margin: 0;
 	padding: 0;
 	
 }
-<<<<<<< HEAD
 fieldset {
 	
 	border: 0px solid #fff;
@@ -1434,27 +1093,12 @@ fieldset {
 .ui-controlgroup, .ui-field-contain {
 	width: 100%!important;
 	margin: 0;
-=======
-#F {
-	background-color: #229701;
-	display: inline-block;
-	float: left;
-	width: 100%;
-	height: 100%;
-	text-decoration: none;
-	color: #fff;
-}
-#B {
-	background-color: #3D7AB4;
-	display: inline-block;
->>>>>>> origin/master
 	float: left;
 	height: auto;
 	position: relative;
 	margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 @media all and (min-height: 600px){
 
 	#mainlabel.point {
@@ -1472,39 +1116,6 @@ fieldset {
 	}
 }
 
-=======
-a#H.selected, a#B.selected, a#F.selected, a#M.selected {
-	
-	z-index: 9999999999;
-	background: linear-gradient(to top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2),  #555 );
-}
-a#H.selected {
-	
-	background-color: #E79404;
-}
-a#M.selected {
-	
-	background-color: #DA1912;
-}
-a#F.selected {
-	
-	background-color: #229701;
-}
-a#B.selected {
-	
-	background-color: #3D7AB4;
-}
-#all {
-	background-color: #333;
-	display: inline-block;
-	float: right;
-	width: 100%;
-	height: 100%;
-	text-decoration: none;
-	color: #fff;
-}
-
->>>>>>> origin/master
 @media all and (min-width: 768px) {
 
 	searchbox {
@@ -1555,23 +1166,12 @@ a#B.selected {
 			radial-gradient(circle at 0 100%, rgba(0, 0, 0, 0) 15px, #111 15px);
 
 		}
-<<<<<<< HEAD
-=======
-		#mainlabel.expand {
-
-			max-width: 470px;
-
-		}
->>>>>>> origin/master
 		
 		searchbox, #mainlabel {
 			left: auto;
 			max-width: 22.5em;
 		}
-<<<<<<< HEAD
 		
-=======
->>>>>>> origin/master
 	}
 }
 
@@ -1583,10 +1183,6 @@ a#B.selected {
 		max-width: 22.5em;
 	}
 	
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 
 
 	#mainlabel.point {
