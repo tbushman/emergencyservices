@@ -26,34 +26,11 @@ var json_url = $("#json_url").val();
 console.log(json_url);
 $('#submit2').hide();
 $('#visibleform').hide();
-$('input:checkbox').change(function() {
 
-
-	if($(this).is(':checked')) {
-
-		var id = $(this).attr('id');
-		$(this).val(id.replace('available_', '').replace('_', ' '));
-	}
-	else {
-
-		$(this).val(''+[]+'');
-	}
-
-});
-
-$('input:radio').change(function() {
-
-	$('.type').removeClass('selected');
-	$(this).addClass('selected');
-	var radio = $(this).attr('id');
-	console.log(radio);
-	$('#typeinput').val('');
-	$('#typeinput').val(''+radio+'');
-
-});
 
 $('#login').click(function(){
 	
+//	
 	initiate_geolocation();
 	function initiate_geolocation() {
 
@@ -86,7 +63,6 @@ $('#login').click(function(){
 	$('mast').remove();
 	$('here').remove();
 	$('there').remove();
-
 	mainlabel.removeClass('search');
 	mainlabel.removeClass('point');
 	mainlabel.removeClass('expand');
@@ -94,7 +70,6 @@ $('#login').click(function(){
 	$('#visibleform').show();
 	$('#geolocate').show();
 	$('#submit2').hide();
-	
 	$('#close').click(function(){
 
 		var mainlabel = $('#mainlabel');
@@ -125,7 +100,30 @@ $(document).on('click', '#escape',function(){
 
 
 function main() {	
+	
+	$('.type').on('ifChecked', function(){
+	  
+		var radio = $(this).attr('id');
+		console.log(radio);
+		$('#typeinput').val('');
+		$('#typeinput').val(''+radio+'');
+	});
+	$('.checkbox').on('ifChecked', function(){
+		
+			var checked = $(this).attr('id');
+			$(this).val(checked.replace('available_', '').replace('_', ' '));
+	});
+	$('.checkbox').on('ifUnchecked', function(){
 
+		$(this).val(''+[]+'');		
+		
+	});
+	$('input').iCheck({
+	    checkboxClass: 'icheckbox_minimal-grey',
+	    radioClass: 'iradio_minimal-grey',
+	    increaseArea: '20%' // optional
+	});
+	
 	$('#geolocate').hide();
 	$('#visibleform').hide(); 
 	
@@ -136,7 +134,7 @@ function main() {
 	var geom = $('#the_geom');
 	geom.val(''+lon+','+lat + '');
 	
-    //$('#visibleform').find('input[type=text], textarea').val('');
+    
 
 	// vars from html form values
 	//return false;
@@ -218,15 +216,17 @@ function main() {
 	  	center: [40.7, -111.8], //For now, map opens on slc
 	  	zoom: zoom,
 		minZoom: 2,
-	  	maxZoom: 14
+	  	maxZoom: 18
 	});
 	//console.log(map);
 	//Mapbox option (courtesy acct tbushman)
 	var options3 = {
 		attribution: 'Map tiles by <a href="http://mapbox.com/">Mapbox</a><a href="http://cartodb.com/attributions"</a>'
 	};  
-	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); //Mapbox Terrain Attribution
-	//L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
+//	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); //Mapbox Terrain Attribution
+
+	L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(map);
+	L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
 
 
 	// Clear the sublayers
@@ -276,7 +276,7 @@ function main() {
 		mainlabel.removeClass('expand');
 		mainlabel.removeClass('list');
 		mainlabel.addClass('expand');
-		mainlabel.append('<there><h1>Emergency Serivices</h1><h4 style="line-height: 1.5em">If you are adding a new map feature, none of the fields are required, but you will be prompted for your lat/lon location.</h4><h4 style="line-height: 1.5em"> If you are updating an existing entry, please be sure to include hours of operation and selected services at the location you are updating. <b>Empty values will overwrite existing database content.</b></h4><h4 style="line-height: 1.5em">Feature edits require prior map refresh.</h4></there>');	
+		mainlabel.append('<here><h1>Emergency Services</h1><h4 style="line-height: 1.5em">If you are adding a new map feature, none of the fields are required, but you will be prompted for your lat/lon location.</h4><h4 style="line-height: 1.5em"> If you are updating an existing entry, please be sure to include hours of operation and selected services at the location you are updating. <b>Empty values will overwrite existing database content.</b></h4><h4 style="line-height: 1.5em">Feature edits require prior map refresh.</h4></here>');	
 	});	
 		
 	//#ID actions
@@ -346,18 +346,13 @@ function main() {
 			var address = item.address;
 			var state = item.state;
 	      	var zip = item.zip;
-			var monday = item.hours_monday;
-	      	var tuesday = item.hours_tuesday;
-	      	var wednesday = item.hours_wednesday;
-	      	var thursday = item.hours_thursday;
-	      	var friday = item.hours_friday;
-	      	var saturday = item.hours_saturday;
-	     	var sunday = item.hours_sunday;
-
-			var header = $('<mast><h1 class="title">'+name+'</h1><contact><h2>'+phone+'</h2><p>'+address+'</p></contact></mast><images><a href="#'+cdbid+'" class="items pic" id="'+cdbid+'"><img src="'+image+'"></img></a></images><lightbox></lightbox><text><info><leftlist><list><ul id="services"></ul></list></leftlist><rightlist><list><ul id="nearby"></ul></list></rightlist></info><hours><wrapper><day><mo><h5>Mo:</h5></mo><tu><h5>Tu:</h5></tu><we><h5>We:</h5></we><thu><h5>Th:</h5></thu><fr><h5>Fr:</h5></fr><sa><h5>Sa:</h5></sa><su><h5>Su:</h5></su></day><times><mo><h5>' + monday + '</h5></mo><tu><h5>' + tuesday + '</h5></tu><we><h5>' + wednesday + '</h5></we><thu><h5>' + thursday + '</h5></thu><fr><h5>' + friday + '</h5></fr><sa><h5>' + saturday + '</h5></sa><su><h5>' + sunday + '</h5></su></times></wrapper></hours></text>');
-			$('#mainlabel').append(header); //Single feature attribute appendage
-			$('h2:empty').remove();
-			$('p:empty').remove();
+			var monday = item.hours_monday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	      	var tuesday = item.hours_tuesday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	      	var wednesday = item.hours_wednesday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	      	var thursday = item.hours_thursday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	      	var friday = item.hours_friday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	      	var saturday = item.hours_saturday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
+	     	var sunday = item.hours_sunday.replace(':00:00-', 'am - ').replace(':00:00', 'am').replace('00am', '12am').replace('13am', '1pm').replace('14am', '2pm').replace('15am', '3pm').replace('16am', '4pm').replace('17am', '5pm').replace('18am', '6pm').replace('19am', '7pm').replace('20am', '8pm').replace('21am', '9pm').replace('22am', '10pm').replace('23am', '11pm');
 
 	      	var clothing = item.available_clothing;
 	      	var computer = item.available_computer_access;
@@ -382,6 +377,15 @@ function main() {
 			$("#zip").val(zip);
 			$("#website").val(website);
 			
+			var header = $('<mast><h1 class="title">'+name+'</h1><contact><h2>'+phone+'</h2><p>'+address+'</p></contact></mast><images><a href="#'+cdbid+'" class="items pic" id="'+cdbid+'"><img src="'+image+'"></img></a></images><lightbox></lightbox><text><info><leftlist><list><ul id="services"></ul></list></leftlist><rightlist><list><ul id="nearby"></ul></list></rightlist></info><hours><wrapper><day><mo><h5>Mo:</h5></mo><tu><h5>Tu:</h5></tu><we><h5>We:</h5></we><thu><h5>Th:</h5></thu><fr><h5>Fr:</h5></fr><sa><h5>Sa:</h5></sa><su><h5>Su:</h5></su></day><times><mo><h5>' + monday + '</h5></mo><tu><h5>' + tuesday + '</h5></tu><we><h5>' + wednesday + '</h5></we><thu><h5>' + thursday + '</h5></thu><fr><h5>' + friday + '</h5></fr><sa><h5>' + saturday + '</h5></sa><su><h5>' + sunday + '</h5></su></times></wrapper></hours></text>');
+			$('#mainlabel').append(header); //Single feature attribute appendage
+			$('h2:empty').remove();
+			$('p:empty').remove();
+			
+			$('mast').prepend('<topbar style="width: 100%; position: relative; display: inline-block"><a href="#" id="escape" style="pointer-events: auto"></a><a href="#" id="edit" style="pointer-events: auto"></a><a href="http://'+website+'" id="link" target="_blank"><h5>website</h5></a></topbar>')
+			var height = $('mast').css('height');
+			$('lightbox').css('height', height);
+			
 	      	$('#services').append('<li><h4>' +clothing +'</h4></li><li><h4>' + computer +'</h4></li><li><h4>' +day+'</h4></li><li><h4>' +dental+'</h4></li><li><h4>' +food+'</h4></li><li><h4>' +housing+'</h4></li><li><h4>' +meals+'</h4></li><li><h4>' +medical+'</h4></li><li><h4>' +personal+'</h4></li><li><h4>' +showers+'</h4></li><li><h4>' +shelter+'</h4></li><li><h4>' +trans+'</li>');
 			var empties = $('li > h4:empty');
 			empties.remove();
@@ -393,13 +397,40 @@ function main() {
 				$('leftlist').prepend('<a href="#" id="listlength" style="pointer-events: auto"><h6>'+services.length+' services offered:</h6></a>');
 				$('#services').hide();
 
+				$('#listlength').click(function(){
+
+					var mainlabel = $('#mainlabel');
+					mainlabel.removeClass('search');
+					mainlabel.removeClass('point');
+					mainlabel.removeClass('expand');
+					mainlabel.removeClass('list');
+					mainlabel.addClass('expand');
+					$('lightbox').html('');
+					var height = $('mast').css('height');
+					$('lightbox').css('height', height);
+					//$('#mainlabel').css('width',  'auto');
+					$('#services').show();
+					$('rightlist > list').css('display', 'none');
+					$('#escape').remove();
+					$('topbar').prepend('<a href="#" id="escape"></a>');
+					$('#escape').click(function(){
+
+						var mainlabel = $('#mainlabel');
+						mainlabel.removeClass('search');
+						mainlabel.removeClass('point');
+						mainlabel.removeClass('expand');
+						mainlabel.removeClass('list');
+						mainlabel.addClass('point');
+						$('mast').css('height', 'auto');
+						var height = $('mast').css('height');
+						$('lightbox').css('height', height);
+
+					});
+					return true;
+
+				});
 			}
-			
-			$('mast').prepend('<a href="http://'+website+'" id="link" target="_blank"><h5>website</h5></a>');
-			$('mast').prepend('<a href="#" id="edit" style="pointer-events: auto"></a>');			
-			$('mast').prepend('<a href="#" id="escape" style="pointer-events: auto"></a>');
-			var height = $('mast').css('height');
-			$('lightbox').css('height', height);
+
 			
 			$(document).on('click', '#edit', function(){
 
@@ -418,7 +449,6 @@ function main() {
 				$('#visibleform').show();
 				$('#geolocate').hide();
 				$('#submit2').show();
-
 				$(document).on('click', '#close',function(){
 
 					var mainlabel = $('#mainlabel');
@@ -444,11 +474,11 @@ function main() {
 					var phone = $("#phone").val();
 					var zip = $("#zip").val();
 					var website = $("#website").val();
+					
 					var mondaybegin = $("#mondaybegin").val();
 					var tuesdaybegin = $("#tuesdaybegin").val();
 					var wednesdaybegin = $("#wednesdaybegin").val();
 					var thursdaybegin = $("#thursdaybegin").val();
-					var thursdaybegin = $("#mondaybegin").val();
 					var fridaybegin = $("#fridaybegin").val();
 					var saturdaybegin = $("#saturdaybegin").val();
 					var sundaybegin = $("#sundaybegin").val();
@@ -456,7 +486,6 @@ function main() {
 					var tuesdayend = $("#tuesdayend").val();
 					var wednesdayend = $("#wednesdayend").val();
 					var thursdayend = $("#thursdayend").val();
-					var thursdayend = $("#mondayend").val();
 					var fridayend = $("#fridayend").val();
 					var saturdayend = $("#saturdayend").val();
 					var sundayend = $("#sundayend").val();
@@ -479,25 +508,29 @@ function main() {
 					var url = "https://"+user_id+".cartodb.com/api/v2/sql?q="+sql_post+"&api_key="+apikey+"";
 
 					$.post(url).fail(function() { //SQL post will fail if api key not present in form, then return to create map.
-					    alert( "error" );
+					    alert( "error: refresh and try again" );
 						var mainlabel = $('#mainlabel');
 						mainlabel.removeClass('search');
 						mainlabel.removeClass('point');
 						mainlabel.removeClass('expand');
 						mainlabel.removeClass('list');
-						//return;	
+						$('#visibleform').find('input[type=text], textarea').val('');
+						return;	
 
 					});
 					$('#visibleform').hide();
 					//location.reload(true);
 					//$('#apikey').val('');
 					//e.preventDefault();
-					//return false;
+					return false;
 
 					//return;
 				});
-				return true;
+				$('#formtitle').remove();
+				$('#visibleform').prepend('<h6 id="formtitle" style="color: #555">database content for <b>'+name+'</b></h6>');
+				
 			});
+			
 			var sql_init = new cartodb.SQL({ user: ''+user_id+'' });
 			//pixel distance from selected feature sql query
 			var bounds_select = "select cartodb_id, label, image, phone, address, state, type, website, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance from "+table_name+" where st_distance( the_geom, st_GeomFromText('POINT("+lon+" "+lat+")', 4326), true ) < (SELECT CDB_XYZ_Resolution("+zoom+")*(("+zoom+")*1.15)) ";
@@ -532,6 +565,13 @@ function main() {
 						$('.cartodb_id').click(function(e, latlon, pxPos, data, layer) {
 
 							var cdbid = [$(this).attr('id')];
+							$('lightbox').remove();
+							$('images').remove();
+							$('text').remove();
+							$('mast').remove();
+							$('here').remove();
+							$('there').remove();
+
 							var sql_get = 'select cartodb_id, label, image, phone, address, state, type, website, zip, hours_monday, hours_tuesday, hours_wednesday, hours_thursday, hours_friday, hours_saturday, hours_sunday ,available_clothing, available_computer_access, available_day_room, available_dental_services, available_food_pantry, available_housing_assistance, available_meals, available_medical_services, available_personal_care_items, available_showers, available_shelter, available_transportation_assistance, ST_X(the_geom) lon, ST_Y(the_geom) lat FROM '+table_name+' WHERE cartodb_id='+cdbid+'';
 							uiActions(sql_get);
 
@@ -540,39 +580,6 @@ function main() {
 					$('#nearby').hide();
 
 				}				
-
-			});
-
-			$('#listlength').click(function(){
-
-				var mainlabel = $('#mainlabel');
-				mainlabel.removeClass('search');
-				mainlabel.removeClass('point');
-				mainlabel.removeClass('expand');
-				mainlabel.removeClass('list');
-				mainlabel.addClass('expand');
-				$('lightbox').html('');
-				var height = $('mast').css('height');
-				$('lightbox').css('height', height);
-				$('#mainlabel').css('width',  'auto');
-				$('#services').show();
-				$('rightlist > list').css('display', 'none');
-				$('#escape').remove();
-				$('mast').prepend('<a href="#" id="escape"></a>');
-				$('#escape').click(function(){
-
-					var mainlabel = $('#mainlabel');
-					mainlabel.removeClass('search');
-					mainlabel.removeClass('point');
-					mainlabel.removeClass('expand');
-					mainlabel.removeClass('list');
-					mainlabel.addClass('point');
-					$('mast').css('height', 'auto');
-					var height = $('mast').css('height');
-					$('lightbox').css('height', height);
-					
-				});
-				
 
 			});
 
@@ -604,7 +611,7 @@ function main() {
 					$('#mainlabel').css('width', width+'%');
 					$('mast').css('height', height);
 					$('#escape').remove();
-					$('mast').prepend('<a href="#" id="escape"></a>');
+					$('topbar').prepend('<a href="#" id="escape"></a>');
 
 					$('#escape').click(function(){
 
@@ -624,10 +631,11 @@ function main() {
 				e.preventDefault();
 				return false;
 			});
-		});
-		//return true;
-	};
+			
 
+		});
+		//return false;
+	};
 	//search///////////////////////////////////////////////////////////////////////////////////////
 	$( "#input" ).autocomplete({
 
@@ -688,6 +696,7 @@ function main() {
 		},	
 		minLength: 2
 	});
+
 	
 
 	//functions__________________________________________________________________________________________

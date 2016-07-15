@@ -8,9 +8,9 @@
   	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
-	<!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">-->
-  	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css"/>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<link href="skins/minimal/grey.css" rel="stylesheet">
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css"/>
   	<!--[if lte IE 8]>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
   	<![endif]-->
@@ -29,32 +29,36 @@
 	<why>
 		<searchbox>
 			<buttonbox>
+				<btn style="width: 17.8%"><a href="#" id="all" class="button all"><h4>ALL</h4></a></btn>
 				<btn><a href="#" id="H" class="button H"><h4>housing</h4><img src="images/housing.svg"></img></a></btn>
 				<btn><a href="#" id="M" class="button M"><h4>medical</h4><img src="images/medical.svg"></img></a></btn>
 				<btn><a href="#" id="F" class="button F"><h4>food</h4><img src="images/food.svg"></img></a></btn>
 				<btn><a href="#" id="B" class="button B"><h4>travel</h4><img src="images/travel.svg"></img></a></btn>
-				<btn><a href="#" id="all" class="button all"><h4>ALL</h4></a>
-					</btn>
+					
 				
 			</buttonbox>
+			<a href="#" id="login"><p style="width: auto; display: inline-block; float: left; margin: 4px 0 0 0">+</p><h4 style=" margin: 0; font-size: 10px; line-height: 29px; width: auto; display: inline-block; float: left">new</h4></a>
 
 		    	<input id="input" type="text" name="search" placeholder="search" />  	
-				<a href="#" id="login"><h4>ADD MAP FEATURE</h4></a>
 		</searchbox>
 		<div id="mainlabel">
 			<form name="checkform" id="visibleform">
 				<a href="#" id="close"></a>
 					
 				<div id="type"><h3>Primary Emergency Service Type</h3>
-					<fieldset data-role="controlgroup" data-type="vertical">
-						<label for="H"> Housing</label>
-						<input type="radio" name="type" class= "type" id="H" value="H" ><br>
-						<label for="M"> Medical</label>
-						<input type="radio" name="type" class= "type" id="M" value="M" > <br>
-						<label for="F"> Food</label>
-						<input type="radio" name="type" class= "type" id="F" value="F" ><br>
-						<label for="B"> Travel</label>
-						<input type="radio" name="type" class= "type" id="B" value="B" ><br>
+					<fieldset data-role="controlgroup">
+						
+						<input type="radio"  name="iCheck" class= "type" id="H" value="H" />
+						<label for="H" style="display: inline-block"><h2 style="color: #555"> Housing</h2></label><br>
+						
+						<input type="radio"  name="iCheck" class= "type" id="M" value="M" /> 
+						<label for="M" style="display: inline-block"><h2 style="color: #555"> Medical</h2></label><br>
+						
+						<input type="radio"  name="iCheck" class= "type" id="F" value="F" />
+						<label for="F" style="display: inline-block"><h2 style="color: #555"> Food</h2></label><br>
+						
+						<input type="radio"  name="iCheck" class= "type" id="B" value="B" />
+						<label for="B" style="display: inline-block"><h2 style="color: #555"> Travel</h2></label><br><br>
 						<input type="text" name="typeinput" id="typeinput" style="display: none" >
 					</fieldset>
 				</div>
@@ -69,12 +73,12 @@
 			        		<input type="text" class="demo" name="zip" id="zip"  placeholder="ZIP Code"><br>
 			        		<input type="text" class="demo" name="phone" id="phone"  placeholder="Phone Contact"><br>
 			        		<input type="text" class="demo" name="image" id="image" placeholder="Image URL"><br>
-			        		<input type="text" class="demo" name="website" id="website" placeholder="Relevant Link URL"><br>
+			        		<input type="text" class="demo" name="website" id="website" placeholder="Relevant Link URL">
 			        		<input type="geometry" class="demo" name="the_geom" style="display: none" id="the_geom">
-			        		<input type="text" class="demo" name="cdbid" id="cdbid"  style="display: none" placeholder="cdbid"><br>
-			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none">
-			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none">
-			        		<input type="text" class="demo" name="apikey" id="apikey"  style="display: none" placeholder="CartoDB api key" value="e9f63b1eb60017c6d4007471d378ce917560be05">
+			        		<input type="text" class="demo" name="cdbid" id="cdbid"  style="display: none; height: 0" placeholder="cdbid"><br>
+			        		<input type="geometry" class="demo" name="lat" id="lat" style="display: none; height: 0">
+			        		<input type="geometry" class="demo" name="lon" id="lon" style="display: none; height: 0">
+			        		<input type="text" class="demo" name="apikey" id="apikey"  style="display: none; height: 0" placeholder="CartoDB api key" value="e9f63b1eb60017c6d4007471d378ce917560be05">
 
 
 		      			</fieldset>
@@ -83,30 +87,29 @@
 				<div class="ui-field-contain">
 					<fieldset data-role="controlgroup" data-type="vertical"  data-mini="true">
 			    		<legend>Which services do you offer?</legend>
-		      			<label for="available_clothing">Clothing</label>
-		      			<input type="checkbox" name="available_clothing" id="available_clothing" value=""><br>
-		      			<label for="available_computer_access">Computer Access</label>
-		      			<input type="checkbox" name="available_computer_access" id="available_computer_access" value=""><br>
-		      			<label for="available_day_room">Day Room</label>
-		      			<input type="checkbox" name="available_day_room" id="available_day_room" value=""><br>
-		      			<label for="available_dental_services">Dental Services</label>
-		      			<input type="checkbox" name="available_dental_services" id="available_dental_services" value=""><br>
-		      			<label for="available_food_pantry">Food Pantry</label>
-		      			<input type="checkbox" name="available_food_pantry" id="available_food_pantry" value=""><br>
-		      			<label for="available_housing_assistance">Housing Assistance</label>
-		      			<input type="checkbox" name="available_housing_assistance" id="available_housing_assistance" value=""><br>
-		      			<label for="available_meals">Meals</label>
-		      			<input type="checkbox" name="available_meals" id="available_meals" value=""><br>
-		      			<label for="available_medical_services">Medical Services</label>
-		      			<input type="checkbox" name="available_medical_services" id="available_medical_services" value=""><br>
-		      			<label for="available_personal_care_items">Personal Care Items</label>
-		      			<input type="checkbox" name="available_personal_care_items" id="available_personal_care_items" value=""><br>
-		      			<label for="available_showers">Showers</label>
-		      			<input type="checkbox" name="available_showers" id="available_showers" value=""><br>
-		      			<label for="available_shelter">Shelter</label>
-		      			<input type="checkbox" name="available_shelter" id="available_shelter" value=""><br>
-		      			<label for="available_transportation_assistance">Transportation Assistance</label>
-		      			<input type="checkbox" name="available_transportation_assistance" id="available_transportation_assistance" value=""><br>
+		      			<input type="checkbox" name="available_clothing" id="available_clothing" value=""><label for="available_clothing">Clothing</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_computer_access" id="available_computer_access" value=""><label for="available_computer_access">Computer Access</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_day_room" id="available_day_room" value=""><label for="available_day_room">Day Room</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_dental_services" id="available_dental_services" value=""><label for="available_dental_services">Dental Services</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_food_pantry" id="available_food_pantry" value=""><label for="available_food_pantry">Food Pantry</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_housing_assistance" id="available_housing_assistance" value=""><label for="available_housing_assistance">Housing Assistance</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_meals" id="available_meals" value=""><label for="available_meals">Meals</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_medical_services" id="available_medical_services" value=""><label for="available_medical_services">Medical Services</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_personal_care_items" id="available_personal_care_items" value=""><label for="available_personal_care_items">Personal Care Items</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_showers" id="available_showers" value=""><label for="available_showers">Showers</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_shelter" id="available_shelter" value=""><label for="available_shelter">Shelter</label><br>
+		      			
+		      			<input type="checkbox" class="checkbox" name="available_transportation_assistance" id="available_transportation_assistance" value=""><label for="available_transportation_assistance">Transportation Assistance</label><br><br>
 
 	  				</fieldset>
 				</div>
@@ -129,7 +132,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -158,7 +161,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -189,7 +192,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -218,7 +221,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -249,7 +252,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -278,7 +281,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -309,7 +312,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -338,7 +341,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -369,7 +372,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -398,7 +401,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -429,7 +432,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -458,7 +461,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -489,7 +492,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -518,7 +521,7 @@
 								<option value="09:00:00">9:00 am</option>
 								<option value="10:00:00">10:00 am</option>
 								<option value="11:00:00">11:00 am</option>
-								<option value="12:00:00">12:00 am</option>
+								<option value="12:00:00">12:00 pm</option>
 								<option value="13:00:00">1:00 pm</option>
 								<option value="14:00:00">2:00 pm</option>
 								<option value="15:00:00">3:00 pm</option>
@@ -554,7 +557,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <!--<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="icheck.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false&v=3.8"></script>
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
 

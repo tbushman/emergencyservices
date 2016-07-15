@@ -28,7 +28,15 @@ body {
 body::-webkit-scrollbar { 
     display: none; 
 }
-
+/* 
+    Hide the original radios and checkboxes
+    (but still accessible)
+    
+    :not(#foo) > is a rule filter to block browsers
+                 that don't support that selector from
+                 applying rules they shouldn't
+       
+*/
 top {
 
 	width: 100%;
@@ -91,7 +99,7 @@ where {
 	position: absolute;
 	margin: 0;
 	padding: 0;
-	background-color: #EEF4DE;
+	background-color: #222;
 	z-index: 0;
 	-webkit-transform: translateZ(0);
 	overflow: hidden;
@@ -162,7 +170,7 @@ h4 {
 h5 {
 	font-weight: 400;
 	color: #999;
-	font-size: .75em;
+	font-size: .67em;
 	line-height: 12px;
 	margin: .4em 0 .4em 0;
 	}
@@ -237,7 +245,6 @@ searchbox {
 
 	background-color: none;
 	top: 0;
-	margin-left: 46px;
 	right: auto;
 	left: 0;
 	display: inline-block;
@@ -248,6 +255,7 @@ searchbox {
 	height: 62px;
 	margin: 0 0 0 40px;
 	padding: 0;
+	padding-right: 10px;
 	pointer-events: auto;
 
 }
@@ -396,14 +404,16 @@ btn, #visibleform > label {
 
 #link {
 	
-	width: 78%;
+	width: auto;
 	position: relative;
-	margin: 0, auto;
+	margin: 0 auto 5px auto;
+	padding-right: 10px;
+	left: auto;
+	right: 65px;
 	display: inline-block;
-	float: left;
+	float: right;
 	height: 22px;
 	line-height: 22px;
-	margin-bottom: 5px;
 	
 }
 .button {
@@ -556,7 +566,7 @@ a#B.selected {
 	width: auto;
 	float: none;
 	position: fixed;
-	background-color: #222;
+	background-color: #111;
 	background-image: none;
 	overflow-y: hidden;
 	overflow-x: hidden;
@@ -576,20 +586,25 @@ a#B.selected {
 
 #mainlabel.search {
 
-	left: 50px;
+	left: 40px;
 	width: auto;
-	bottom: auto;
+	min-width: 160px;
+	height: auto;
 	margin-bottom: 36px;
 	margin-right: 10px;
 	right: auto;
 	float: none;
-	position: fixed;
-	background-color: #222;
+	position: absolute;
+	top: 72px;
+	bottom: auto;
+	background-color: #111;
 	background-image: none;
 	overflow-y: hidden;
 	overflow-x: hidden;
-	height: 80%;
-	margin-top: 72px;
+	min-height: 250px;
+	max-height: 80%;
+	padding-top: 4px;
+	padding-right: 10px;
 	display: block;
 	pointer-events: none;
 	box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.3);
@@ -842,7 +857,11 @@ info {
 	margin: 0;
 	min-width: 46%;
 	max-width: 49%;
-	height: 100%;
+	height: auto;
+	max-height: 100%;
+	position: relative;
+	top: 0;
+	bottom: 0;
 	margin: 0 0 10px 0;
 	}
 contact {
@@ -905,7 +924,10 @@ where text {
 	max-height: 21%;
 	
 }	
-
+#mainlabel.expand text {
+	
+	margin-bottom: 36px;
+}
 leftlist {
 	display: inline-block;
 	width: 100%;
@@ -927,11 +949,13 @@ rightlist {
 	float: left;
 	padding-bottom: 10px;
 	height: auto;
+	max-height: 120px;
 	top: auto;
 	bottom: 0;
 	position: relative;
 	pointer-events: auto;
 	margin: 0, auto;
+	overflow-y: scroll;
 	}
 here {
 	display: inline-block;
@@ -982,10 +1006,16 @@ there {
 	
 	display: inline-block;
 	overflow-y: scroll;
-	margin: 0 auto;
-	max-height: 90%;
-	position: relative;
+	margin: 0, auto;
+	height: auto;
+	min-height: 200px;
+	max-height: 89%;
+	position: absolute;
+	float: none;
 	width: 100%;
+	top: 11%;
+	bottom: 0;
+	left: 0;
 	pointer-events: auto;
 	padding-left: 10px;
 }	
@@ -1044,7 +1074,7 @@ there {
 
 #login, #launch {
 	
-	width: 18.5%;
+	width: 17.8%;
 	height: auto;
 	display: inline-block;
 	background-color: #333;
@@ -1052,11 +1082,11 @@ there {
 	position: relative;
 	top: 0;
 	right: 0;
-	left: auto;
+	left: 0;
 	bottom: auto;
 	float: left;
-	margin: 0 0 auto 5px;
-	padding-left: 8px;
+	margin: 0;
+	padding-left: 4px;
 }
 
 #visibleform {
@@ -1080,6 +1110,7 @@ there {
 	min-height: 29px;
 	float: left;
 	margin: 0;
+	margin-left: 5px;
 	padding: 0;
 	
 }
