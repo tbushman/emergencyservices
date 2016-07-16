@@ -1,5 +1,3 @@
-
-//$('#geolocate').click(initiate_geolocation); //form submit button
 $('#map').click(function(e){ //click on map to close gallery
 	var mainlabel = $('#mainlabel');
 	mainlabel.removeClass('search');
@@ -28,7 +26,7 @@ $('#submit2').hide();
 $('#visibleform').hide();
 
 
-$('#login').click(function(){
+$(document).on('click', '#login', function(){
 	
 //	
 	initiate_geolocation();
@@ -68,7 +66,7 @@ $('#login').click(function(){
 	mainlabel.removeClass('expand');
 	mainlabel.removeClass('list');
 	$('#visibleform').show();
-	$('#geolocate').show();
+	$('#addmap').show();
 	$('#submit2').hide();
 	$('#close').click(function(){
 
@@ -123,8 +121,9 @@ function main() {
 	    radioClass: 'iradio_minimal-grey',
 	    increaseArea: '20%' // optional
 	});
+
 	
-	$('#geolocate').hide();
+	$('#addmap').hide();
 	$('#visibleform').hide(); 
 	
 	$('#input').show();
@@ -140,7 +139,7 @@ function main() {
 	//return false;
 
 	//return true;
-	$('#geolocate').click(function(){
+	$('#addmap').click(function(){
 
 		var mainlabel = $('#mainlabel');
 		mainlabel.removeClass('search');
@@ -267,6 +266,7 @@ function main() {
 			
 	       	LayerActions[$(this).attr('id')] ();
 		});
+		$('#geolocate').click(initiate_geolocation); //form submit button
 		
 			
 		$('.button#all').click();//Fit bounds of all records
@@ -279,6 +279,67 @@ function main() {
 		mainlabel.append('<here><h1>Emergency Services</h1><h4 style="line-height: 1.5em">If you are adding a new map feature, none of the fields are required, but you will be prompted for your lat/lon location.</h4><h4 style="line-height: 1.5em"> If you are updating an existing entry, please be sure to include hours of operation and selected services at the location you are updating. <b>Empty values will overwrite existing database content.</b></h4><h4 style="line-height: 1.5em">Feature edits require prior map refresh.</h4></here>');	
 	});	
 		
+	function initiate_geolocation() {
+
+		navigator.geolocation.getCurrentPosition(handle_geolocation_query);
+
+	};
+
+	function handle_geolocation_query(position){
+
+		$('lightbox').remove();
+		$('images').remove();
+		$('text').remove();
+		$('mast').remove();
+		$('here').remove();
+		$('there').remove();
+		var mainlabel = $('#mainlabel');
+		mainlabel.removeClass('search');
+		mainlabel.removeClass('point');
+		mainlabel.removeClass('expand');
+		mainlabel.removeClass('list');
+		mainlabel.addClass('point');
+
+		var lat = position.coords.latitude;
+		console.log(lat);
+		var lon = position.coords.longitude;
+		console.log(lon);
+		var geom = $('#the_geom');
+		geom.val(''+lon+','+lat+'');
+		var the_geom = geom.val();
+
+		var latinput = $('#lat');
+		latinput.val(''+lat+'');
+		var loninput = $('#lon');
+		loninput.val(''+lon+'');
+	   	var zoom = map.getZoom(zoom);
+		var latlng = new L.LatLng(lat, lon);
+		console.log(latlng);
+		map.setView(latlng, zoom+1); //zoom to single feature
+
+		var size = zoom*1.5;
+		console.log(size);
+		var resolution = size*20;
+
+		var circle = new L.CircleMarker(latlng, {
+                radius: size,
+                fillColor: "rgba(0,0,0,0)",
+                color: "#999",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.3
+        });
+		
+		map.removeLayer(circle);
+		circle.addTo(map);
+		
+		circle.on('click', function (e, latlon, pxPos, data, layer) {
+			mainlabel.append('<here></a><h3 style="margin: 8px, auto; width: auto; display: inline-block; float: left; padding: 4px">Add Feature? </h3><a href="#" style="width: auto; left: 0; right: 30px; margin: 8px auto 4px 10px; text-align: center; padding: 10px" id="login">YES</a><a href="#" id="escape" style="float: right; position: relative; display: inline-block; margin: 0, auto"></here>');
+			map.removeLayer(circle);
+			//$('#visibleform').find('input[type=text], textarea').val('');
+		});
+		//main();
+	}
 	//#ID actions
 	var LayerActions = { 
 		cdbid: function() { LayerSelect("SELECT * FROM emergency_services WHERE cartodb_id = '"+data.cartodb_id+"'") },
@@ -319,9 +380,9 @@ function main() {
 		   	var zoom = map.getZoom(zoom);
 			var size = zoom*1.5;
 			console.log(size);
+			var resolution = size*20;
 			var latlong = new L.LatLng(lat, lon);
 			console.log(latlong);
-			var resolution = size*20;
 
 			map.setView(latlong, zoom+1); //zoom to single feature
 
@@ -447,7 +508,7 @@ function main() {
 				mainlabel.removeClass('expand');
 				mainlabel.removeClass('list');
 				$('#visibleform').show();
-				$('#geolocate').hide();
+				$('#addmap').hide();
 				$('#submit2').show();
 				$(document).on('click', '#close',function(){
 

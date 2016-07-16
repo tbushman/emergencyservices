@@ -401,6 +401,33 @@ btn, #visibleform > label {
 	
 	
 }
+#geolocate {
+	
+	width: 26px;
+	height: 26px;
+	margin: 0, auto;
+	margin-bottom: 5px;
+	display: inline-block;
+	position: absolute;
+	float: left;
+	top: 72px;
+	left: 0;
+	right: auto;
+	bottom: auto;
+	pointer-events: auto;
+	background: 
+    linear-gradient(
+      rgba(0, 0, 0, 0), 
+      rgba(0, 0, 0, 0)
+    ),
+    url("images/geolocate.svg");
+    background-color: #fff;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	z-index: 1;
+	-webkit-transform: translateZ(0);		
+	
+}
 
 #link {
 	
