@@ -1,0 +1,8 @@
+extends layout
+
+block content
+	script.
+		// Use local storage to keep track of the user's token and id.
+		localStorage.setItem('userId', '#{user.id}')
+		
+		window.location.href = '/';

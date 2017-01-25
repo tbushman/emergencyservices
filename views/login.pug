@@ -1,0 +1,21 @@
+extends layout
+block page
+	- var menu = 'login'
+block content
+	div.ms-Grid
+		div.ms-Grid-row
+			div.ms-Grid-col.ms-u-mdPush1.ms-u-md9.ms-u-lgPush1.ms-u-lg6
+				p.ms-font-xl Enter username and password
+				form(enctype="multipart/form-data", method="POST", action="/login")
+					div.ms-TextField
+						label.ms-Label Username
+						input.ms-TextField-field(type="text", name="username")
+					div.ms-TextField
+						label.ms-Label Password
+						input.ms-TextField-field(type="password", name="password")
+					p
+					button.ms-Button.ms-Button--primary(type="submit", ariaDescription="Log in")
+						span.ms-Button-label Log in
+				p.ms-font-xl First time here?
+				a.ms-Button.ms-Button--primary(href="/register", role="button", ariaDescription="Register") 
+					span.ms-Button-label Register

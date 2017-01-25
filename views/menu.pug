@@ -1,0 +1,44 @@
+if (menu === 'profile' || menu === 'home')
+	#menu
+		li
+			input#mySearch.catchphrase(type="search", placeholder="search")
+			a(href="#", title="Menu")
+				img(src="http://pu.bli.sh/images/menu_button.svg")
+
+			div#dropdown
+				a.drop.ms-Grid-col.ms-u-sm12#contact(href="/") 
+					span.ms-font-l Home
+				if (loggedin)
+					a.drop.ms-Grid-col.ms-u-sm12#addfeature(href="/api/addfeature/"+zoom+"/"+lat+"/"+lng+"") 
+						span.ms-font-l Add Feature
+					a.drop.ms-Grid-col.ms-u-sm12#logout(href="/logout") 
+						span.ms-font-l Log out
+					
+				else
+					a.drop.ms-Grid-col.ms-u-sm12#cv(href="/login") 
+						span.ms-font-l Login
+					a.drop.ms-Grid-col.ms-u-sm12#gallery(href="/register") 
+						span.ms-font-l Register
+		
+	script(type="text/javascript").
+		$(document).on('change', '#mySearch', function(e){
+			e.preventDefault();
+			$('.searchbox').slideUp(100);
+			$('.searchbox').remove();
+			var term = $(e.target).val();
+			console.log(term)
+			$.get('/search/'+term+'').done(function(response){
+				console.log(response)
+				
+				$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
+				if (response == 'none') {
+					$('.searchbox').slideDown(200);
+					$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No pu.bli.sher by that name</p>')
+				}
+				for (var i in response) {
+					$('.searchbox').slideDown(200);
+					$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/'+response[i].username+'"><span class="ms-font-l">'+response[i].username+'</span></a>')
+				}
+			})
+		})
+		

@@ -1,0 +1,33 @@
+doctype html
+html
+	head
+		title= appTitle
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		link(rel="stylesheet", href="/stylesheets/jquery-ui.min.css")
+		link(rel="stylesheet", href="/stylesheets/leaflet.css")
+		link(rel="stylesheet", href="/stylesheets/fabric.css")
+		link(rel="stylesheet", href="/stylesheets/fabric.components.css")
+		link(rel="stylesheet" href="/scripts/pickadate/default.css")
+		link(rel="stylesheet" href="/scripts/pickadate/default.date.css")
+		link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
+		link(rel="stylesheet", href="/stylesheets/styles.css")
+		script(type="text/javascript", src="/scripts/jquery.min.js")
+		script(type="text/javascript", src="/scripts/jquery-ui.min.js")
+		script(type="text/javascript", src="/scripts/leaflet.js")
+		script(type="text/javascript", src="/scripts/d3.v3.min.js")
+		script(type="text/javascript", src="/scripts/fabric.min.js")
+		script(type="text/javascript", src="/scripts/pickadate/picker.js")
+		script(type="text/javascript", src="/scripts/pickadate/picker.date.js")
+		script(type="text/javascript", src="/scripts/pickadate/picker.time.js")
+		script(type="text/javascript", src="/scripts/Dropdown.js")
+		script(type="text/javascript", src="/scripts/navbar.js")
+		script(type="text/javascript", src="/scripts/Panel.js")
+	body
+		block page
+		
+		block header
+			include menu.pug
+		block content
+		a#publish_logo(href="/home" target="_blank")
+			img(src="/images/publish_logo.svg")
+			

@@ -1,0 +1,453 @@
+extends layout
+block page
+	- var menu = 'home'
+	- var menudata = data[userindex]
+block content
+	- var zfactor = 0.15 * zoom;
+	
+	if (infowindow)
+		include gallery.pug
+		
+	#map
+	
+	
+	if (infowindow && infowindow !== 'new' && infowindow !== 'edit')
+		div.ms-Overlay.ms-Overlay--dark.js-togglePanel
+		
+	script(type="text/javascript").		
+
+		$('#input_date1, #input_date2').pickadate({
+			selectYears: 80,
+			selectMonths: true,
+			onOpen: function() {
+				scrollIntoView( this.$node )
+			}
+		})
+		function scrollIntoView( $node ) {
+			$('html,body').animate({
+				scrollTop: ~~$node.offset().top - 60
+			})
+		}
+		$('.list > .ms-Panel-main').css({display: 'none'})
+		$('.list').removeClass('is-open')
+		$('.list').css({display: 'none'})
+		$('#dropdown').slideUp(100); 
+		$('#menu').removeClass('selected');
+	
+		$.fn.Panel = function () {
+		    return this.each(function () {
+				var $panel = $(this);
+				var $panelMain = $panel.find("#mainpanel");
+				$panelMain.css({display: "block"});
+				$panel.addClass("is-open");
+				$panelMain.on("animationend webkitAnimationEnd MSAnimationEnd", function(event) {
+					if (event.originalEvent.animationName === "fadeOut") {
+						$(this).css({display: "none"});
+						$panelMain.css({display: "none"});
+						$('.list > .ms-Panel-main').css({display: 'none'})
+						$('.list').removeClass('is-open')
+						$('.list').css({display: 'none'})
+						$('.js-togglePanel').remove()
+					}
+				});
+				$('.js-togglePanel').click(function(){
+					console.log('clicked shadow')
+					$panel.toggleClass("is-open");
+					$panelMain.css({display: "none"});
+					$('.list > .ms-Panel-main').css({display: 'none'})
+					$('.list').removeClass('is-open')
+					$('.list').css({display: 'none'})
+					$('.js-togglePanel').remove()
+				})
+				$('#closepanel').click(function(){
+					$panel.toggleClass("is-open");
+					$panelMain.css({display: "none"});
+					$('.js-togglePanel').remove()
+				})
+			});
+		};
+		if ($.fn.Panel) {
+		  $('.ms-Panel').Panel();
+		}
+		$(document).on('click', '#menu > li > a', function (e) { 
+			e.preventDefault()
+
+			if ($('#menu').hasClass('selected')) {
+
+		        $('#dropdown').slideUp(100); 
+		        $('#menu').removeClass("selected");
+
+		    } 
+			else 
+			{
+		        $('#menu').addClass('selected');
+				$('#dropdown').slideDown(200);
+				$('.drop').slideDown(200)
+		        $('.username').css('z-index', 9999999);
+			}
+
+			e.stopPropagation();
+		});
+
+		var map;
+		
+		map = new L.map('map', { 
+		  	zoomControl: true,
+		  	center: [#{lat}, #{lng}], 
+		  	zoom: #{zoom},
+			minZoom: 2,
+		  	maxZoom: 18
+		});
+		var options3 = {
+			attribution: 'Map tiles by <a href="http://mapbox.com/">Mapbox</a><a href="http://cartodb.com/attributions"</a>'
+		};
+		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); 
+
+		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); 
+		var featurePane = map.createPane('featurePane');
+		featurePane.style.zIndex = 20000;
+
+		var MyControl = L.Control.extend({
+		    options: {
+		        position: 'topright'
+		    },
+
+		    onAdd: function (map) {
+		        var container = L.DomUtil.create('div', 'ms-Panel ms-Panel--small list')
+				var shadow = L.DomUtil.create('div', 'ms-Overlay ms-Overlay--dark js-togglePanel')
+				var content = L.DomUtil.create('div', 'ms-Panel-main ms-Grid')
+				var inner = L.DomUtil.create('div', 'ms-Grid-row ms-Panel-contentInner')
+				
+				content.append(inner);
+				container.append(shadow);
+				container.append(content);
+		        return container;
+		    }
+		});
+		map.addControl(new MyControl());
+		map.dragging.enable();
+		map.touchZoom.enable();
+		map.doubleClickZoom.enable();
+		map.scrollWheelZoom.enable();
+		map.boxZoom.enable();
+		map.keyboard.enable();
+		if (map.tap) map.tap.enable();
+		document.getElementById('map').style.cursor='grab';
+		
+		
+		var datalength = #{data.length}
+		console.log(datalength)
+
+		$.getJSON('/mydata/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
+
+			function onEachFeature(feature, latlng) {
+
+				var cut = feature.geometry.coordinates[0];
+				feature.geometry.coordinates.splice(0, 1);
+				feature.geometry.coordinates.push(cut)
+
+			}
+			L.geoJSON(data, {
+			    onEachFeature: onEachFeature,
+				pointToLayer: function (feature, latlng) {
+					var fillColor = "#BAD80A"
+					/*console.log(feature.properties._id)
+					if (feature.properties.type === i) {
+						fillColor = "#F11810"
+					} else {
+						fillColor = "#BAD80A"
+					}*/
+					var geojsonMarkerOptions = {
+					    radius: 8,
+					    fillColor: fillColor,
+					    color: "#fff",
+					    weight: 2,
+					    opacity: 1,
+					    fillOpacity: 0.8,
+						className: feature._id
+					};
+					return L.circleMarker(latlng, geojsonMarkerOptions);
+				}
+			}).addTo(map);
+			
+		})
+		var lMarker;
+
+		if (window.location.pathname.split('/')[2] !== 'addfeature' && window.location.pathname.split('/')[2] !== 'editcontent') {
+			
+			lMarker = L.marker([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}]).addTo(map);
+			
+		} else {
+			lMarker = L.marker([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}], {draggable: true}).addTo(map);
+			
+		}
+		map.setView([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}])
+					
+		map.on('zoomend', function(e){
+			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent') {
+				return false;
+			}
+			
+			zoom = map.getZoom();
+			var center = map.getCenter()
+			var lat = center.lat;
+			var lng = center.lng;
+			$.post('/zoom/'+zoom+'/'+lat+'/'+lng+'', function(data){
+				window.location.href = '/'+data
+			})
+		})
+
+		$(document).on('click', '.leaflet-interactive', function(e){
+			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
+				lMarker.on('dragend', function(event){
+					var marker = event.target;
+				    var position = marker.getLatLng();
+					console.log(position);
+					marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+					map.panTo(new L.LatLng(position.lat, position.lng))
+					$('form > #lat').val(position.lat)
+					$('form > #lng').val(position.lng)
+				});
+			} else {
+				zoom = map.getZoom();
+				var center = map.getCenter()
+				var lat = center.lat;
+				var lng = center.lng;
+				var d = $(this).attr('d').split('a')[0];
+				var dxm = d.split(',')[0]
+				var dx = parseInt(dxm.replace('M', ''), 10);
+				var dy = parseInt(d.split(',')[1], 10);
+				var rangex = [dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5];
+				var rangey = [dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5];
+				
+				var grid = [[]];
+				for (var x = 0; x < rangex.length; x++) {
+					grid[x] = [];
+					for (var y = 0; y < rangey.length; y++) {
+						grid[x][y] = 'M' + rangex[x] + ',' + rangey[y]
+					}
+				}
+				console.log(rangex, rangey, grid)
+				var that = $(document).find($("path[d^='"+d+"']"))
+				console.log(d, that)
+				var list = 0;
+				for (var i in grid) {
+					for (var j in grid[i]) {
+						var indexes = []
+						for (var k = 0; k < $('#map').find($("path[d^='"+grid[i][j]+"']")).length; k++) {
+							if ($('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class') !== undefined) {
+								list++;
+								var classi = $('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class');
+								var id = classi
+								$.ajax({
+									url: '/list/'+id+'/'+zoom+'/'+lat+'/'+lng+'',
+									processData: false,
+									contentType: false,
+									type: 'POST',
+									success: function(data){
+										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/6/null/null" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
+										map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
+										lMarker.remove()
+									}
+								});
+							} else {
+
+							}
+
+						}
+
+					}												
+				}
+				if (list > 1) {
+					console.log(list)
+					$('.list').css({display: 'block'})
+					$('.list > .ms-Panel-main').css({display: 'block'})
+					$('.list').addClass("is-open");
+					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s">'+list+' features nearby:</p>');
+					map.dragging.disable();
+					map.touchZoom.disable();
+					map.doubleClickZoom.disable();
+					map.scrollWheelZoom.disable();
+					map.boxZoom.disable();
+					map.keyboard.disable();
+					if (map.tap) map.tap.disable();
+					document.getElementById('map').style.cursor='default';
+					$('.list > .js-togglePanel').css('pointer-events', 'auto')
+
+
+				} else {
+					var id = $(this).attr('class').split(' ')[0]
+
+					console.log(id)
+
+					$.post('/focus/'+id+'/'+6+'/'+lat+'/'+lng+'', function(){
+						window.location.href = '/focus/'+id+'/'+6+'/'+lat+'/'+lng+''
+					})
+				}
+				
+			}
+		})
+		$(document).on('click', '.list > .js-togglePanel', function(){
+			$('.list > .ms-Panel-main').css({display: 'none'})
+			$('.list').removeClass('is-open')
+			$('.list').css({display: 'none'})
+			$('.list > .ms-Grid > .ms-Panel-contentInner').html('')
+		})
+		$(document).on('click', '#editform', function(){
+			if ($('#formshow').css('display') === 'none') {
+				$('#formshow').css('display', 'block');
+				$('#editform > span').html('Hide Feature details')
+			} else {
+				$('#formshow').css('display', 'none');
+				$('#editform > span').html('Show Feature details')
+			}
+		})
+		$(document).on('click', '#deletefeature', function(){
+
+			if ($('#deletefeature span').css('display') === 'block') {
+				$(this).attr("href", "/api/deletefeature/"+#{id}+"");
+			} else {
+				$('#deletefeature span').css('display', 'block')
+			}
+		})
+		$(document).on('focus', 'textarea', function(){
+			var text = $(this).attr('placeholder');
+			$(this).val(text)
+			$(this).css('max-width', '100%')
+		})
+
+		var uploadurl;
+		var index;
+		var img;
+		
+		
+		$(document).on('change', '#media', function(e){
+			e.preventDefault();
+
+			if (window.location.pathname.split('/')[2] === 'addfeature') {
+				id = #{id} + 1
+			} else {
+				id = #{id}
+			}
+			$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="ms-Grid-row"><img id="return"></img><input type="hidden" id="inputthumb" name="thumb"></input><input type="hidden" id="inputimg" name="img"></input></div>')
+			setTimeout(function(){
+				processImage()	
+			}, 200)
+					
+		});
+
+		function processImage() {
+			
+		    var dataurl = null;
+		    var filesToUpload = document.getElementById('media').files;
+		    var file = filesToUpload[0];
+			var imagefile = file.type;
+			console.log(file.name)
+			var imageTypes= ["image/jpeg","image/png","image/jpg"];
+			if(imageTypes.indexOf(imagefile) == -1) {
+				$("#info").html("<span class='msg-error'>Please Select A valid Image File</span><br /><span>Only jpeg, jpg, and png types allowed</span>");
+				return false;
+				
+			} else {
+				img = document.getElementById('return');
+			    var reader = new FileReader();
+				
+			    reader.onloadend = function(e) {
+					var maxWidth = 1200 ;
+		        	var maxHeight = 1200 ;
+					img.src = e.target.result;
+			        img.onload = function () {
+
+						$('#media').val('')
+						var w = img.width;
+						var h = img.height;
+						var can = $('#canvas')[0];
+						checkImage(can, w, h, maxWidth, maxHeight)
+			        }
+				}
+			    reader.readAsDataURL(file);
+			}
+		}
+		
+		function reSize(can, w, h, maxWidth, maxHeight){
+			can.height = h*0.75;
+			can.width = w*0.75;
+
+			var can2 = document.createElement('canvas');
+			can2.width = w*0.75;
+		    can2.height = h*0.75;
+		    var ctx2 = can2.getContext('2d');
+
+		    ctx2.drawImage(img, 0, 0, w*0.75, h*0.75);
+			var ctx = can.getContext('2d');
+			ctx.drawImage(can2, 0, 0, w*0.75, h*0.75, 0, 0, w*0.75, h*0.75);
+			w = w*0.75;
+			h = h*0.75;
+			img.width = w;
+			img.height = h;
+			checkImage(can, w, h, maxWidth, maxHeight)
+		}
+		function checkImage(can, w, h, maxWidth, maxHeight) {
+			
+			
+			if (h > maxHeight) {
+				console.log('half')
+				reSize(can, w, h, maxWidth, maxHeight)
+			} else {
+				if (maxHeight === 200) {
+					drawThumb(can, w, h)
+				} else {
+					drawImage(can, w, h)
+				}						
+			}						
+		}	
+			
+		function drawImage(can, w, h) {
+			can.height = h;
+			can.width = w;
+			var ctx = can.getContext('2d');
+			ctx.drawImage(img, 0, 0, w, h);
+
+			can.toBlob(function(blob) {
+				var fd = new FormData();
+
+				fd.append("img", blob);
+				
+				uploadurl = '/api/uploadmedia/'+id+'/jpeg';
+
+				console.log(blob)
+				console.log(uploadurl)
+				$.ajax({
+				    url: uploadurl,
+				    type: 'POST',
+				    data: fd,
+					processData: false,
+					contentType: false,
+				    success: function(response) { 
+						img.src = response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '');
+				        img.onload = function () {
+							$('#inputimg').val(response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', ''))
+							var can = $('#canvas')[0];
+							var maxWidth = 200 ;
+				        	var maxHeight = 200 ;								
+							var w = img.width;
+							var h = img.height;
+							checkImage(can, w, h, maxWidth, maxHeight)
+				        }
+					}
+				})
+			}, 'image/jpeg', 0.95);
+		}
+		function drawThumb(can, w, h) {
+			can.height = h;
+			can.width = w;
+			var ctx = can.getContext('2d');
+			ctx.drawImage(img, 0, 0, w, h);
+			dataurl = can.toDataURL("image/jpeg", 0.8);
+			setTimeout(function(){
+				
+				$('#inputthumb').val(dataurl.replace(/data:image\/jpeg;base64,/, ''))
+								
+			}, 100)
+		}
+		

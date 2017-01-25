@@ -1,0 +1,141 @@
+if (infowindow === 'new')
+	div(class="ms-Panel ms-Panel--small")
+		div.ms-Panel-main.ms-Grid#mainpanel
+			div.ms-Grid-row.ms-Panel-contentInner
+				a#closepanel
+					i.ms-Icon.ms-Icon--x
+				div.ms-Grid-col.ms-u-sm12
+					form#form(enctype="multipart/form-data", method="POST", action="/api/addcontent/"+(id+1)+"", style="margin-bottom: 50px")
+						div.ms-TextField
+							label.ms-Label Label
+							input.ms-TextField-field(type="text", name="label")
+						div.ms-TextField
+							label.ms-Label Address
+							input.ms-TextField-field(type="text", name="address1")
+						div.ms-TextField
+							label.ms-Label Phone
+							input.ms-TextField-field(type="text", name="phone")
+						div.ms-TextField
+							label.ms-Label Description
+							textarea.ms-TextField-field(type="text", name="description")
+						div.ms-TextField
+							label.ms-Label Link
+							input.ms-TextField-field(type="text", name="website")
+						p.ms-font-l Add Up to three images
+						div.ms-Grid-row
+							div.ms-Grid-col.ms-u-xl12
+								input.ms-Button#media(type="file")
+							div.ms-Grid-col.ms-u-xl12#appendcanvas
+								
+															
+						input(type="hidden", id="lat", name="lat", value= lat)
+						input(type="hidden", id="lng", name="lng", value= lng)
+						
+						p.ms-font-s You may add more later
+						#info.ms-font-s #{info}
+						p
+						button.ms-Button.ms-Button--primary(type="submit", ariaDescription="Submit Feature to map")
+							span.ms-Button-label Submit
+					
+if (infowindow === 'edit')
+	div(class="ms-Panel ms-Panel--small")
+		div.ms-Panel-main.ms-Grid#mainpanel
+			div.ms-Grid-row.ms-Panel-contentInner
+				div.ms-Grid-col.ms-u-sm12
+					div#info.ms-font-s
+					form#form(enctype="multipart/form-data", method="POST", action="/api/editcontent/"+id+"", style="margin-bottom: 50px")
+						a#editform.ms-Button(href="#", role="button")
+							span.ms-Button-label Edit Feature details
+						
+						#formshow(style="display: none")
+							div.ms-Grid-col.ms-u-sm12.ms-TextField
+								label.ms-Label Label
+								input.ms-TextField-field(type="text", name="title", value= doc.properties.label)
+							div.ms-Grid-col.ms-u-sm12.ms-TextField
+								label.ms-Label Address
+								input.ms-TextField-field(type="text", name="label", value= doc.properties.address1)
+							div.ms-Grid-col.ms-u-sm12.ms-TextField
+								label.ms-Label Phone
+								input.ms-TextField-field(type="text", name="place", value= doc.properties.phone)
+							div.ms-Grid-col.ms-u-sm12.ms-TextField
+								label.ms-Label Description
+								textarea.ms-TextField-field(type="text", name="description", value= doc.properties.description, placeholder= doc.properties.description)
+							div.ms-Grid-col.ms-u-sm12.ms-TextField
+								label.ms-Label Link
+								input.ms-TextField-field(type="text", name="website", value= doc.properties.website)
+						
+						div.ms-Grid-col.ms-u-sm12
+							p.ms-font-xl #{doc.properties.label}	
+						a#closepanel
+							i.ms-Icon.ms-Icon--x
+						div.ms-Grid-col.ms-u-sm12
+							p.ms-font-s.ms-fontWeight-semibold #{doc.properties.city} 
+								br
+								span.ms-font-s.ms-fontWeight-light #{doc.properties.address} 
+							p.ms-font-xs #{doc.properties.description}
+							p
+							div.ms-Grid-col.ms-u-sm12.spacer#resize
+								a.ms-ListItem-image(href="#", id= item.index, name= doc._id)
+									img(src= item.thumb)
+								input(type="hidden", name="thumb"+i+"", value= doc.thumb)
+								
+								input(type="hidden", name="img"+i+"", value= doc.image)
+								
+							p.ms-font-s Add media
+							div.ms-Grid-col.ms-u-xl12
+								input.ms-Button#media(type="file")
+							div.ms-Grid-col.ms-u-xl12#appendcanvas
+								
+										
+							input(type="hidden", id="lat", name="lat", value= doc.geometry.coordinates[1])
+							input(type="hidden", id="lng", name="lng", value= doc.geometry.coordinates[0])
+						div.ms-Grid-row.spacer
+						div.ms-Grid-row.spacer
+							button.ms-Button.ms-Button--primary.ms-Grid-col.ms-u-sm12.block(type="submit", ariaDescription="Submit Feature to map")
+								span.ms-Button-label Submit
+						
+					div.ms-Grid-row
+						a.ms-Button.ms-Button--alert.ms-Grid-col.ms-u-sm12#deletefeature(href="#", role="button")
+							span.ms-Button-label Delete Feature
+							span.ms-font-s(style="display: none") This cannot be undone. Continue?
+					div.ms-Grid-row.spacer
+
+if (infowindow === 'doc')
+	if (img && img !== undefined)
+		- var size = 'large'
+		- var append = 'ms-Grid-col ms-u-sm12 ms-u-lg8'
+		- var sidepanel = 'ms-Grid-col ms-u-sm12 ms-u-lg4'
+	else
+		- var size = 'small'
+		- var append = 'ms-Grid-col ms-u-sm12'
+		- var sidepanel = 'ms-Grid-col ms-u-sm12'
+	div(class="ms-Panel ms-Panel--"+ size + "")
+		div.ms-Panel-main.ms-Grid#mainpanel
+			div.ms-Grid-row.ms-Panel-contentInner
+				if (img)
+					if (type === 'image')
+						div#append(class= append)
+							img(src= img)
+					else
+						div#append(class= append, style="height: 100%")
+							embed(src= img, width="100%", height="100%")
+				div.ms-Grid-row#sidepanel(class= sidepanel)
+					div.ms-Grid-col.ms-u-sm12
+						p.ms-font-xl #{doc.properties.label} 
+					
+					div.ms-Grid-col.ms-u-sm12
+						p.ms-font-s.ms-fontWeight-semibold #{doc.properties.city} 
+							br
+							span.ms-font-s.ms-fontWeight-light #{doc.properties.address1} 
+
+						p.ms-font-xs #{doc.properties.phone}
+				if (loggedin)
+					div.ms-Grid-col.ms-u-sm1
+						div.ms-Grid-row
+							a.ms-Grid-col.ms-u-sm10(href="/api/editcontent/"+index+"")
+								i.ms-Icon.ms-Icon--editBox
+							a#closepanel
+								i.ms-Icon.ms-Icon--x
+				else
+					a#closepanel
+						i.ms-Icon.ms-Icon--x

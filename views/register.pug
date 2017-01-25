@@ -1,0 +1,28 @@
+extends layout
+block page
+	- var menu = 'login'
+block content
+	div.ms-Grid
+		div.ms-Grid-row
+			div.ms-Grid-col.ms-u-mdPush1.ms-u-md9.ms-u-lgPush1.ms-u-lg6
+				
+				p.ms-font-xl Already Registered?
+				a.ms-Button.ms-Button--primary(href="/login", role="button", ariaDescription="Log in")
+					span.ms-Button-label Log in
+				hr
+				p.ms-font-xl Register
+
+				form#form(enctype="multipart/form-data", method="POST", action="/register", style="margin-bottom: 50px")
+					div.ms-TextField
+						label.ms-Label Username
+						input.ms-TextField-field(type="text", name="username", maxlength="40")
+					div.ms-TextField
+						label.ms-Label Email
+						input.ms-TextField-field(type="email", name="email")
+					div.ms-TextField
+						label.ms-Label Password
+						input.ms-TextField-field(type="password", name="password")
+					p
+					button.ms-Button.ms-Button--primary(type="submit", ariaDescription="Register")
+						span.ms-Button-label Register
+				#info #{info}
