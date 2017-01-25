@@ -1,4 +1,27 @@
 .env
+.npm
+etc
+mongo
+tmp
+node-cmd.cmd
+node-env.cmd
+node.exe
+node.lib
+npm
+npm-debug.log
+npm.cmd
+semver
+semver.cmd
+uglifyjs
+uglifyjs.cmd
+mkdirp
+mkdirp.cmd
+mime
+mime.cmd
+cleancss
+cleancss.cmd
+acorn
+acorn.cmd
 
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
