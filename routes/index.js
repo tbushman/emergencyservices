@@ -307,8 +307,7 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 				})
 			}			
 		})						
-	})
-	
+	})	
 })
 
 router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
@@ -347,7 +346,7 @@ router.all('/search/:term', function(req, res, next){
 
 //WIP convert import hours of operation
 function convertHoO(str) {
-	if (str.trim() === 'Closed' || str.trim() === 'Call' || str.trim() === '24 hours') {
+	if (str.trim() === 'Closed' || str.trim() === 'Call' || str.trim() === '24 hours' || str === '') {
 		if (str.trim() === 'Closed') {
 			return {
 				begin: null,
@@ -369,40 +368,152 @@ function convertHoO(str) {
 				allday: true,
 				closed: null
 			}
+		} else if (str === '') {
+			return {
+				begin: null,
+				end: null,
+				allday: null,
+				closed: null
+			}
 		}
 		
 	} else {
+		var beg;
+		var beg_hr;
+		var beg_mn;
+		var endd;
+		var end_hr;
+		var end_mn;
 		if (str.split(';')[1] !== undefined) {
-			var hours = str.split(';')[0]
-			var begin = hours.split('-')[0]
-			var end = hours.split('-')[1]
-			return {
-				begin: begin,
-				end: end,
-				allday: false,
-				closed: null
+			var hours = str.split(';')[0];
+			if (hours.split('-')[0].split('a')[1] !== undefined) {
+				beg = hours.split('-')[0].replace('am', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10);
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10);
+				}
+			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
+				beg = hours.split('-')[0].replace('pm', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10) + 12;
+				}
+			}
+			if (hours.split('-')[1].split('a')[1] !== undefined) {
+				end = hours.split('-')[1].replace('am', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10);
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10);
+				}
+			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
+				end = hours.split('-')[1].replace('pm', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10) + 12;
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10) + 12;
+				}
 			}
 		} else if (str.split('_')[1] !== undefined) {
 			var hours = str.split('_')[0]
-			var begin = hours.split('-')[0]
-			var end = hours.split('-')[1]
-			return {
-				begin: begin,
-				end: end,
-				allday: false,
-				closed: null
+			if (hours.split('-')[0].split('a')[1] !== undefined) {
+				beg = hours.split('-')[0].replace('am', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10);
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10);
+				}
+			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
+				beg = hours.split('-')[0].replace('pm', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10) + 12;
+				}
+			}
+			if (hours.split('-')[1].split('a')[1] !== undefined) {
+				end = hours.split('-')[1].replace('am', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10);
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10);
+				}
+			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
+				end = hours.split('-')[1].replace('pm', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10) + 12;
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10) + 12;
+				}
 			}
 		} else if (str.split('&')[1] !== undefined) {
-			var hours = str.split('&')[0].trim()
-			var begin = hours.split('-')[0]
-			var end = hours.split('-')[1]
-			return {
-				begin: begin,
-				end: end,
-				allday: false,
-				closed: null
+			var hours = str.split('&').join('-');
+			if (hours.split('').indexOf('a') !== -1) {
+				beg = hours.split('-')[0].replace('a', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10);
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10);
+				}
+			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
+				beg = hours.split('-')[0].replace('p', '');
+				if (beg.split(':')[1] !== undefined) {
+					beg_mn = parseInt(beg.split(':')[1], 10);
+					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
+				} else {
+					beg_mn == 0;
+					beg_hr = parseInt(beg, 10) + 12;
+				}
+			}
+			if (hours.split('-')[1].split('a')[1] !== undefined) {
+				end = hours.split('-')[1].replace('am', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10);
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10);
+				}
+			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
+				end = hours.split('-')[1].replace('pm', '');
+				if (end.split(':')[1] !== undefined) {
+					end_mn = parseInt(end.split(':')[1], 10);
+					end_hr = parseInt(end.split(':')[0], 10) + 12;
+				} else {
+					end_mn == 0;
+					end_hr = parseInt(end, 10) + 12;
+				}
 			}
 		}
+		var begin = moment({ hour: beg_hr, minute: beg_mn }).utc().format();
+		var endd = moment({ hour: end_hr, minute: end_mn }).utc().format();
+		return {
+			begin: begin,
+			end: endd,
+			allday: false,
+			closed: null		
+		}
+
 	}
 }
 
@@ -541,7 +652,7 @@ router.get('/api/publish', function(req, res, next){
 			for (var l in data) {
 				datarray.push(data[l])
 			}
-			var loc = datarray[datarray.length-1].geometry.coordinates;
+			var loc = datarray[0].geometry.coordinates;
 			var zoom;
 			var lat;
 			var lng;
@@ -552,20 +663,13 @@ router.get('/api/publish', function(req, res, next){
 				info = 'Refreshed'
 			} else {
 				zoom = 3
-				lat = loc.lat
-				lng = loc.lng
-			}
-			var index;
-			if (req.app.locals.index) {
-				index = req.app.locals.index
-			} else {
-				index = 0
+				lat = loc[1]
+				lng = loc[0]
 			}
 			return res.render('publish', {
 				loggedin: req.app.locals.loggedin,
 				username: req.app.locals.username,
 				id: datarray.length - 1,
-				index: index,
 				zoom: zoom,
 				data: datarray,
 				lng: lng,
