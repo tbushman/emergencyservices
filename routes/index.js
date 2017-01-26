@@ -344,177 +344,144 @@ router.all('/search/:term', function(req, res, next){
 	})
 })
 
-//WIP convert import hours of operation
-function convertHoO(str) {
-	if (str.trim() === 'Closed' || str.trim() === 'Call' || str.trim() === '24 hours' || str === '') {
-		if (str.trim() === 'Closed') {
-			return {
-				begin: null,
-				end: null,
-				allday: null,
-				closed: true
-			}
-		} else if (str.trim() === 'Call') {
-			return {
-				begin: null,
-				end: null,
-				allday: null,
-				closed: null
-			}
-		} else if (str.trim() === '24 hours') {
-			return {
-				begin: null,
-				end: null,
-				allday: true,
-				closed: null
-			}
-		} else if (str === '') {
-			return {
-				begin: null,
-				end: null,
-				allday: null,
-				closed: null
-			}
+function separateHourFromMin(hours, cb) {
+	if (hours === undefined) {
+		return {
+			begin: null,
+			end: null,
+			allday: false,
+			closed: false
 		}
-		
 	} else {
-		var beg;
+		var beg = hours.split('-')[0];
 		var beg_hr;
 		var beg_mn;
-		var endd;
+		var end = hours.split('-')[1];
 		var end_hr;
 		var end_mn;
-		if (str.split(';')[1] !== undefined) {
-			var hours = str.split(';')[0];
-			if (hours.split('-')[0].split('a')[1] !== undefined) {
-				beg = hours.split('-')[0].replace('am', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10);
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10);
-				}
-			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
-				beg = hours.split('-')[0].replace('pm', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10) + 12;
-				}
+
+		if (beg.split('a')[1] !== undefined) {
+			beg = beg.replace('am', '').replace('a', '');
+			if (beg.split(':')[1] !== undefined) {
+				beg_mn = parseInt(beg.split(':')[1].trim(), 10);
+				beg_hr = parseInt(beg.split(':')[0].trim(), 10);
+			} else {
+				beg_mn == 0;
+				beg_hr = parseInt(beg, 10);
 			}
-			if (hours.split('-')[1].split('a')[1] !== undefined) {
-				end = hours.split('-')[1].replace('am', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10);
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10);
-				}
-			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
-				end = hours.split('-')[1].replace('pm', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10) + 12;
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10) + 12;
-				}
-			}
-		} else if (str.split('_')[1] !== undefined) {
-			var hours = str.split('_')[0]
-			if (hours.split('-')[0].split('a')[1] !== undefined) {
-				beg = hours.split('-')[0].replace('am', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10);
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10);
-				}
-			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
-				beg = hours.split('-')[0].replace('pm', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10) + 12;
-				}
-			}
-			if (hours.split('-')[1].split('a')[1] !== undefined) {
-				end = hours.split('-')[1].replace('am', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10);
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10);
-				}
-			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
-				end = hours.split('-')[1].replace('pm', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10) + 12;
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10) + 12;
-				}
-			}
-		} else if (str.split('&')[1] !== undefined) {
-			var hours = str.split('&').join('-');
-			if (hours.split('').indexOf('a') !== -1) {
-				beg = hours.split('-')[0].replace('a', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10);
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10);
-				}
-			} else if ( hours.split('-')[0].split('p')[1] !== undefined) {
-				beg = hours.split('-')[0].replace('p', '');
-				if (beg.split(':')[1] !== undefined) {
-					beg_mn = parseInt(beg.split(':')[1], 10);
-					beg_hr = parseInt(beg.split(':')[0], 10) + 12;
-				} else {
-					beg_mn == 0;
-					beg_hr = parseInt(beg, 10) + 12;
-				}
-			}
-			if (hours.split('-')[1].split('a')[1] !== undefined) {
-				end = hours.split('-')[1].replace('am', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10);
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10);
-				}
-			} else if ( hours.split('-')[1].split('p')[1] !== undefined) {
-				end = hours.split('-')[1].replace('pm', '');
-				if (end.split(':')[1] !== undefined) {
-					end_mn = parseInt(end.split(':')[1], 10);
-					end_hr = parseInt(end.split(':')[0], 10) + 12;
-				} else {
-					end_mn == 0;
-					end_hr = parseInt(end, 10) + 12;
-				}
+		} 
+		if (beg.split('p')[1] !== undefined) {
+			beg = beg.replace('pm', '').replace('p', '');
+			if (beg.split(':')[1] !== undefined) {
+				beg_mn = parseInt(beg.split(':')[1].trim(), 10);
+				beg_hr = parseInt(beg.split(':')[0].trim(), 10) + 12;
+			} else {
+				beg_mn == 0;
+				beg_hr = parseInt(beg, 10) + 12;
 			}
 		}
-		var begin = moment({ hour: beg_hr, minute: beg_mn }).utc().format();
-		var endd = moment({ hour: end_hr, minute: end_mn }).utc().format();
+		if (end.split('a')[1] !== undefined) {
+			end = end.replace('am', '').replace('a', '');
+			if (end.split(':')[1] !== undefined) {
+				end_mn = parseInt(end.split(':')[1].trim(), 10);
+				end_hr = parseInt(end.split(':')[0].trim(), 10);
+			} else {
+				end_mn == 0;
+				end_hr = parseInt(end, 10);
+			}
+		} 
+		if (end.split('p')[1] !== undefined) {
+			end = end.replace('pm', '').replace('p', '');
+			if (end.split(':')[1] !== undefined) {
+				end_mn = parseInt(end.split(':')[1].trim(), 10);
+				end_hr = parseInt(end.split(':')[0].trim(), 10) + 12;
+			} else {
+				end_mn == 0;
+				end_hr = parseInt(end, 10) + 12;
+			}
+		}
+		console.log(beg, end)
+		var begin = moment({ hour: beg_hr, minute: beg_mn });
+		var endd = moment({ hour: end_hr, minute: end_mn });
 		return {
 			begin: begin,
 			end: endd,
 			allday: false,
-			closed: null		
+			closed: false		
 		}
-
 	}
+}
+
+//WIP convert import hours of operation
+function convertHoO(str) {
+	if (str === 'Closed' || str === 'Call' || str === '24 hours' || str === '') {
+		var hours;
+		if (str === 'Closed') {
+			hours = {
+				begin: null,
+				end: null,
+				allday: false,
+				closed: true
+			}
+		} else if (str === 'Call') {
+			hours = {
+				begin: null,
+				end: null,
+				allday: false,
+				closed: false
+			}
+		} else if (str === '24 hours') {
+			hours = {
+				begin: null,
+				end: null,
+				allday: true,
+				closed: false
+			}
+		} else if (str === '') {
+			hours = {
+				begin: null,
+				end: null,
+				allday: false,
+				closed: false
+			}
+		}
+		return hours;
+		
+	} else {
+		
+		if (str.split('-')[1] !== undefined) {
+			var hours;
+			if (str.split(';')[1] !== undefined || str.split('_')[1] !== undefined) {
+				if (str.split(';')[1] !== undefined) {
+					str.split(';').pop();
+					hours = str;
+				} else {
+					str.split('_').pop()
+					hours = str;
+				}
+			} else {
+				hours = str
+			}
+			var result = separateHourFromMin(hours)
+			return result;
+			
+		} else {
+			var hours;
+			if (str.split('&')[1] !== undefined) {
+				hours = str.split('&').join('-');
+			} else
+			if (str.split(';')[1] !== undefined) {
+				hours = str.split(';')[0];
+			} else
+			if (str.split('_')[1] !== undefined) {
+				hours = str.split('_')[0]
+			}
+			var result = separateHourFromMin(hours)
+			return result;
+			
+		}
+	}
+	
 }
 
 function convertAvailableServices(str) {
