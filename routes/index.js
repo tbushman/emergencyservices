@@ -478,10 +478,8 @@ function convertHoO(str) {
 			}
 			var result = separateHourFromMin(hours)
 			return result;
-			
 		}
-	}
-	
+	}	
 }
 
 function convertAvailableServices(str) {
