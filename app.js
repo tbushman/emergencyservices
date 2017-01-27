@@ -74,7 +74,7 @@ app.use('/', routes);
 
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1) // trust first proxy
-	app.use('/publishers', express.static('/var/www/pu/publishers')));
+	app.use('/publishers', express.static('/var/www/pu/publishers'));
 	
 } else {
 	app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
