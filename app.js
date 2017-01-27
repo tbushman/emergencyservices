@@ -62,9 +62,6 @@ var sess = {
 	store: store
 }
 app.use(cookieParser(sess.secret));
-if (app.get('env') === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-}
 // session middleware configuration
 // see https://github.com/expressjs/session
 app.use(session(sess));
@@ -72,8 +69,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
+
 app.use('/', routes);
+
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1) // trust first proxy
+	app.use('/publishers', express.static('/var/www/pu/publishers')));
+	
+} else {
+	app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
+}
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -83,19 +89,6 @@ app.use(function (req, res, next) {
 });
 
 // error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function (err, req, res) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res) {
