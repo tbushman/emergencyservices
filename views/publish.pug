@@ -4,7 +4,7 @@ block page
 	- var menudata = data[userindex]
 block content
 	- var zfactor = 0.15 * zoom;
-	
+
 	if (infowindow)
 		include gallery.pug
 		
@@ -16,9 +16,10 @@ block content
 		
 	script(type="text/javascript").		
 
-		$('#input_date1, #input_date2').pickadate({
-			selectYears: 80,
-			selectMonths: true,
+		$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
+			format: 'h:i A',
+			formatSubmit: 'h:i A',
+			hiddenName: true,
 			onOpen: function() {
 				scrollIntoView( this.$node )
 			}
@@ -62,7 +63,12 @@ block content
 				$('#closepanel').click(function(){
 					$panel.toggleClass("is-open");
 					$panelMain.css({display: "none"});
-					$('.js-togglePanel').remove()
+					$('.js-togglePanel').remove();
+					if (window.location.pathname.split('/')[1] === 'api') {
+						window.location.href = '/api/publish';
+					} else {
+						window.location.href = '/'
+					}
 				})
 			});
 		};
@@ -164,7 +170,7 @@ block content
 					    weight: 2,
 					    opacity: 1,
 					    fillOpacity: 0.8,
-						className: feature._id
+						className: ""+feature._id+""
 					};
 					return L.circleMarker(latlng, geojsonMarkerOptions);
 				}
@@ -172,7 +178,6 @@ block content
 			
 		})
 		var lMarker;
-
 		if (window.location.pathname.split('/')[2] !== 'addfeature' && window.location.pathname.split('/')[2] !== 'editcontent') {
 			
 			lMarker = L.marker([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}]).addTo(map);
@@ -314,8 +319,85 @@ block content
 			var text = $(this).attr('placeholder');
 			$(this).val(text)
 			$(this).css('max-width', '100%')
+		});
+		$(document).on('change', '.ms-TextField-field', function(){
+			var id = $(this).attr('id');
+			if (id.split('-')[1] !== undefined) {
+				var thisid = id.split('-')[1];
+				var day = thisid.split('_')[0];
+				var status = thisid.split('_')[1];
+				switch (status) {
+					case "b":
+						if ($(this).val() === '' && $('#input-'+day+'_e').val() === '') {
+							$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+							$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+							
+						} else {
+							$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+							$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+						}
+						break;
+					case "e":
+						if ($(this).val() === '' && $('#input-'+day+'_b').val() === '') {
+							$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+							$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+							
+						} else {
+							$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+							$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+						}
+						break;
+					default:
+						break;
+				}
+								
+			}
 		})
-
+		$(document).on('click', '.ms-ChoiceField-field', function(e){
+			var that = $(this);
+			var id = that.attr('id');
+			if (id !== undefined) {
+				var day = id.split('_')[0];
+				var status = id.split('_')[1];
+				if (that.siblings('input').hasClass('is-checked')) {
+					that.siblings('input').removeClass('is-checked')
+					that.siblings('input').attr('aria-checked', 'false')
+					that.siblings('input').attr('checked', '')
+					switch (status) {
+						case "all":
+							$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+							$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+							$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+							break;
+						case "closed":
+							$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+							$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+							$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+					    	break;
+						default:
+					    	break;
+					}
+				} else {
+					that.siblings('input').addClass('is-checked')
+					that.siblings('input').attr('aria-checked', 'true');
+					//that.siblings('input').attr('checked', 'checked');
+					switch (status) {
+						case "all":
+							$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+							$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+							$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+							break;
+						case "closed":
+							$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+							$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+							$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+					    	break;
+						default:
+					    	break;
+					}
+				}
+			}
+		})
 		var uploadurl;
 		var index;
 		var img;
@@ -358,7 +440,6 @@ block content
 					img.src = e.target.result;
 			        img.onload = function () {
 
-						$('#media').val('')
 						var w = img.width;
 						var h = img.height;
 						var can = $('#canvas')[0];

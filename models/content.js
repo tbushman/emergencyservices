@@ -2,7 +2,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var Content = new Schema({
-	_id: String,
+	_id: Number,
 	type: String,
 	properties: {
 		label: String,

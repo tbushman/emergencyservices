@@ -344,6 +344,32 @@ router.all('/search/:term', function(req, res, next){
 	})
 })
 
+function convertTime(str, cb) {
+	var str_hr;
+	var str_mn;
+	if (str.split('a')[1] !== undefined || str.split('A')[1] !== undefined) {
+		str = str.replace('am', '').replace('a', '').replace('AM', '');
+		if (str.split(':')[1] !== undefined) {
+			str_mn = parseInt(str.split(':')[1].trim(), 10);
+			str_hr = parseInt(str.split(':')[0].trim(), 10);
+		} else {
+			str_mn == 0;
+			str_hr = parseInt(str, 10);
+		}
+	} 
+	if (str.split('p')[1] !== undefined || str.split('P')[1] !== undefined) {
+		str = str.replace('pm', '').replace('p', '').replace('PM', '');
+		if (str.split(':')[1] !== undefined) {
+			str_mn = parseInt(str.split(':')[1].trim(), 10);
+			str_hr = parseInt(str.split(':')[0].trim(), 10) + 12;
+		} else {
+			str_mn == 0;
+			str_hr = parseInt(str, 10) + 12;
+		}
+	}
+	return moment({ hour: str_hr, minute: str_mn })
+}
+
 function separateHourFromMin(hours, cb) {
 	if (hours === undefined) {
 		return {
@@ -354,55 +380,11 @@ function separateHourFromMin(hours, cb) {
 		}
 	} else {
 		var beg = hours.split('-')[0];
-		var beg_hr;
-		var beg_mn;
 		var end = hours.split('-')[1];
-		var end_hr;
-		var end_mn;
 
-		if (beg.split('a')[1] !== undefined) {
-			beg = beg.replace('am', '').replace('a', '');
-			if (beg.split(':')[1] !== undefined) {
-				beg_mn = parseInt(beg.split(':')[1].trim(), 10);
-				beg_hr = parseInt(beg.split(':')[0].trim(), 10);
-			} else {
-				beg_mn == 0;
-				beg_hr = parseInt(beg, 10);
-			}
-		} 
-		if (beg.split('p')[1] !== undefined) {
-			beg = beg.replace('pm', '').replace('p', '');
-			if (beg.split(':')[1] !== undefined) {
-				beg_mn = parseInt(beg.split(':')[1].trim(), 10);
-				beg_hr = parseInt(beg.split(':')[0].trim(), 10) + 12;
-			} else {
-				beg_mn == 0;
-				beg_hr = parseInt(beg, 10) + 12;
-			}
-		}
-		if (end.split('a')[1] !== undefined) {
-			end = end.replace('am', '').replace('a', '');
-			if (end.split(':')[1] !== undefined) {
-				end_mn = parseInt(end.split(':')[1].trim(), 10);
-				end_hr = parseInt(end.split(':')[0].trim(), 10);
-			} else {
-				end_mn == 0;
-				end_hr = parseInt(end, 10);
-			}
-		} 
-		if (end.split('p')[1] !== undefined) {
-			end = end.replace('pm', '').replace('p', '');
-			if (end.split(':')[1] !== undefined) {
-				end_mn = parseInt(end.split(':')[1].trim(), 10);
-				end_hr = parseInt(end.split(':')[0].trim(), 10) + 12;
-			} else {
-				end_mn == 0;
-				end_hr = parseInt(end, 10) + 12;
-			}
-		}
 		console.log(beg, end)
-		var begin = moment({ hour: beg_hr, minute: beg_mn });
-		var endd = moment({ hour: end_hr, minute: end_mn });
+		var begin = convertTime(beg);
+		var endd = convertTime(end);
 		return {
 			begin: begin,
 			end: endd,
@@ -428,7 +410,7 @@ function convertHoO(str) {
 				begin: null,
 				end: null,
 				allday: false,
-				closed: false
+				closed: true
 			}
 		} else if (str === '24 hours') {
 			hours = {
@@ -442,7 +424,7 @@ function convertHoO(str) {
 				begin: null,
 				end: null,
 				allday: false,
-				closed: false
+				closed: true
 			}
 		}
 		return hours;
@@ -650,31 +632,31 @@ router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
 	Content.remove(
 		{_id: id}, 
-		{justOne: true}, function(err, doc) {
+		{justOne: true}, function(err) {
 			if (err) {
 				return next(err)
 			}
-			Content.find({}, function(error, data){
-				if (error) {
-					return next(error)
-				}
-				var datarray = [];
-				for (var l in data) {
-					datarray.push(data[l])
-				}
-				return res.render('publish', {
-					loggedin: req.app.locals.loggedin,
-					username: req.app.locals.username,
-					id: datarray.length - 1,
-					zoom: 6,
-					data: datarray,
-					lng: data[0].geometry.coordinates[0],
-					lat: data[0].geometry.coordinates[1],
-					info: 'Deleted'
-				})
-			})
 		}
 	)
+	Content.find({}, function(error, data){
+		if (error) {
+			return next(error)
+		}
+		var datarray = [];
+		for (var l in data) {
+			datarray.push(data[l])
+		}
+		return res.render('publish', {
+			loggedin: req.app.locals.loggedin,
+			username: req.app.locals.username,
+			id: datarray.length - 1,
+			zoom: 6,
+			data: datarray,
+			lng: data[0].geometry.coordinates[0],
+			lat: data[0].geometry.coordinates[1],
+			info: 'Deleted'
+		})
+	})
 })
 
 router.get('/api/editcontent/:id', function(req, res, next){
@@ -714,51 +696,45 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 	
 	async.waterfall([
 		function(next){
-			Publisher.findOne({_id: req.app.locals.userId}, function(err, pub) {
-				if (err) {
-					return next(err)
-				}
-				var id = parseInt(pub.userindex, 10)
-				var keys = Object.keys(body);
-				keys.splice(keys.indexOf('label'), 1)
-				keys.splice(keys.indexOf('address1'), 1)
-				keys.splice(keys.indexOf('address2'), 1)
-				keys.splice(keys.indexOf('city'), 1)
-				keys.splice(keys.indexOf('state'), 1)
-				keys.splice(keys.indexOf('zip'), 1)
-				keys.splice(keys.indexOf('phone'), 1)
-				keys.splice(keys.indexOf('lat'), 1)
-				keys.splice(keys.indexOf('lng'), 1)
-				keys.splice(keys.indexOf('description'), 1)
+			var keys = Object.keys(body);
+			keys.splice(keys.indexOf('label'), 1)
+			keys.splice(keys.indexOf('address1'), 1)
+			keys.splice(keys.indexOf('address2'), 1)
+			keys.splice(keys.indexOf('city'), 1)
+			keys.splice(keys.indexOf('state'), 1)
+			keys.splice(keys.indexOf('zip'), 1)
+			keys.splice(keys.indexOf('phone'), 1)
+			keys.splice(keys.indexOf('lat'), 1)
+			keys.splice(keys.indexOf('lng'), 1)
+			keys.splice(keys.indexOf('description'), 1)
 
-				var thumburl;
-				var i = 0;
-				var thiskey = 'thumb'
-				for (var i in keys) {
+			var thumburl;
+			var i = 0;
+			var thiskey = 'thumb'
+			for (var i in keys) {
 
-					if (keys[i] == thiskey) {
-						//console.log(body[thiskey])
-						var thisbody = body[thiskey]
-						if (thisbody.split('').length > 100) {
-							//fs.writefile
-							var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
-							var thumburl = ''+publishers+'/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+				if (keys[i] == thiskey) {
+					//console.log(body[thiskey])
+					var thisbody = body[thiskey]
+					if (thisbody.split('').length > 100) {
+						//fs.writefile
+						var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
+						var thumburl = ''+publishers+'/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+						
+						fs.writeFile(thumburl, thumbbuf, function(err) {
+							if(err) {
+								console.log("err", err);
+							} 
 							thumburl = thumburl.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '')
-							count++;
-							fs.writeFile(thumburl, thumbbuf, function(err) {
-								if(err) {
-									console.log("err", err);
-								} 
-							})
+						})
 
-						} else {
-							thumburl = body[thiskey]
-						}						
-					}
+					} else {
+						thumburl = body[thiskey]
+					}						
 				}
-				keys.splice(keys.indexOf(thiskey, 1))
-				next(null, id, thumburl, body, keys)
-			})
+			}
+			keys.splice(keys.indexOf(thiskey, 1))
+			next(null, id, thumburl, body, keys)
 		},
 		function(id, thumburl, body, keys, next) {
 			var img;
@@ -787,50 +763,50 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 				website: body.website,
 				hours: {
 					mo: {
-						begin: body.mo_b,
-						end: body.mo_e,
-						allday: body.mo_a,
-						closed: body.mo_c
+						begin: (body.mo_b !== '')?convertTime(body.mo_b):null,
+						end: (body.mo_e !== '')?convertTime(body.mo_e):null,
+						allday: (body.mo_a)?true:false,
+						closed: (body.mo_c)?true:false
 					},
 					tu: {
-						begin: body.tu_b,
-						end: body.tu_e,
-						allday: body.tu_a,
-						closed: body.tu_c
+						begin: (body.tu_b !== '')?convertTime(body.tu_b):null,
+						end: (body.tu_e !== '')?convertTime(body.tu_e):null,
+						allday: (body.tu_a)?true:false,
+						closed: (body.tu_c)?true:false
 					},
 					we: {
-						begin: body.we_b,
-						end: body.we_e,
-						allday: body.we_a,
-						closed: body.we_c
+						begin: (body.we_b !== '')?convertTime(body.we_b):null,
+						end: (body.we_e !== '')?convertTime(body.we_e):null,
+						allday: (body.we_a)?true:false,
+						closed: (body.we_c)?true:false
 					},
 					th: {
-						begin: body.th_b,
-						end: body.th_e,
-						allday: body.th_a,
-						closed: body.th_c
+						begin: (body.th_b !== '')?convertTime(body.th_b):null,
+						end: (body.th_e !== '')?convertTime(body.th_e):null,
+						allday: (body.th_a)?true:false,
+						closed: (body.th_c)?true:false
 					},
 					fr: {
-						begin: body.fr_b,
-						end: body.fr_e,
-						allday: body.fr_a,
-						closed: body.fr_c
+						begin: (body.fr_b !== '')?convertTime(body.fr_b):null,
+						end: (body.fr_e !== '')?convertTime(body.fr_e):null,
+						allday: (body.fr_a)?true:false,
+						closed: (body.fr_c)?true:false
 					},
 					sa: {
-						begin: body.sa_b,
-						end: body.sa_e,
-						allday: body.sa_a,
-						closed: body.sa_c
+						begin: (body.sa_b !== '')?convertTime(body.sa_b):null,
+						end: (body.sa_e !== '')?convertTime(body.sa_e):null,
+						allday: (body.sa_a)?true:false,
+						closed: (body.sa_c)?true:false
 					},
 					su: {
-						begin: body.su_b,
-						end: body.su_e,
-						allday: body.su_a,
-						closed: body.su_c
+						begin: (body.su_b !== '')?convertTime(body.su_b):null,
+						end: (body.su_e !== '')?convertTime(body.su_e):null,
+						allday: (body.su_a)?true:false,
+						closed: (body.su_c)?true:false
 					}
 				},
 				image: img,
-				thumb: thumb,
+				thumb: thumburl,
 				clothing: body.clothing,
 				computer: body.computer,
 				dayroom: body.dayroom,
@@ -855,7 +831,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 				}
 				
 					var loc = doc.geometry.coordinates;
-					Publisher.find({}, function(er, data){
+					Content.find({}, function(er, data){
 						if (er) {
 							return next(er)
 						}
@@ -876,7 +852,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			infowindow: 'doc',
 			loggedin: req.app.locals.loggedin,
 			username: doc.username,
-			id: id,
+			id: parseInt(id, 10),
 			zoom: 6,
 			doc: doc,
 			data: datarray,
@@ -901,7 +877,7 @@ router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
 				infowindow: 'new',
 				loggedin: req.app.locals.loggedin,
 				username: req.app.locals.username,
-				id: data.length,
+				id: data.length - 1,
 				zoom: req.params.zoom,
 				data: datarray,
 				lng: req.params.lng,
@@ -915,29 +891,27 @@ router.all('/api/uploadmedia/:id/:type', uploadmedia.single('img'), function(req
 	return res.send(req.file.path)
 });
 
-router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
-	var id = parseInt(req.params.id, 10);
+router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 	var body = req.body;
 	
 	async.waterfall([
 		function(next){
-			Publisher.findOne({_id: req.app.locals.userId}, function(err, pub) {
-				if (err) {
-					return next(err)
+			var keys = Object.keys(body);
+			keys.splice(keys.indexOf('label'), 1)
+			keys.splice(keys.indexOf('address1'), 1)
+			keys.splice(keys.indexOf('address2'), 1)
+			keys.splice(keys.indexOf('city'), 1)
+			keys.splice(keys.indexOf('state'), 1)
+			keys.splice(keys.indexOf('zip'), 1)
+			keys.splice(keys.indexOf('phone'), 1)
+			keys.splice(keys.indexOf('lat'), 1)
+			keys.splice(keys.indexOf('lng'), 1)
+			keys.splice(keys.indexOf('description'), 1)
+			Content.find({}, function(err, pu){
+				if(err) {
+					next(err)
 				}
-				var id = parseInt(pub.userindex, 10)
-				var keys = Object.keys(body);
-				keys.splice(keys.indexOf('label'), 1)
-				keys.splice(keys.indexOf('address1'), 1)
-				keys.splice(keys.indexOf('address2'), 1)
-				keys.splice(keys.indexOf('city'), 1)
-				keys.splice(keys.indexOf('state'), 1)
-				keys.splice(keys.indexOf('zip'), 1)
-				keys.splice(keys.indexOf('phone'), 1)
-				keys.splice(keys.indexOf('lat'), 1)
-				keys.splice(keys.indexOf('lng'), 1)
-				keys.splice(keys.indexOf('description'), 1)
-
+				var id = pu.length;
 				var thumburl;
 				var i = 0;
 				var thiskey = 'thumb'
@@ -950,12 +924,12 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 							//fs.writefile
 							var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
 							var thumburl = ''+publishers+'/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
-							thumburl = thumburl.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '')
-							count++;
+
 							fs.writeFile(thumburl, thumbbuf, function(err) {
 								if(err) {
 									console.log("err", err);
 								} 
+								thumburl = thumburl.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '')
 							})
 
 						} else {
@@ -964,10 +938,11 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 					}
 				}
 				keys.splice(keys.indexOf(thiskey, 1))
-				next(null, id, thumburl, body, keys)
+				next(null, thumburl, body, keys, id)
 			})
+		
 		},
-		function(id, thumburl, body, keys, next) {
+		function(thumburl, body, keys, id, next) {
 			var img;
 			var thiskey = 'img'
 			for (var k = 0; k < keys.length; k++) {
@@ -976,13 +951,12 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 				}
 			}
 			keys.splice(keys.indexOf(thiskey))
-			next(null, id, thumburl, img, body, keys)
+			next(null, thumburl, img, body, keys, id)
 		},
-		function(id, thumburl, img, body, keys, next) {
-			
-			
+		function(thumburl, img, body, keys, id, next) {
+			var loc = [parseFloat(body.lng), parseFloat(body.lat)]
 			var entry = {
-				_id: id,
+				_id: parseInt(id, 10),
 				type: "Feature",
 				properties: {
 					label: body.label,
@@ -997,50 +971,50 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 					website: body.website,
 					hours: {
 						mo: {
-							begin: body.mo_b,
-							end: body.mo_e,
-							allday: body.mo_a,
-							closed: body.mo_c
+							begin: (body.mo_b !== '')?convertTime(body.mo_b):null,
+							end: (body.mo_e !== '')?convertTime(body.mo_e):null,
+							allday: (body.mo_a)?true:false,
+							closed: (body.mo_c)?true:false
 						},
 						tu: {
-							begin: body.tu_b,
-							end: body.tu_e,
-							allday: body.tu_a,
-							closed: body.tu_c
+							begin: (body.tu_b !== '')?convertTime(body.tu_b):null,
+							end: (body.tu_e !== '')?convertTime(body.tu_e):null,
+							allday: (body.tu_a)?true:false,
+							closed: (body.tu_c)?true:false
 						},
 						we: {
-							begin: body.we_b,
-							end: body.we_e,
-							allday: body.we_a,
-							closed: body.we_c
+							begin: (body.we_b !== '')?convertTime(body.we_b):null,
+							end: (body.we_e !== '')?convertTime(body.we_e):null,
+							allday: (body.we_a)?true:false,
+							closed: (body.we_c)?true:false
 						},
 						th: {
-							begin: body.th_b,
-							end: body.th_e,
-							allday: body.th_a,
-							closed: body.th_c
+							begin: (body.th_b !== '')?convertTime(body.th_b):null,
+							end: (body.th_e !== '')?convertTime(body.th_e):null,
+							allday: (body.th_a)?true:false,
+							closed: (body.th_c)?true:false
 						},
 						fr: {
-							begin: body.fr_b,
-							end: body.fr_e,
-							allday: body.fr_a,
-							closed: body.fr_c
+							begin: (body.fr_b !== '')?convertTime(body.fr_b):null,
+							end: (body.fr_e !== '')?convertTime(body.fr_e):null,
+							allday: (body.fr_a)?true:false,
+							closed: (body.fr_c)?true:false
 						},
 						sa: {
-							begin: body.sa_b,
-							end: body.sa_e,
-							allday: body.sa_a,
-							closed: body.sa_c
+							begin: (body.sa_b !== '')?convertTime(body.sa_b):null,
+							end: (body.sa_e !== '')?convertTime(body.sa_e):null,
+							allday: (body.sa_a)?true:false,
+							closed: (body.sa_c)?true:false
 						},
 						su: {
-							begin: body.su_b,
-							end: body.su_e,
-							allday: body.su_a,
-							closed: body.su_c
+							begin: (body.su_b !== '')?convertTime(body.su_b):null,
+							end: (body.su_e !== '')?convertTime(body.su_e):null,
+							allday: (body.su_a)?true:false,
+							closed: (body.su_c)?true:false
 						}
 					},
 					image: img,
-					thumb: thumb,
+					thumb: thumburl,
 					clothing: body.clothing,
 					computer: body.computer,
 					dayroom: body.dayroom,
@@ -1056,12 +1030,13 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 				},
 				geometry: {
 					type: "Point",
-				    coordinates: [body.lng, body.lat]
+				    coordinates: loc
 				}
 			}
-
-			entry = new Content(JSON.parse(JSON.stringify(entry)))
-			entry.save(function(err){
+			var newentry = new Content(entry)
+			//Content.insert(newentry) doesn't work in mongoose
+			
+			newentry.save(function(err){
 				if(err) {
 					console.log(err);  // handle errors!
 				} else {
@@ -1069,12 +1044,13 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 						if (err) {
 							return next(err)
 						}
-						next(null, entry, data, loc)
+						next(null, entry, data, loc, id)
 					})
 				}
 			})
+			
 		}
-	], function(err, entry, data, loc){
+	], function(err, entry, data, loc, id){
 		if (err) {
 			return next(err)
 		}
@@ -1085,7 +1061,7 @@ router.post('/api/addcontent/:index', upload.array(), function(req, res, next){
 		return res.render('publish', {
 			infowindow: 'doc',
 			loggedin: req.app.locals.loggedin,
-			username: doc.username,
+			username: req.app.locals.loggedin,
 			id: id,
 			zoom: 6,
 			doc: entry,

@@ -262,23 +262,8 @@ hr {
 	pointer-events: auto;
 
 }
-.search img {
 
-	display: inline-block;
-	background-color: rgba(255, 255, 255, 0.1);
-	position: fixed;
-	top: 36px;
-	right: 10px;
-	bottom: 56px;
-	height: 23px;
-	width: auto;
-	left: auto;
-	float: none;
-	pointer-events: auto;
-
-}
-
-#avatar, #resume, #media, #media1 {
+#media {
 	padding: 0; 
 	background-color: rgba(255, 255, 255, 0);
 	box-sizing: content-box;
@@ -300,39 +285,6 @@ hr {
 
 .picker__select--year {
 	overflow-y: scroll;
-}
-
-#arrows {
-	pointer-events: none;
-	width: 100%;
-	position: absolute;
-	top: 50%;
-	z-index: 4000;	
-}
-
-.arrow {
-	pointer-events: auto;
-	color: #555;
-	font-size:35px;
-	display:block;
-	height: 100%;
-	padding: 10px 3px;
-}
-
-.arrow:hover {
-	background-color: rgba(255, 255, 255, 0.5);
-}
-
-.left {
-	float: left;
-}
-
-.right {
-	float: right;
-}
-
-.arrow > i {
-	margin:12px auto;
 }
 
 .ms-ListItem-secondaryText  {
@@ -409,4 +361,12 @@ a.username:hover > .ms-font-l {
 
 .picker__select--month, .picker__select--year {
 	height: 4em;
+}
+
+.ms-ChoiceField {
+	margin-top: 5px;
+}
+
+label.ms-ChoiceField-field > span {
+	margin-left: 25px;
 }
