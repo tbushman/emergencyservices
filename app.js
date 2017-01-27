@@ -45,7 +45,7 @@ app.locals.$ = require('jquery');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-/*var store = new MongoDBStore(
+var store = new MongoDBStore(
 	{
 		uri: 'mongodb://localhost/session_es',
         collection: 'mySessions'
@@ -53,13 +53,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 )
 store.on('error', function(error, next){
 	next(error)
-})*/
+})
 var sess = {
 	secret: '12345QWERTY-SECRET',
 	name: 'nodecookie',
 	resave: false,
-	saveUninitialized: false/*,
-	store: store*/
+	saveUninitialized: false,
+	store: store
 }
 app.use(cookieParser(sess.secret));
 if (app.get('env') === 'production') {
