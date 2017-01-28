@@ -638,28 +638,28 @@ router.get('/api/publish', function(req, res, next){
 
 router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
-	Content.remove({_id: id}, 1, function(e){
+	Content.remove({_id: id}, 1, function(e, doc){
 		if (e) {
 		   return next(e);
 		}
-	})
-	Content.find({}, function(error, data){
-		if (error) {
-			return next(error)
-		}
-		var datarray = [];
-		for (var l in data) {
-			datarray.push(data[l])
-		}
-		return res.render('publish', {
-			loggedin: req.app.locals.loggedin,
-			username: req.app.locals.username,
-			id: datarray.length - 1,
-			zoom: 6,
-			data: datarray,
-			lng: data[0].geometry.coordinates[0],
-			lat: data[0].geometry.coordinates[1],
-			info: 'Deleted'
+		Content.find({}, function(error, data){
+			if (error) {
+				return next(error)
+			}
+			var datarray = [];
+			for (var l in data) {
+				datarray.push(data[l])
+			}
+			return res.render('publish', {
+				loggedin: req.app.locals.loggedin,
+				username: req.app.locals.username,
+				id: datarray.length - 1,
+				zoom: 6,
+				data: datarray,
+				lng: data[0].geometry.coordinates[0],
+				lat: data[0].geometry.coordinates[1],
+				info: 'Deleted'
+			})
 		})
 	})
 })
