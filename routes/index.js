@@ -16,7 +16,36 @@ var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
 //var uploadmedia = null;
 //Todo: user remove triggers userindex $inc -1
-var storage = multer.diskStorage({
+var destination = function(req, file, cb) {
+	var p = ''+publishers+'/pu/publishers/emergencyservices/images/full';
+	var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs';
+	fs.access(p, function(err) {
+		if (err && err.code === 'ENOENT') {
+			mkdirp(p, function(err){
+				if (err) {
+					console.log("err", err);
+				}
+				mkdirp(q, function(err){
+					if (err) {
+						console.log("err", err);
+					}
+					cb(null, p)
+				})
+			})
+		} else {
+			if (err && err.code === 'EACCESS') {
+				console.log('permission error: '+err)
+			} else {
+				cb(null, p)
+			}
+		}
+	})
+} 
+var filename = function(req, file, cb) {
+	cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
+}
+var storage = multer.diskStorage({destination, filename})
+/*var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		var p = ''+publishers+'/pu/publishers/emergencyservices/images/full'
 		var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs'
@@ -34,14 +63,18 @@ var storage = multer.diskStorage({
 					})
 				})
 			} else {
-				cb(null, p)
+				if (err && err.code === 'EACCESS') {
+					console.log('permission error: '+err)
+				} else {
+					cb(null, p)
+				}
 			}
 		})
   	},
 	filename: function (req, file, cb) {
 		cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
   	}
-})
+})*/
  
 var uploadmedia = multer({ storage: storage })
 dotenv.load();
@@ -583,7 +616,8 @@ router.get('/api/publish', function(req, res, next){
 								})
 								entry.save(function(err) {
 									if(err) {
-										console.log(err);  // handle errors!
+										console.log('save error: '+err);  // handle errors!
+										next(err, info)
 									}
 								})
 							}
@@ -640,7 +674,8 @@ router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
 	Content.remove({_id: id}, 1, function(e, doc){
 		if (e) {
-		   return next(e);
+			console.log('delete error: '+e)
+			return next(e);
 		}
 		Content.find({}, function(error, data){
 			if (error) {
