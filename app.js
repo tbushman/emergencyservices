@@ -98,7 +98,7 @@ app.use(function (err, req, res) {
 
 var uri = process.env.DEVDB;
 
-mongoose.connect(uri/*, {authMechanism: 'ScramSHA1'}*/);
+mongoose.connect(uri, {authMechanism: 'ScramSHA1'});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 module.exports = app;
