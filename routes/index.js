@@ -630,14 +630,7 @@ router.get('/api/publish', function(req, res, next){
 
 router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
-	Content.remove(
-		{_id: id}, 
-		{justOne: true}, function(err) {
-			if (err) {
-				return next(err)
-			}
-		}
-	)
+	Content.deleteOne({_id: id})
 	Content.find({}, function(error, data){
 		if (error) {
 			return next(error)
@@ -714,18 +707,18 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			for (var i in keys) {
 
 				if (keys[i] == thiskey) {
-					//console.log(body[thiskey])
 					var thisbody = body[thiskey]
+					var thumburl;
 					if (thisbody.split('').length > 100) {
 						//fs.writefile
 						var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
-						var thumburl = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+						var thumb = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
 						
-						fs.writeFile(thumburl, thumbbuf, function(err) {
+						fs.writeFile(thumb, thumbbuf, function(err) {
 							if(err) {
 								console.log("err", err);
-							} 
-							thumburl = thumburl.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '')
+							}
+							thumburl = thumb.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh/pu', '')
 						})
 
 					} else {
@@ -733,21 +726,11 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 					}						
 				}
 			}
+			var imgurl = body['img']
 			keys.splice(keys.indexOf(thiskey, 1))
-			next(null, id, thumburl, body, keys)
+			next(null, id, thumburl, imgurl, body, keys)
 		},
-		function(id, thumburl, body, keys, next) {
-			var img;
-			var thiskey = 'img'
-			for (var k = 0; k < keys.length; k++) {
-				if (keys[k] === thiskey) {
-					img = body[keys[k]]
-				}
-			}
-			keys.splice(keys.indexOf(thiskey))
-			next(null, id, thumburl, img, body, keys)
-		},
-		function(id, thumburl, img, body, keys, next) {
+		function(id, thumburl, imgurl, body, keys, next) {
 			
 			
 			var entry = {
@@ -805,7 +788,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 						closed: (body.su_c)?true:false
 					}
 				},
-				image: img,
+				image: imgurl,
 				thumb: thumburl,
 				clothing: body.clothing,
 				computer: body.computer,
@@ -923,13 +906,13 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 						if (thisbody.split('').length > 100) {
 							//fs.writefile
 							var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
-							var thumburl = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+							var thumb = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
 
-							fs.writeFile(thumburl, thumbbuf, function(err) {
+							fs.writeFile(thumb, thumbbuf, function(err) {
 								if(err) {
 									console.log("err", err);
 								} 
-								thumburl = thumburl.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '')
+								thumburl = thumb.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh/pu', '')
 							})
 
 						} else {
@@ -937,23 +920,13 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 						}						
 					}
 				}
+				var imgurl = body['img']
 				keys.splice(keys.indexOf(thiskey, 1))
-				next(null, thumburl, body, keys, id)
+				next(null, thumburl, imgurl, body, keys, id)
 			})
 		
 		},
-		function(thumburl, body, keys, id, next) {
-			var img;
-			var thiskey = 'img'
-			for (var k = 0; k < keys.length; k++) {
-				if (keys[k] === thiskey) {
-					img = body[keys[k]]
-				}
-			}
-			keys.splice(keys.indexOf(thiskey))
-			next(null, thumburl, img, body, keys, id)
-		},
-		function(thumburl, img, body, keys, id, next) {
+		function(thumburl, imgurl, body, keys, id, next) {
 			var loc = [parseFloat(body.lng), parseFloat(body.lat)]
 			var entry = {
 				_id: parseInt(id, 10),
@@ -1013,7 +986,7 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 							closed: (body.su_c)?true:false
 						}
 					},
-					image: img,
+					image: imgurl,
 					thumb: thumburl,
 					clothing: body.clothing,
 					computer: body.computer,

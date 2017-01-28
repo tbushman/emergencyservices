@@ -505,9 +505,9 @@ block content
 					processData: false,
 					contentType: false,
 				    success: function(response) { 
-						img.src = response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', '');
+						img.src = response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh/pu', '');
 				        img.onload = function () {
-							$('#inputimg').val(response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh', ''))
+							$('#inputimg').val(response.replace('/var/www/pu', '').replace('/Users/traceybushman/Documents/pu.bli.sh/pu', ''))
 							var can = $('#canvas')[0];
 							var maxWidth = 200 ;
 				        	var maxHeight = 200 ;								
