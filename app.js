@@ -62,6 +62,10 @@ var sess = {
 	store: store
 }
 app.use(cookieParser(sess.secret));
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1) // trust first proxy	
+}
+
 // session middleware configuration
 // see https://github.com/expressjs/session
 app.use(session(sess));
@@ -69,16 +73,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
 
 app.use('/', routes);
-
-if (app.get('env') === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-	app.use('/publishers', express.static('/var/www/pu/publishers'));
-	
-} else {
-	app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
-}
 
 
 // catch 404 and forward to error handler
