@@ -73,7 +73,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/publishers', express.static(path.join(__dirname, '../publishers')));
+app.use('/publishers', express.static(path.join(__dirname, '../../pu/publishers')));
 
 app.use('/', routes);
 

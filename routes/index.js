@@ -12,14 +12,14 @@ var spawn = require("child_process").spawn;
 var dotenv = require('dotenv');
 var Publisher = require('../models/publishers.js');
 var Content = require('../models/content.js');
-var publishers = path.join(__dirname, '/../..');
+var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
 //var uploadmedia = null;
 //Todo: user remove triggers userindex $inc -1
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		var p = ''+publishers+'/publishers/emergencyservices/images/full'
-		var q = ''+publishers+'/publishers/emergencyservices/images/thumbs'
+		var p = ''+publishers+'/pu/publishers/emergencyservices/images/full'
+		var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs'
 		fs.access(p, function(err) {
 			if (err && err.code === 'ENOENT') {
 				mkdirp(p, function(err){
@@ -719,7 +719,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 					if (thisbody.split('').length > 100) {
 						//fs.writefile
 						var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
-						var thumburl = ''+publishers+'/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+						var thumburl = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
 						
 						fs.writeFile(thumburl, thumbbuf, function(err) {
 							if(err) {
@@ -923,7 +923,7 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 						if (thisbody.split('').length > 100) {
 							//fs.writefile
 							var thumbbuf = new Buffer(body[thiskey], 'base64'); // decode
-							var thumburl = ''+publishers+'/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
+							var thumburl = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs/thumb_'+id+'.jpeg'
 
 							fs.writeFile(thumburl, thumbbuf, function(err) {
 								if(err) {
