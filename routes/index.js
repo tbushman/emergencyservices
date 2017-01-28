@@ -333,12 +333,20 @@ router.all('/search/:term', function(req, res, next){
 	var term = req.params.term;
 	var regex = new RegExp(term);
 	console.log(regex)
-	Content.find({label: { $regex: regex }}, function(err, pu){
+	Content.find({'properties.label': { $regex: regex }}, function(err, pu){
 		if (err) {
 			return next(err)
 		}
 		if (!err && pu === null) {
-			return ('none')
+			Content.find({regex: true}, function(er, doc){
+				if (er) {
+					return next(err)
+				}
+				if (!err && pu === null) {
+					return ('none')
+				}
+				return res.json(doc)
+			})			
 		}
 		return res.json(pu)
 	})

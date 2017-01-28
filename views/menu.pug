@@ -33,11 +33,11 @@ if (menu === 'profile' || menu === 'home')
 				$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
 				if (response == 'none') {
 					$('.searchbox').slideDown(200);
-					$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No pu.bli.sher by that name</p>')
+					$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No results</p>')
 				}
 				for (var i in response) {
 					$('.searchbox').slideDown(200);
-					$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/'+response[i].username+'"><span class="ms-font-l">'+response[i].username+'</span></a>')
+					$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/focus/'+response[i]._id+'/'+6+'/'+response[i].geometry.coordinates[1]+'/'+response[i].geometry.coordinates[0]+'"><span class="ms-font-l">'+response[i].properties.label+'</span></a>')
 				}
 			})
 		})
