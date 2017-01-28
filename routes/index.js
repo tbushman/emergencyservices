@@ -639,7 +639,7 @@ router.get('/api/publish', function(req, res, next){
 router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
 	try {
-		Content.deleteOne({_id: id})
+		Content.remove({_id: id}, 1)
 	} catch (e) {
 	   console.log(e);
 	}
