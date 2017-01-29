@@ -233,6 +233,9 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 	var lat = req.params.lat;
 	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
+	return;
+	//req.app.locals.lat = lat;
+	//req.app.locals.lng = lng;
 	/*Content.find({}, function(err, data){
 		if (err) {
 			next(err)
@@ -284,8 +287,12 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			if (error) {
 				return next(error)
 			}
-			//lat = doc.geometry.coordinates[1]
-			//lng = doc.geometry.coordinates[0]
+			if (req.params.lat === null || req.params.lat === 'null') {
+				lat = doc.geometry.coordinates[1]
+				lng = doc.geometry.coordinates[0]
+			}
+			req.app.locals.lat = lat;
+			req.app.locals.lng = lng;
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
@@ -300,14 +307,14 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 						data: datarray,
 						doc: doc,
 						lat: lat,
-						lng: lat,
+						lng: lng,
 						info: ':)'
 					})
 
 			} else {
 				return res.render('publish', {
 					infowindow: 'doc',
-					zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
+					zoom: zoom,
 					data: datarray,
 					id: datarray.length - 1,
 					doc: doc,
@@ -327,8 +334,8 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	var lat = req.params.lat;
 	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
-	//req.app.locals.lat = lat;
-	//req.app.locals.lng = lng;
+	req.app.locals.lat = lat;
+	req.app.locals.lng = lng;
 	Content.findOne({_id: id}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -621,13 +628,17 @@ router.get('/api/publish', function(req, res, next){
 			}
 			var loc = datarray[0].geometry.coordinates;
 			var zoom;
-			var lat = loc[1]
-			var lng = loc[0]
+			var lat;
+			var lng;
 			if (req.app.locals.zoom) {
 				zoom = req.app.locals.zoom
+				lat = req.app.locals.lat
+				lng = req.app.locals.lng
 				info = 'Refreshed'
 			} else {
 				zoom = 3
+				lat = loc[1]
+				lng = loc[0]
 			}
 			return res.render('publish', {
 				loggedin: req.app.locals.loggedin,
