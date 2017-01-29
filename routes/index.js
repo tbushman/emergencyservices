@@ -276,8 +276,7 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	var id = req.params.id;
 	var zoom = req.params.zoom;
-	var lat = req.params.lat;
-	var lng = req.params.lng;
+	var lat, lng;
 	Content.findOne({_id: id},function(err, doc){
 		if (err) {
 			return next(err)
@@ -286,10 +285,8 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			if (error) {
 				return next(error)
 			}
-			if (req.params.lat === null || req.params.lat === 'null') {
-				lat = doc.geometry.coordinates[1]
-				lng = doc.geometry.coordinates[0]
-			}
+			lat = doc.geometry.coordinates[1]
+			lng = doc.geometry.coordinates[0]
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
@@ -311,7 +308,7 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			} else {
 				return res.render('publish', {
 					infowindow: 'doc',
-					zoom: zoom,
+					zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
 					data: datarray,
 					id: datarray.length - 1,
 					doc: doc,
