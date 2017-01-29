@@ -316,7 +316,7 @@ block content
 				var dx = parseInt(dxm.replace('M', ''), 10);
 				var dy = parseInt(d.split(',')[1], 10);
 				var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
-				var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+6, dy+7, dy+8];
+				var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+5, dy+5, dy+5];
 				
 				var grid = [[]];
 				for (var x = 0; x < rangex.length; x++) {
@@ -343,7 +343,7 @@ block content
 									contentType: false,
 									type: 'POST',
 									success: function(data){
-										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/6" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
+										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/'+zoom+'/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
 										map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
 										lMarker.remove()
 									}
@@ -361,8 +361,7 @@ block content
 					$('.list').css({display: 'block'})
 					$('.list > .ms-Panel-main').css({display: 'block'})
 					$('.list').addClass("is-open");
-					$('.nearby').remove();
-					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s nearby">'+list+' features nearby:</p>');
+					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s">'+list+' features nearby:</p>');
 					map.dragging.disable();
 					map.touchZoom.disable();
 					map.doubleClickZoom.disable();
@@ -379,10 +378,11 @@ block content
 
 					console.log(id)
 
-					$.post('/focus/'+id+'/'+6+'', function(){
-						window.location.href = '/focus/'+id+'/'+6+''
+					$.post('/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+'', function(){
+						window.location.href = '/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+''
 					})
 				}
+				
 				
 			}
 		})

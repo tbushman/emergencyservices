@@ -233,7 +233,6 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 	var lat = req.params.lat;
 	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
-	return;
 	//req.app.locals.lat = lat;
 	//req.app.locals.lng = lng;
 	/*Content.find({}, function(err, data){
@@ -249,6 +248,7 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 
 		return res.send('home')
 	})*/
+	return res.send('ok')
 })
 
 
@@ -273,11 +273,12 @@ router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 	})
 });
 
-router.all('/focus/:id/:zoom', function(req, res, next){
+router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
-	console.log(outputPath)
-	var id = parseInt(req.params.id);
+	var id = req.params.id;
 	var zoom = req.params.zoom;
+	var lat = req.params.lat;
+	var lng = req.params.lng;
 	Content.findOne({_id: id},function(err, doc){
 		if (err) {
 			return next(err)
@@ -286,10 +287,13 @@ router.all('/focus/:id/:zoom', function(req, res, next){
 			if (error) {
 				return next(error)
 			}
-			var lat = doc.geometry.coordinates[1]
-			var lng = doc.geometry.coordinates[0]
+			//if (req.params.lat === null || req.params.lat === 'null') {
+				lat = doc.geometry.coordinates[1]
+				lng = doc.geometry.coordinates[0]
+			//}
+			/*req.app.locals.zoom = zoom;
 			req.app.locals.lat = lat;
-			req.app.locals.lng = lng;
+			req.app.locals.lng = lng;*/
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
@@ -311,7 +315,7 @@ router.all('/focus/:id/:zoom', function(req, res, next){
 			} else {
 				return res.render('publish', {
 					infowindow: 'doc',
-					zoom: zoom,
+					zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
 					data: datarray,
 					id: id,
 					doc: doc,
