@@ -488,7 +488,22 @@ block content
 			can.width = w;
 			var ctx = can.getContext('2d');
 			ctx.drawImage(img, 0, 0, w, h);
+			if (!HTMLCanvasElement.prototype.toBlob) {
+			 Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+			  value: function (callback, type, quality) {
 
+			    var binStr = atob( this.toDataURL(type, quality).split(',')[1] ),
+			        len = binStr.length,
+			        arr = new Uint8Array(len);
+
+			    for (var i = 0; i < len; i++ ) {
+			     arr[i] = binStr.charCodeAt(i);
+			    }
+
+			    callback( new Blob( [arr], {type: type || 'image/png'} ) );
+			  }
+			 });
+			}
 			can.toBlob(function(blob) {
 				var fd = new FormData();
 
