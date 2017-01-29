@@ -233,8 +233,6 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 	var lat = req.params.lat;
 	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
-	req.app.locals.lat = lat;
-	req.app.locals.lng = lng;
 	/*Content.find({}, function(err, data){
 		if (err) {
 			next(err)
@@ -328,8 +326,8 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	var lat = req.params.lat;
 	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
-	req.app.locals.lat = lat;
-	req.app.locals.lng = lng;
+	//req.app.locals.lat = lat;
+	//req.app.locals.lng = lng;
 	Content.findOne({_id: id}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -622,17 +620,13 @@ router.get('/api/publish', function(req, res, next){
 			}
 			var loc = datarray[0].geometry.coordinates;
 			var zoom;
-			var lat;
-			var lng;
+			var lat = loc[1]
+			var lng = loc[0]
 			if (req.app.locals.zoom) {
 				zoom = req.app.locals.zoom
-				lat = req.app.locals.lat
-				lng = req.app.locals.lng
 				info = 'Refreshed'
 			} else {
 				zoom = 3
-				lat = loc[1]
-				lng = loc[0]
 			}
 			return res.render('publish', {
 				loggedin: req.app.locals.loggedin,
