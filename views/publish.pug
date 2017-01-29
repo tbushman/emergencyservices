@@ -4,7 +4,35 @@ block page
 	- var menudata = data[data.length-1]
 block content
 	- var zfactor = 0.15 * zoom;
-
+	
+	div.ms-Grid-row
+		div.ms-Grid-col.ms-u-sm7.buttonbox
+			div.ms-Grid-row
+				div.ms-Grid-col.ms-u-sm4
+					div.ms-Grid-row
+						a#select.all.block.ms-Button(href="#", name="all", title="All") 
+							p.ms-font-m.buttonlabel ALL
+							img(src="/images/refresh.svg")
+				div.ms-Grid-col.ms-u-sm2
+					div.ms-Grid-row
+						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
+							p.ms-font-m.buttonlabel Housing
+							img(src="/images/housing.svg")
+				div.ms-Grid-col.ms-u-sm2
+					div.ms-Grid-row
+						a#select.m.block.ms-Button(href="#", name="M", title="Medical") 
+							p.ms-font-m.buttonlabel Medical
+							img(src="/images/medical.svg")
+				div.ms-Grid-col.ms-u-sm2
+					div.ms-Grid-row
+						a#select.f.block.ms-Button(href="#", name="F", title="Food") 
+							p.ms-font-m.buttonlabel Food
+							img(src="/images/food.svg")
+				div.ms-Grid-col.ms-u-sm2
+					div.ms-Grid-row
+						a#select.b.block.ms-Button(href="#", name="B", title="Travel") 
+							p.ms-font-m.buttonlabel Travel
+							img(src="/images/travel.svg")
 	if (infowindow)
 		include gallery.pug
 		
@@ -105,11 +133,12 @@ block content
 		  	maxZoom: 18
 		});
 		var options3 = {
-			attribution: 'Map tiles by <a href="http://mapbox.com/">Mapbox</a><a href="http://cartodb.com/attributions"</a>'
+			attribution: 'Map tiles by <a href="http://carto.com/">Carto</a><a href="http://cartodb.com/attributions"</a>'
 		};
-		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.iba1gl27/{z}/{x}/{y}.png', options3).addTo(map); 
+		
+		L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(map);
+		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
 
-		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); 
 		var featurePane = map.createPane('featurePane');
 		featurePane.style.zIndex = 20000;
 
@@ -143,7 +172,7 @@ block content
 		
 		var datalength = #{data.length}
 		console.log(datalength)
-
+		var dataLayer;
 		$.getJSON('/mydata/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
 
 			function onEachFeature(feature, latlng) {
@@ -153,20 +182,32 @@ block content
 				feature.geometry.coordinates.push(cut)
 
 			}
-			L.geoJSON(data, {
+			dataLayer = L.geoJSON(data, {
 			    onEachFeature: onEachFeature,
 				pointToLayer: function (feature, latlng) {
-					var fillColor = "#BAD80A"
-					/*console.log(feature.properties._id)
-					if (feature.properties.type === i) {
-						fillColor = "#F11810"
-					} else {
-						fillColor = "#BAD80A"
-					}*/
+					var fillColor;
+					
+					switch (feature.properties.cat) {
+						case 'B':
+							fillColor = '#3D7AB4'
+							break;
+						case 'H':
+							fillColor = '#E79404'
+							break;
+						case 'M':
+							fillColor = '#DA1912'
+							break;
+						case 'F':
+							fillColor = '#229701'
+							break;
+						default:
+							fillColor = '#fff'
+							break;
+					}
 					var geojsonMarkerOptions = {
-					    radius: 8,
+					    radius: 11,
 					    fillColor: fillColor,
-					    color: "#fff",
+					    color: "rgba(0, 0, 0, 0)",
 					    weight: 2,
 					    opacity: 1,
 					    fillOpacity: 0.8,
@@ -198,10 +239,63 @@ block content
 			var lat = center.lat;
 			var lng = center.lng;
 			$.post('/zoom/'+zoom+'/'+lat+'/'+lng+'', function(data){
-				window.location.href = '/'+data
+				//window.location.href = '/'+data
 			})
 		})
+		$(document).on('click', '#select', function(){
+			var cat = $(this).attr('name');
+			var fillColor;
 
+			switch (cat) {
+				case 'all':
+					location.reload(true)
+					break;
+				case 'B':
+					fillColor = '#3D7AB4'
+					break;
+				case 'H':
+					fillColor = '#E79404'
+					break;
+				case 'M':
+					fillColor = '#DA1912'
+					break;
+				case 'F':
+					fillColor = '#229701'
+					break;
+				default:
+					fillColor = '#fff'
+					break;
+			}
+			$.getJSON('/type/'+cat+'/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
+				var bounds = []
+				function onEachFeature(feature, latlng) {
+
+					var cut = feature.geometry.coordinates[0];
+					feature.geometry.coordinates.splice(0, 1);
+					feature.geometry.coordinates.push(cut)
+					bounds.push(feature.geometry.coordinates)
+				}
+				console.log(data)
+				dataLayer.remove()
+				dataLayer = L.geoJSON(data, {
+				    onEachFeature: onEachFeature,
+					pointToLayer: function (feature, latlng) {
+						
+						var geojsonMarkerOptions = {
+						    radius: 11,
+						    fillColor: fillColor,
+						    color: "rgba(0, 0, 0, 0)",
+						    weight: 2,
+						    opacity: 1,
+						    fillOpacity: 0.8,
+							className: ""+feature._id+""
+						};
+						return L.circleMarker(latlng, geojsonMarkerOptions);
+					}
+				}).addTo(map);
+				map.fitBounds(bounds)
+			})
+		})
 		$(document).on('click', '.leaflet-interactive', function(e){
 			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
 				lMarker.on('dragend', function(event){
@@ -222,8 +316,8 @@ block content
 				var dxm = d.split(',')[0]
 				var dx = parseInt(dxm.replace('M', ''), 10);
 				var dy = parseInt(d.split(',')[1], 10);
-				var rangex = [dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5];
-				var rangey = [dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5];
+				var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
+				var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+6, dy+7, dy+8];
 				
 				var grid = [[]];
 				for (var x = 0; x < rangex.length; x++) {
@@ -268,7 +362,8 @@ block content
 					$('.list').css({display: 'block'})
 					$('.list > .ms-Panel-main').css({display: 'block'})
 					$('.list').addClass("is-open");
-					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s">'+list+' features nearby:</p>');
+					$('.nearby').remove();
+					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s nearby">'+list+' features nearby:</p>');
 					map.dragging.disable();
 					map.touchZoom.disable();
 					map.doubleClickZoom.disable();

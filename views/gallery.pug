@@ -314,7 +314,7 @@ if (infowindow === 'edit')
 	div(class="ms-Panel ms-Panel--small")
 		div.ms-Panel-main.ms-Grid#mainpanel
 			div.ms-Grid-row.ms-Panel-contentInner
-				div.ms-Grid-col.ms-u-sm12
+				div.ms-Grid-col.ms-u-sm12#sidepanel
 					div#info.ms-font-s
 					form#form(enctype="multipart/form-data", method="POST", action="/api/editcontent/"+id+"", style="margin-bottom: 50px")
 						a#editform.ms-Button(href="#", role="button")
@@ -351,6 +351,43 @@ if (infowindow === 'edit')
 						
 						div.ms-Grid-col.ms-u-sm12
 							p.ms-font-xl #{doc.properties.label}
+							p.ms-font-l Type
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm12
+										div(class=(doc.properties.cat === 'B')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+											if (doc.properties.cat === 'B')
+												input(id="b", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="b")
+											else
+												input(id="b", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="b")
+											label.ms-ChoiceField-field#type_b(for="b")
+												span.ms-label Travel
+									
+									div.ms-Grid-col.ms-u-sm12
+										div(class=(doc.properties.cat === 'F')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+											if (doc.properties.cat === 'F')
+												input(id="f", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="f")
+											else
+												input(id="f", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="f")
+											label.ms-ChoiceField-field#type_f(for="f")
+												span.ms-label Food
+									
+									div.ms-Grid-col.ms-u-sm12
+										div(class=(doc.properties.cat === 'H')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+											if (doc.properties.cat === 'H')
+												input(id="h", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="h")
+											else
+												input(id="h", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="h")
+											label.ms-ChoiceField-field#type_h(for="h")
+												span.ms-label Housing
+									
+									div.ms-Grid-col.ms-u-sm12
+										div(class=(doc.properties.cat === 'M')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+											if (doc.properties.cat === 'M')
+												input(id="m", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="m")
+											else
+												input(id="m", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="m")
+											label.ms-ChoiceField-field#type_h(for="m")
+												span.ms-label Medical
 							p.ms-font-l Hours of Operation
 							div.ms-Grid-row
 								div.ms-Grid-col.ms-u-sm8#mo_hrs
@@ -863,12 +900,11 @@ if (infowindow === 'doc')
 								div.ms-Grid-row
 									span.ms-font-s Transportation Assistance
 				if (loggedin)
-					div.ms-Grid-col.ms-u-sm1
-						div.ms-Grid-row
-							a.ms-Grid-col.ms-u-sm10(href="/api/editcontent/"+id+"")
-								i.ms-Icon.ms-Icon--editBox
-							a#closepanel
-								i.ms-Icon.ms-Icon--x
+					a#editbutton(href="/api/editcontent/"+id+"")
+						i.ms-Icon.ms-Icon--editBox
+					a#closepanel
+						i.ms-Icon.ms-Icon--x
+							
 				else
 					a#closepanel
 						i.ms-Icon.ms-Icon--x

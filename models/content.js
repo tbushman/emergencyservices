@@ -15,6 +15,7 @@ var Content = new Schema({
 		description: String,
 		current: Boolean,
 		website: String,
+		cat: String,
 		hours: {
 			mo: {
 				begin: Date,

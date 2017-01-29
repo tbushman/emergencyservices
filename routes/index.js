@@ -232,7 +232,10 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 	var zoom = parseInt(req.params.zoom, 10);
 	var lat = req.params.lat;
 	var lng = req.params.lng;
-	Content.find({}, function(err, data){
+	req.app.locals.zoom = zoom;
+	req.app.locals.lat = lat;
+	req.app.locals.lng = lng;
+	/*Content.find({}, function(err, data){
 		if (err) {
 			next(err)
 		}
@@ -242,17 +245,26 @@ router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
 		for (var l in data) {
 			datarray.push(data[l])
 		}
-		req.app.locals.zoom = zoom;
-		req.app.locals.lat = lat;
-		req.app.locals.lng = lng;
 
 		return res.send('home')
-	})
+	})*/
 })
 
 
 router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 	Content.find({}, function(err, doc){
+		if (err) {
+			return next(err)
+		}
+		return res.json(doc)
+	})
+});
+
+router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
+	var cat = req.params.cat;
+	Content.find({'properties.cat': cat}, function(err, doc){
 		if (err) {
 			return next(err)
 		}
@@ -278,9 +290,6 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 				lat = doc.geometry.coordinates[1]
 				lng = doc.geometry.coordinates[0]
 			}
-			req.app.locals.zoom = zoom;
-			req.app.locals.lat = lat;
-			req.app.locals.lng = lng;
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
@@ -290,12 +299,12 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 					return res.render('publish', {
 						loggedin: req.app.locals.loggedin,
 						infowindow: 'doc',
-						zoom: zoom,
+						zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
 						id: id,
 						data: datarray,
 						doc: doc,
-						lat: lat,
-						lng: lng,
+						lat: (req.app.locals.lat)?req.app.locals.lat:lat,
+						lng: (req.app.locals.lng)?req.app.locals.lng:lat,
 						info: ':)'
 					})
 
@@ -557,6 +566,7 @@ router.get('/api/publish', function(req, res, next){
 										description: "",
 										current: false,
 										website: importjson[i].properties.website,
+										cat: importjson[i].properties.type,
 										hours: {
 											mo: convertHoO(importjson[i].properties.hours_monday),
 											tu: convertHoO(importjson[i].properties.hours_tuesday),
@@ -747,10 +757,24 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			}
 			var imgurl = body['img']
 			keys.splice(keys.indexOf(thiskey, 1))
+			keys.splice(keys.indexOf('img', 1))
 			next(null, id, thumburl, imgurl, body, keys)
 		},
 		function(id, thumburl, imgurl, body, keys, next) {
+			var type;
 			
+			if (keys.indexOf('b') !== -1) {
+				type = 'B'
+			}
+			if (keys.indexOf('f') !== -1) {
+				type = 'F'
+			}
+			if (keys.indexOf('h') !== -1) {
+				type = 'H'
+			}
+			if (keys.indexOf('m') !== -1) {
+				type = 'M'
+			}
 			
 			var entry = {
 				label: body.label,
@@ -763,6 +787,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 				description: body.description,
 				current: false,
 				website: body.website,
+				cat: type,
 				hours: {
 					mo: {
 						begin: (body.mo_b !== '')?convertTime(body.mo_b):null,
@@ -947,6 +972,21 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 		},
 		function(thumburl, imgurl, body, keys, id, next) {
 			var loc = [parseFloat(body.lng), parseFloat(body.lat)]
+			var type;
+			
+			if (keys.indexOf('b') !== -1) {
+				type = 'B'
+			}
+			if (keys.indexOf('f') !== -1) {
+				type = 'F'
+			}
+			if (keys.indexOf('h') !== -1) {
+				type = 'H'
+			}
+			if (keys.indexOf('m') !== -1) {
+				type = 'M'
+			}
+			
 			var entry = {
 				_id: parseInt(id, 10),
 				type: "Feature",
@@ -961,6 +1001,7 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 					description: body.description,
 					current: false,
 					website: body.website,
+					cat: type,
 					hours: {
 						mo: {
 							begin: (body.mo_b !== '')?convertTime(body.mo_b):null,

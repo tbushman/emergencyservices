@@ -144,12 +144,26 @@ hr {
 
 #closepanel {
 	position: fixed;
-	top: 30px;
-	right: 30px;
+	top: 55%;
+	right: 18px;
 	bottom: auto;
 	left: auto;
 	color: #A6A6A6;
 	z-index: 9999;
+}
+
+#editbutton {
+	position: fixed;
+	top: 55%;
+	right: 42px;
+	bottom: auto;
+	left: auto;
+	color: #A6A6A6;
+	z-index: 9999;
+}
+
+#append {
+	min-height: 49%;
 }
 
 #append > img {
@@ -224,46 +238,17 @@ hr {
 
 	outline: none;
 	border:0px solid #dbdbdb;
-	height: 100%;
-	display: inline-block;
-	width: auto;
-	height: 28px;
-	right: auto;
 	left: 36px;
 	top: 0;
 	bottom: auto;
 	position: absolute;
-	text-align: left;
-	margin: 0 auto;
-	float: left;
 	background: linear-gradient(to right, rgba(255, 255, 255, 0.2),  #EEF4DE);
 	background-color: none;
 	pointer-events: auto;
-
+	padding: 3px;
 }
 
-.search {
-
-	display: inline-block;
-	bottom: 56px;
-	right: 10px;
-	top: 33px;
-	left: auto;
-	height: 28px;
-	width: 28px;
-	margin: 0;
-	float: right;
-	background: none;
-	background-color: none !important;
-	border:0;
-	padding: 0;
-	position: fixed;
-	float: none;
-	pointer-events: auto;
-
-}
-
-#media {
+#avatar, #resume, #media, #media1 {
 	padding: 0; 
 	background-color: rgba(255, 255, 255, 0);
 	box-sizing: content-box;
@@ -275,16 +260,50 @@ hr {
 	right: 10px;
 	top: auto;
 	left: auto;
-	width: 150px;
+	width: 110px;
 }
 
 #publish_logo > img {
 	width: 100%;
 	height: auto;
+	padding-bottom: 8px;
 }
 
 .picker__select--year {
 	overflow-y: scroll;
+}
+
+#arrows {
+	pointer-events: none;
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	z-index: 4000;	
+}
+
+.arrow {
+	pointer-events: auto;
+	color: #555;
+	font-size:35px;
+	display:block;
+	height: 100%;
+	padding: 10px 3px;
+}
+
+.arrow:hover {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.arrow > i {
+	margin:12px auto;
 }
 
 .ms-ListItem-secondaryText  {
@@ -300,20 +319,18 @@ hr {
 }
 
 .list.leaflet-control {
-	bottom: 50%;
-	left: 50%;
 	margin: 0;
 	pointer-events: none;
 }
 
 .list > .ms-Panel-main {
+	max-height: 80%;
 	width: 100%;
-	top: 0;
 	bottom: 0;
 	position: absolute;
 	float: right;
 	background-color: rgba(255, 255, 255, 0);
-	background-image: radial-gradient(circle at 0 100%, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	
+	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	
 	z-index: -2;
 	pointer-events: auto;
 }
@@ -322,6 +339,7 @@ hr {
 	background-color: rgba(255, 255, 255, 0);
 	pointer-events: auto;
 }
+
 .list a {
 	margin: 0 0 5px 0!important;
 }
@@ -351,8 +369,34 @@ hr {
 }
 
 #sidepanel {
-	height: 100%;
+	height: auto;
+	max-height: 51%;
+	top: 0;
+	bottom: 0;
 	overflow-y: scroll;
+}
+
+#mainpanel > .ms-Panel-contentInner {
+	overflow-y: hidden;
+	position: absolute;
+}
+
+.ms-Panel--small, .ms-Panel--medium {
+	top: 50%;
+	background-color: rgba(255, 255, 255, 0);
+	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);
+}
+
+.ms-Panel--small > #mainpanel, .ms-Panel--medium > #mainpanel {
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.ms-Panel--small #sidepanel, .ms-Panel--medium #sidepanel {
+	max-height: 100%;
+}
+.ms-ChoiceField-field > span {
+	margin-left: 25px;
 }
 
 a.username:hover > .ms-font-l {
@@ -362,11 +406,92 @@ a.username:hover > .ms-font-l {
 .picker__select--month, .picker__select--year {
 	height: 4em;
 }
-
-.ms-ChoiceField {
-	margin-top: 5px;
+.ms-Panel-main {
+	border-left: 0px solid #000;
+	border-right: 0px solid #000;
+}
+.all {
+	background-color: #444;
+}
+.h {
+	background-color: #E79404;
+}
+.m {
+	background-color: #DA1912;
+}
+.f {
+	background-color: #229701;
+}
+.b {
+	background-color: #3D7AB4;
+}
+.buttonbox {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: auto;
+	top: auto;
+}
+.buttonbox .ms-Grid-col {
+	margin: 0 0 0 0;
+}
+#select {
+	height: auto;
+	min-width: auto;
+	width: 100%;
+	padding: 8px 2px 2px 2px;
+	border: 0px solid #000;
+	border-right: 0px solid #000;
+}
+#select p {
+	display: none;
+}
+#select img {
+	width: 25px;
+	height: 25px;
+	margin: 0px auto;
+	display: inline-block;
+	position: relative;
+}
+.buttonlabel {
+	min-width: 25px;
+	margin: 2px auto;
+}
+@media (min-width: 640px) and (orientation: landscape) {
+#select p {
+	display: block;
+}
+.list.leaflet-control {
+	top: 50%;
+	left: 50%;
+}
+.list > .ms-Panel-main {
+	background-image: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	
 }
 
-label.ms-ChoiceField-field > span {
-	margin-left: 25px;
+#closepanel, #editbutton {
+	top: 20px;
+}
+#sidepanel {
+	min-height: 100%;
+}
+.ms-Panel--small, .ms-Panel--medium {
+	top: 0;
+	background-color: none;
+	background-image: none
+}
+.ms-Panel--small > #mainpanel {
+	position: absolute;
+	background-color: #fff;
+}
+.ms-Panel--medium .ms-Panel-main {
+	width: 33%;
+}
+
+}
+
+@media (min-width: 1024px) and (orientation: landscape) {
+	.ms-Panel--medium  .ms-Panel-main {
+		width: 33%!important;
+	}
 }
