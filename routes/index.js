@@ -16,7 +16,7 @@ var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
 //var uploadmedia = null;
 //Todo: user remove triggers userindex $inc -1
-var destination = function(req, file, cb) {
+/*var destination = function(req, file, cb) {
 	var p = ''+publishers+'/pu/publishers/emergencyservices/images/full';
 	
 	fs.access(p, function(err) {
@@ -65,8 +65,8 @@ var destination = function(req, file, cb) {
 var filename = function(req, file, cb) {
 	cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
 }
-var storage = multer.diskStorage({destination, filename})
-/*var storage = multer.diskStorage({
+var storage = multer.diskStorage({destination, filename})*/
+var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		var p = ''+publishers+'/pu/publishers/emergencyservices/images/full'
 		var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs'
@@ -95,7 +95,7 @@ var storage = multer.diskStorage({destination, filename})
 	filename: function (req, file, cb) {
 		cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
   	}
-})*/
+})
  
 var uploadmedia = multer({ storage: storage })
 dotenv.load();
