@@ -18,20 +18,41 @@ var upload = multer();
 //Todo: user remove triggers userindex $inc -1
 var destination = function(req, file, cb) {
 	var p = ''+publishers+'/pu/publishers/emergencyservices/images/full';
-	var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs';
+	
 	fs.access(p, function(err) {
 		if (err && err.code === 'ENOENT') {
-			mkdirp(p, function(err){
-				if (err) {
-					console.log("err", err);
-				}
-				mkdirp(q, function(err){
+			async.doWhilst(
+				function(){
+					mkdirp(p, function(err){
+						if (err) {
+							console.log("err", err);
+						}
+						var q = ''+publishers+'/pu/publishers/emergencyservices/images/thumbs';
+						mkdirp(q, function(err){
+							if (err) {
+								console.log("err", err);
+							}
+						})
+					})
+				}, 
+			    function(next) {
+					var check = ''+publishers+'/pu/publishers/emergencyservices/images/full';
+					fs.access(check, function(err){
+						if (err && err.code === 'ENOENT') {
+							next(null);
+						} else {
+							next(null, check)
+						}
+					})
+				}, //a function that checks that the file is not null
+			    function (err, check) {
+			        //here the file is not null
 					if (err) {
-						console.log("err", err);
+						cb(err)
 					}
-					cb(null, p)
-				})
-			})
+					cb(null, check)
+			    }
+			);
 		} else {
 			if (err && err.code === 'EACCESS') {
 				console.log('permission error: '+err)
@@ -39,7 +60,7 @@ var destination = function(req, file, cb) {
 				cb(null, p)
 			}
 		}
-	})
+	});
 } 
 var filename = function(req, file, cb) {
 	cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
