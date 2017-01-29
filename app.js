@@ -32,6 +32,17 @@ passport.deserializeUser(function(id, done) {
 });
 
 var app = express();
+// Add headers
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1) // trust first proxy	
+	app.use(function (req, res, next) {
+	    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:80');
+	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control, Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	    res.setHeader('Access-Control-Allow-Credentials', true);
+	    next();
+	});
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,9 +73,6 @@ var sess = {
 	store: store
 }
 app.use(cookieParser(sess.secret));
-if (app.get('env') === 'production') {
-	app.set('trust proxy', 1) // trust first proxy	
-}
 
 // session middleware configuration
 // see https://github.com/expressjs/session
