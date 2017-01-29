@@ -303,8 +303,8 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 						id: id,
 						data: datarray,
 						doc: doc,
-						lat: (req.app.locals.lat)?req.app.locals.lat:lat,
-						lng: (req.app.locals.lng)?req.app.locals.lng:lat,
+						lat: lat,
+						lng: lat,
 						info: ':)'
 					})
 
