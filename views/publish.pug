@@ -239,7 +239,6 @@ block content
 			var lat = center.lat;
 			var lng = center.lng;
 			$.post('/zoom/'+zoom+'/'+lat+'/'+lng+'', function(data){
-				//window.location.href = '/'+data
 			})
 		})
 		$(document).on('click', '#select', function(){
@@ -344,7 +343,7 @@ block content
 									contentType: false,
 									type: 'POST',
 									success: function(data){
-										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/6/null/null" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
+										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/6" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
 										map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
 										lMarker.remove()
 									}
@@ -380,8 +379,8 @@ block content
 
 					console.log(id)
 
-					$.post('/focus/'+id+'/'+6+'/'+lat+'/'+lng+'', function(){
-						window.location.href = '/focus/'+id+'/'+6+'/'+lat+'/'+lng+''
+					$.post('/focus/'+id+'/'+6+'', function(){
+						window.location.href = '/focus/'+id+'/'+6+''
 					})
 				}
 				
