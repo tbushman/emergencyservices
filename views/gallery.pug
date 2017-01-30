@@ -4,7 +4,7 @@ if (infowindow === 'new')
 			div.ms-Grid-row.ms-Panel-contentInner
 				a#closepanel
 					i.ms-Icon.ms-Icon--x
-				div.ms-Grid-col.ms-u-sm12
+				div.ms-Grid-col.ms-u-sm12#sidepanel
 
 				
 					form#form(enctype="multipart/form-data", method="POST", action="/api/addcontent/"+(id+1)+"", style="margin-bottom: 50px")
@@ -733,7 +733,7 @@ if (infowindow === 'edit')
 								a.ms-ListItem-image(href="#", id= doc._id, name= doc._id)
 									img(src= doc.thumb)
 								
-							p.ms-font-s Change Image
+							p.ms-font-l Change Image
 							div.ms-Grid-col.ms-u-xl12
 								input.ms-Button#media(type="file")
 							div.ms-Grid-col.ms-u-xl12#appendcanvas
