@@ -219,21 +219,15 @@ block content
 			
 		})
 		var lMarker;
-		var currentfeature;
-		if (#{data[id]._id} === #{id}) {
-			currentfeature = #{data[id]};
-		} else {
-			currentfeature = #{doc};
-		}
 		if (window.location.pathname.split('/')[2] !== 'addfeature' && window.location.pathname.split('/')[2] !== 'editcontent') {
 			
-			lMarker = L.marker([currentfeature.geometry.coordinates[1], currentfeature.geometry.coordinates[0]]).addTo(map);
+			lMarker = L.marker([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}]).addTo(map);
 			
 		} else {
-			lMarker = L.marker([currentfeature.geometry.coordinates[1], currentfeature.geometry.coordinates[0]], {draggable: true}).addTo(map);
+			lMarker = L.marker([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}], {draggable: true}).addTo(map);
 			
 		}
-		map.setView([currentfeature.geometry.coordinates[1], currentfeature.geometry.coordinates[0]])
+		map.setView([#{data[id].geometry.coordinates[1]}, #{data[id].geometry.coordinates[0]}])
 					
 		map.on('zoomend', function(e){
 			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent') {
@@ -371,7 +365,8 @@ block content
 					$('.list').css({display: 'block'})
 					$('.list > .ms-Panel-main').css({display: 'block'})
 					$('.list').addClass("is-open");
-					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s">'+list+' features nearby:</p>');
+					$('.listheader').remove()
+					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader">'+list+' features nearby:</p>');
 					map.dragging.disable();
 					map.touchZoom.disable();
 					map.doubleClickZoom.disable();

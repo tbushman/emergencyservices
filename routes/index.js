@@ -551,9 +551,9 @@ router.get('/api/publish', function(req, res, next){
 							/*importjson.sort(function(a, b){
 								return (a.properties.cartodb_id > b.properties.cartodb_id) ? -1 : ((a.properties.cartodb_id < b.properties.cartodb_id) ? 1 : 0);
 							})*/
-							for (var i in importjson) {
-								
+							for (var i = 0; i < importjson.length; i++) {
 								var entry = new Content({
+									_id: i,
 									type: "Feature",
 									properties: {
 										label: importjson[i].properties.label,
