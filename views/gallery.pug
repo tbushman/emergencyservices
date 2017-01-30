@@ -35,6 +35,34 @@ if (infowindow === 'new')
 						div.ms-TextField
 							label.ms-Label Link
 							input.ms-TextField-field(type="text", name="website")
+						
+						p.ms-font-l Type
+						p.ms-font-s Please choose only one.
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										
+										input(id="b", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="b")
+										label.ms-ChoiceField-field#type_b(for="b")
+											span.ms-label Travel
+								
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="f", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="f")
+										label.ms-ChoiceField-field#type_f(for="f")
+											span.ms-label Food
+								
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="h", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="h")
+										label.ms-ChoiceField-field#type_h(for="h")
+											span.ms-label Housing
+								
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="m", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="m")
+										label.ms-ChoiceField-field#type_h(for="m")
+											span.ms-label Medical
 						p.ms-font-l Hours of Operation
 						div.ms-Grid-row
 							div.ms-Grid-col.ms-u-sm8#mo_hrs
@@ -298,7 +326,8 @@ if (infowindow === 'new')
 							div.ms-Grid-col.ms-u-xl12
 								input.ms-Button#media(type="file")
 							div.ms-Grid-col.ms-u-xl12#appendcanvas
-
+								input(type="hidden", id="inputthumb", name="thumb")
+								input(type="hidden" id="inputimg" name="img")
 						input(style="display: none", type="number", step="any", id="lat", name="lat", value= lat)
 						input(style="display: none", type="number", step="any", id="lng", name="lng", value= lng)
 						hr
@@ -352,9 +381,10 @@ if (infowindow === 'edit')
 						div.ms-Grid-col.ms-u-sm12
 							p.ms-font-xl #{doc.properties.label}
 							p.ms-font-l Type
+							p.ms-font-s.ms-fontWeight-semibold Please choose only one.
 								div.ms-Grid-row
 									div.ms-Grid-col.ms-u-sm12
-										div(class=(doc.properties.cat === 'B')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+										div(class=(doc.properties.cat === 'B')?"ms-ChoiceField":"ms-ChoiceField")
 											if (doc.properties.cat === 'B')
 												input(id="b", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="b")
 											else
@@ -363,7 +393,7 @@ if (infowindow === 'edit')
 												span.ms-label Travel
 									
 									div.ms-Grid-col.ms-u-sm12
-										div(class=(doc.properties.cat === 'F')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+										div(class=(doc.properties.cat === 'F')?"ms-ChoiceField":"ms-ChoiceField")
 											if (doc.properties.cat === 'F')
 												input(id="f", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="f")
 											else
@@ -372,7 +402,7 @@ if (infowindow === 'edit')
 												span.ms-label Food
 									
 									div.ms-Grid-col.ms-u-sm12
-										div(class=(doc.properties.cat === 'H')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+										div(class=(doc.properties.cat === 'H')?"ms-ChoiceField":"ms-ChoiceField")
 											if (doc.properties.cat === 'H')
 												input(id="h", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="h")
 											else
@@ -381,7 +411,7 @@ if (infowindow === 'edit')
 												span.ms-label Housing
 									
 									div.ms-Grid-col.ms-u-sm12
-										div(class=(doc.properties.cat === 'M')?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+										div(class=(doc.properties.cat === 'M')?"ms-ChoiceField":"ms-ChoiceField")
 											if (doc.properties.cat === 'M')
 												input(id="m", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="m")
 											else
@@ -737,7 +767,8 @@ if (infowindow === 'edit')
 							div.ms-Grid-col.ms-u-xl12
 								input.ms-Button#media(type="file")
 							div.ms-Grid-col.ms-u-xl12#appendcanvas
-								
+								input(type="hidden", id="inputthumb", name="thumb", value= doc.properties.thumb)
+								input(type="hidden" id="inputimg" name="img", value= doc.properties.image)
 										
 							input(style="display: none", type="number", step="any", id="lat", name="lat", value= doc.geometry.coordinates[1])
 							input(style="display: none", type="number", step="any", id="lng", name="lng", value= doc.geometry.coordinates[0])

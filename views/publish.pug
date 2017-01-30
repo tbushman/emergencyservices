@@ -88,7 +88,7 @@ block content
 					$('.list').css({display: 'none'})
 					$('.js-togglePanel').remove()
 				})
-				$('#closepanel').click(function(){
+				$(document).on('click', '#closepanel', function(){
 					$panel.toggleClass("is-open");
 					$panelMain.css({display: "none"});
 					$('.js-togglePanel').remove();
@@ -347,7 +347,7 @@ block content
 									contentType: false,
 									type: 'POST',
 									success: function(data){
-										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/'+zoom+'/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-m">'+data.properties.label+'</span></a>')
+										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/'+zoom+'/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-l">'+data.properties.label+'</span></a>')
 										map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
 										lMarker.remove()
 									}
@@ -366,7 +366,7 @@ block content
 					$('.list > .ms-Panel-main').css({display: 'block'})
 					$('.list').addClass("is-open");
 					$('.listheader').remove()
-					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader">'+list+' features nearby:</p>');
+					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader ms-fontWeight-semibold">'+list+' features nearby:</p>');
 					map.dragging.disable();
 					map.touchZoom.disable();
 					map.doubleClickZoom.disable();
@@ -510,7 +510,7 @@ block content
 			} else {
 				id = #{id}
 			}
-			$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="ms-Grid-row"><img id="return"></img><input type="hidden" id="inputthumb" name="thumb"></input><input type="hidden" id="inputimg" name="img"></input></div>')
+			$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="ms-Grid-row"><img id="return"></img></div>')
 			setTimeout(function(){
 				processImage()	
 			}, 200)
