@@ -228,10 +228,8 @@ router.get('/home', function(req, res, next) {
 	})
 })
 
-router.post('/zoom/:zoom/:lat/:lng', function(req, res, next){
+router.post('/zoom/:zoom', function(req, res, next){
 	var zoom = parseInt(req.params.zoom, 10);
-	var lat = req.params.lat;
-	var lng = req.params.lng;
 	req.app.locals.zoom = zoom;
 	//req.app.locals.lat = lat;
 	//req.app.locals.lng = lng;
@@ -553,11 +551,11 @@ router.get('/api/publish', function(req, res, next){
 							/*importjson.sort(function(a, b){
 								return (a.properties.cartodb_id > b.properties.cartodb_id) ? -1 : ((a.properties.cartodb_id < b.properties.cartodb_id) ? 1 : 0);
 							})*/
-
+							var countup = 0;
 							for (var i in importjson) {
-
+								
 								var entry = new Content({
-									_id: i,
+									_id: countup,
 									type: "Feature",
 									properties: {
 										label: importjson[i].properties.label,
@@ -604,7 +602,9 @@ router.get('/api/publish', function(req, res, next){
 									if(err) {
 										console.log('save error: '+err);  // handle errors!
 										next(err, info)
-									}
+									} else {
+										countup++
+									}									
 								})
 							}
 							next(null, info)							
@@ -675,7 +675,7 @@ router.all('/api/deletefeature/:id', function(req, res, next) {
 				loggedin: req.app.locals.loggedin,
 				username: req.app.locals.username,
 				id: datarray.length - 1,
-				zoom: 6,
+				zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
 				data: datarray,
 				lng: data[0].geometry.coordinates[0],
 				lat: data[0].geometry.coordinates[1],
@@ -705,7 +705,7 @@ router.get('/api/editcontent/:id', function(req, res, next){
 				loggedin: req.app.locals.loggedin,
 				username: req.app.locals.username,
 				id: id,
-				zoom: 6,
+				zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
 				doc: doc,
 				data: datarray,
 				lng: loc[0],
@@ -884,7 +884,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			loggedin: req.app.locals.loggedin,
 			username: doc.username,
 			id: parseInt(id, 10),
-			zoom: 6,
+			zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
 			doc: doc,
 			data: datarray,
 			lng: loc[0],
@@ -1100,7 +1100,7 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 			loggedin: req.app.locals.loggedin,
 			username: req.app.locals.loggedin,
 			id: id,
-			zoom: 6,
+			zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
 			doc: entry,
 			data: datarray,
 			lng: loc[0],

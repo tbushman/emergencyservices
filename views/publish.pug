@@ -235,10 +235,7 @@ block content
 			}
 			
 			zoom = map.getZoom();
-			var center = map.getCenter()
-			var lat = center.lat;
-			var lng = center.lng;
-			$.post('/zoom/'+zoom+'/'+lat+'/'+lng+'', function(data){
+			$.post('/zoom/'+zoom+'', function(data){
 			})
 		})
 		$(document).on('click', '#select', function(){
