@@ -598,14 +598,15 @@ router.get('/api/publish', function(req, res, next){
 									    coordinates: [importjson[i].geometry.coordinates[0], importjson[i].geometry.coordinates[1]]
 									}
 								})
+								countup++
 								entry.save(function(err) {
 									if(err) {
 										console.log('save error: '+err);  // handle errors!
+										countup--
 										//next(err, info)
-									} else {
-										countup++
-									}									
+									}
 								})
+								
 							}
 							next(null, info)							
 						}
