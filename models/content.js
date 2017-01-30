@@ -1,8 +1,9 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+	autoIncrement = require('mongoose-auto-increment');
 
 var Content = new Schema({
-	_id: Number,
+	//_id: Number,
 	type: String,
 	properties: {
 		label: String,
@@ -80,5 +81,5 @@ var Content = new Schema({
 	    coordinates: []
 	}
 }, { collection: 'es' })
-
+Content.plugin(autoIncrement.plugin, 'Content');
 module.exports = mongoose.model('Content', Content);

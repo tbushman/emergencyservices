@@ -551,11 +551,9 @@ router.get('/api/publish', function(req, res, next){
 							/*importjson.sort(function(a, b){
 								return (a.properties.cartodb_id > b.properties.cartodb_id) ? -1 : ((a.properties.cartodb_id < b.properties.cartodb_id) ? 1 : 0);
 							})*/
-							var countup = 0;
 							for (var i in importjson) {
 								
 								var entry = new Content({
-									_id: countup,
 									type: "Feature",
 									properties: {
 										label: importjson[i].properties.label,
@@ -598,11 +596,9 @@ router.get('/api/publish', function(req, res, next){
 									    coordinates: [importjson[i].geometry.coordinates[0], importjson[i].geometry.coordinates[1]]
 									}
 								})
-								countup++
 								entry.save(function(err) {
 									if(err) {
 										console.log('save error: '+err);  // handle errors!
-										countup--
 										//next(err, info)
 									}
 								})
