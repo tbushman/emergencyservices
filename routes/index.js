@@ -601,7 +601,7 @@ router.get('/api/publish', function(req, res, next){
 								entry.save(function(err) {
 									if(err) {
 										console.log('save error: '+err);  // handle errors!
-										next(err, info)
+										//next(err, info)
 									} else {
 										countup++
 									}									
