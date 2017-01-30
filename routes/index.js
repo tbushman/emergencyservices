@@ -459,11 +459,10 @@ function convertHoO(str) {
 			var hours;
 			if (str.split(';')[1] !== undefined || str.split('_')[1] !== undefined) {
 				if (str.split(';')[1] !== undefined) {
-					str.split(';').pop();
-					hours = str;
+					hours = str.split(';').join('-')
 				} else {
-					str.split('_').pop()
-					hours = str;
+					
+					hours = str.split('_').join('-')
 				}
 			} else {
 				hours = str
@@ -474,7 +473,7 @@ function convertHoO(str) {
 		} else {
 			var hours;
 			if (str.split('&')[1] !== undefined) {
-				hours = str.split('&').join('-');
+				hours = str.split(' & ').join('-');
 			} else
 			if (str.split(';')[1] !== undefined) {
 				hours = str.split(';')[0];
