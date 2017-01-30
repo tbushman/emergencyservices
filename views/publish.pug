@@ -295,7 +295,12 @@ block content
 				map.fitBounds(bounds)
 			})
 		})
+		var clicked;
+		map.on('click', function(e){
+			clicked = e.latlng;
+		})
 		$(document).on('click', '.leaflet-interactive', function(e){
+			
 			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
 				lMarker.on('dragend', function(event){
 					var marker = event.target;
@@ -308,9 +313,11 @@ block content
 				});
 			} else {
 				zoom = map.getZoom();
-				var center = map.getCenter()
-				var lat = center.lat;
-				var lng = center.lng;
+				var center = map.getCenter();
+				
+				console.log(clicked)
+				var lat = clicked.lat;
+				var lng = clicked.lng;
 				var d = $(this).attr('d').split('a')[0];
 				var dxm = d.split(',')[0]
 				var dx = parseInt(dxm.replace('M', ''), 10);

@@ -275,7 +275,7 @@ router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 
 router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
-	var id = req.params.id;
+	var id = parseInt(req.params.id, 10);
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
 	var lng = req.params.lng;
@@ -287,10 +287,10 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			if (error) {
 				return next(error)
 			}
-			//if (req.params.lat === null || req.params.lat === 'null') {
+			if (req.params.lat === null || req.params.lat === 'null') {
 				lat = doc.geometry.coordinates[1]
 				lng = doc.geometry.coordinates[0]
-			//}
+			}
 			/*req.app.locals.zoom = zoom;
 			req.app.locals.lat = lat;
 			req.app.locals.lng = lng;*/
