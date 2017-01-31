@@ -5,6 +5,7 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 var path = require('path');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
+var promise = require('bluebird');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -17,6 +18,7 @@ var pug = require('pug');
 dotenv.load();
 
 passport.use(new LocalStrategy(Publisher.authenticate()));
+mongoose.Promise = promise;
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
