@@ -66,10 +66,11 @@ function ensureAuthenticated(req, res, next) {
 //if not, go to global profile (home)
 router.get('/', function (req, res) {
 	
-	if (req.user) {
+	if (req.app.locals.loggedin) {
 		req.app.locals.userId = req.user._id;
 		req.app.locals.givenName = req.user.givenName;
 		req.app.locals.loggedin = req.user.username;
+		req.app.locals.username = req.user.username;
 		return res.redirect('/api/publish')
 	} else {
 		return res.redirect('/home')
@@ -112,6 +113,7 @@ router.get('/login', function(req, res, next){
 router.post('/login', upload.array(), passport.authenticate('local'), function(req, res, next) {
 	req.app.locals.userId = req.user._id;
 	req.app.locals.loggedin = req.user.username;
+	req.app.locals.username = req.user.username;
     res.redirect('/api/publish')
 });
 
@@ -120,6 +122,7 @@ router.get('/logout', function(req, res) {
 	req.app.locals.username = null;
 	req.app.locals.userId = null;
 	req.app.locals.zoom = null;
+	req.app.locals.loggedin = null;
 	req.logout();
 	if (req.user || req.session) {
 		req.user = null;
