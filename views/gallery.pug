@@ -793,8 +793,12 @@ if (infowindow === 'doc')
 				div.ms-Grid-row#sidepanel(class= sidepanel)
 					div.ms-Grid-col.ms-u-sm12
 						p.ms-font-xl #{doc.properties.label} 
-						a(href="http://"+doc.properties.website+"", target="_blank")
-							i.ms-Icon.ms-Icon--link
+						if (doc.properties.website.split('/')[0] === 'http:')
+							a(href=""+doc.properties.website+"", target="_blank")
+								i.ms-Icon.ms-Icon--link
+						else
+							a(href="http://"+doc.properties.website+"", target="_blank")
+								i.ms-Icon.ms-Icon--link
 						div#append(class= append)
 							img(src= doc.properties.image)
 					div.ms-Grid-col.ms-u-sm12
