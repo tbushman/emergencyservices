@@ -294,10 +294,10 @@ router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			if (error) {
 				return next(error)
 			}
-			if (req.params.lat === null || req.params.lat === 'null') {
+			//if (req.params.lat === null || req.params.lat === 'null') {
 				lat = doc.geometry.coordinates[1]
 				lng = doc.geometry.coordinates[0]
-			}
+			//}
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
@@ -306,7 +306,7 @@ router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 					return res.render('publish', {
 						loggedin: req.app.locals.loggedin,
 						infowindow: 'doc',
-						zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
+						zoom: zoom,
 						id: id,
 						data: datarray,
 						doc: doc,
@@ -318,7 +318,7 @@ router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			} else {
 				return res.render('publish', {
 					infowindow: 'doc',
-					zoom: (req.app.locals.zoom)?req.app.locals.zoom:zoom,
+					zoom: zoom,
 					data: datarray,
 					id: id,
 					doc: doc,
