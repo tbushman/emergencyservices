@@ -14,6 +14,7 @@ var Publisher = require('../models/publishers.js');
 var Content = require('../models/content.js');
 var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
+
 //var uploadmedia = null;
 //Todo: user remove triggers userindex $inc -1
 
@@ -47,14 +48,18 @@ var storage = multer.diskStorage({
 		cb(null, file.fieldname + '_' + req.params.id + '.jpeg')   	
   	}
 })
- 
+
+//use uploadmedia var as middleware 
 var uploadmedia = multer({ storage: storage })
+
+//always
 dotenv.load();
 
 var geolocation = require ('google-geolocation') ({
 	key: process.env.GOOGLE_KEY
 });
 
+//for all /api/*
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) { 
 		return next(); 
@@ -66,7 +71,7 @@ function ensureAuthenticated(req, res, next) {
 //if not, go to global profile (home)
 router.get('/', function (req, res) {
 	
-	if (req.app.locals.loggedin) {
+	if (req.user) {
 		req.app.locals.userId = req.user._id;
 		req.app.locals.givenName = req.user.givenName;
 		req.app.locals.loggedin = req.user.username;
@@ -77,6 +82,7 @@ router.get('/', function (req, res) {
 	}
 });
 
+//improve error handling
 router.get('/register', function(req, res) {
     return res.render('register', { } );
 });
@@ -129,7 +135,8 @@ router.get('/logout', function(req, res) {
 		req.session.destroy(function(err){
 			if (err) {
 				req.session = null;
-				return next(err);
+				//improve error handling
+				return res.redirect('/');
 			} else {
 				req.session = null;
 				return res.redirect('/');
@@ -273,8 +280,7 @@ router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 		return res.json(doc)
 	})
 });
-
-router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
+router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	var id = parseInt(req.params.id, 10);
 	var zoom = req.params.zoom;
@@ -292,14 +298,10 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 				lat = doc.geometry.coordinates[1]
 				lng = doc.geometry.coordinates[0]
 			}
-			/*req.app.locals.zoom = zoom;
-			req.app.locals.lat = lat;
-			req.app.locals.lng = lng;*/
 			var datarray = [];
 			for (var l in data) {
 				datarray.push(data[l])
 			}
-			
 			if (req.isAuthenticated()) { 
 					return res.render('publish', {
 						loggedin: req.app.locals.loggedin,
@@ -324,7 +326,33 @@ router.all('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 					lng: lng,
 					info: ':)'
 				})
-			}			
+			}		
+		})						
+	})
+})
+router.post('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	var id = parseInt(req.params.id, 10);
+	var zoom = req.params.zoom;
+	var lat = req.params.lat;
+	var lng = req.params.lng;
+	Content.findOne({_id: id},function(err, doc){
+		if (err) {
+			return next(err)
+		}
+		Content.find({}, function(error, data) {
+			if (error) {
+				return next(error)
+			}
+			if (req.params.lat === null || req.params.lat === 'null') {
+				lat = doc.geometry.coordinates[1]
+				lng = doc.geometry.coordinates[0]
+			}
+			var datarray = [];
+			for (var l in data) {
+				datarray.push(data[l])
+			}
+			return res.json(doc)
 		})						
 	})	
 })
@@ -566,7 +594,9 @@ router.get('/api/publish', function(req, res, next){
 										zip: importjson[i].properties.zip,
 										phone: importjson[i].properties.phone,
 										description: "",
+										//this could come in handy as app improves, but not currently in use:
 										current: false,
+										//for hours of operation
 										website: importjson[i].properties.website,
 										cat: importjson[i].properties.type,
 										hours: {

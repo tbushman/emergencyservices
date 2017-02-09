@@ -168,8 +168,106 @@ block content
 		map.keyboard.enable();
 		if (map.tap) map.tap.enable();
 		document.getElementById('map').style.cursor='grab';
+		var clicked;
+		map.on('click', function(e){
+			clicked = e.latlng;
+			
+		})
 		
+		$(document).on('click', '.leaflet-interactive', function(e){
+			onClick(e)
+			
+		})
 		
+		function onClick(e) {
+			zoom = map.getZoom();
+			var center = map.getCenter();
+			var latlng = clicked;
+			var lng = clicked.lng;
+			var lat = clicked.lat;
+			console.log($(e.originalEvent.explicitOriginalTarget))
+			var d = $(e.originalEvent.explicitOriginalTarget).attr('d').split('a')[0];
+			var dxm = d.split(',')[0]
+			var dx = parseInt(dxm.replace('M', ''), 10);
+			var dy = parseInt(d.split(',')[1], 10);
+			var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
+			var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+5, dy+5, dy+5];
+
+			var grid = [[]];
+			for (var x = 0; x < rangex.length; x++) {
+				grid[x] = [];
+				for (var y = 0; y < rangey.length; y++) {
+					grid[x][y] = 'M' + rangex[x] + ',' + rangey[y]
+				}
+			}
+			console.log(rangex, rangey, grid)
+			var that = $(document).find($("path[d^='"+d+"']"))
+			console.log(d, that)
+			var list = 0;
+			for (var i in grid) {
+				for (var j in grid[i]) {
+					var indexes = []
+					for (var k = 0; k < $('#map').find($("path[d^='"+grid[i][j]+"']")).length; k++) {
+						if ($('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class') !== undefined) {
+							list++;
+							var classi = $('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class');
+							var id = classi
+							$.ajax({
+								url: '/list/'+id+'/'+zoom+'/'+lat+'/'+lng+'',
+								processData: false,
+								contentType: false,
+								type: 'POST',
+								success: function(data){
+									$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/'+zoom+'/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-l">'+data.properties.label+'</span></a>')
+									map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
+									lMarker.remove()
+								}
+							});
+						} else {
+
+						}
+
+					}
+
+				}												
+			}
+			if (list > 1) {
+				console.log(list)
+				$('.list').css({display: 'block'})
+				$('.list > .ms-Panel-main').css({display: 'block'})
+				$('.list').addClass("is-open");
+				$('.listheader').remove()
+				$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader ms-fontWeight-semibold">'+list+' features nearby:</p>');
+				map.dragging.disable();
+				map.touchZoom.disable();
+				map.doubleClickZoom.disable();
+				map.scrollWheelZoom.disable();
+				map.boxZoom.disable();
+				map.keyboard.disable();
+				if (map.tap) map.tap.disable();
+				document.getElementById('map').style.cursor='default';
+				$('.list > .js-togglePanel').css('pointer-events', 'auto')
+
+			} else {
+				if (list === 0) {
+					//clicked = {lat: #{lat}, lng: #{lng}}
+				} else {
+					var id = $(e.originalEvent.explicitOriginalTarget).attr('class').split(' ')[0];
+					lat = latlng.lat;
+					lng = latlng.lng;
+					console.log(id)
+
+					$.post('/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+'').done(function(result){
+						var lat = result.geometry.coordinates[1];
+						var lng = result.geometry.coordinates[0];
+						window.location.href = '/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+''
+						
+
+						//
+					})
+				}
+			}
+		}
 		var datalength = #{data.length}
 		console.log(datalength)
 		var dataLayer;
@@ -180,8 +278,9 @@ block content
 				var cut = feature.geometry.coordinates[0];
 				feature.geometry.coordinates.splice(0, 1);
 				feature.geometry.coordinates.push(cut)
-
 			}
+			
+			
 			dataLayer = L.geoJSON(data, {
 			    onEachFeature: onEachFeature,
 				pointToLayer: function (feature, latlng) {
@@ -204,16 +303,21 @@ block content
 							fillColor = '#fff'
 							break;
 					}
-					var geojsonMarkerOptions = {
+					var circleMarker;
+					
+					var geojsonMarkerOptions;
+					
+					geojsonMarkerOptions = {
 					    radius: 11,
 					    fillColor: fillColor,
 					    color: "rgba(0, 0, 0, 0)",
 					    weight: 2,
 					    opacity: 1,
 					    fillOpacity: 0.8,
-						className: ""+feature._id+""
+						className: ""+feature._id+""					    
 					};
-					return L.circleMarker(latlng, geojsonMarkerOptions);
+					circleMarker = L.circleMarker(latlng, geojsonMarkerOptions)
+					return circleMarker;
 				}
 			}).addTo(map);
 			
@@ -226,6 +330,17 @@ block content
 		} else {
 			lMarker = L.marker([#{lat}, #{lng}], {draggable: true}).addTo(map);
 			
+		}
+		if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
+			lMarker.on('dragend', function(event){
+				var marker = event.target;
+			    var position = marker.getLatLng();
+				console.log(position);
+				marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+				map.panTo(new L.LatLng(position.lat, position.lng))
+				$('form > #lat').val(position.lat)
+				$('form > #lng').val(position.lng)
+			});
 		}
 		map.setView([#{lat}, #{lng}])
 					
@@ -277,7 +392,11 @@ block content
 				    onEachFeature: onEachFeature,
 					pointToLayer: function (feature, latlng) {
 						
-						var geojsonMarkerOptions = {
+						var circleMarker;
+
+						var geojsonMarkerOptions;
+
+						geojsonMarkerOptions = {
 						    radius: 11,
 						    fillColor: fillColor,
 						    color: "rgba(0, 0, 0, 0)",
@@ -286,111 +405,15 @@ block content
 						    fillOpacity: 0.8,
 							className: ""+feature._id+""
 						};
-						return L.circleMarker(latlng, geojsonMarkerOptions);
+						circleMarker = L.circleMarker(latlng, geojsonMarkerOptions)
+						return circleMarker;
 					}
 				}).addTo(map);
 				map.fitBounds(bounds)
 			})
 		})
-		var clicked;
-		map.on('click', function(e){
-			clicked = e.latlng;
-		})
-		$(document).on('click', '.leaflet-interactive', function(e){
-			
-			if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
-				lMarker.on('dragend', function(event){
-					var marker = event.target;
-				    var position = marker.getLatLng();
-					console.log(position);
-					marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
-					map.panTo(new L.LatLng(position.lat, position.lng))
-					$('form > #lat').val(position.lat)
-					$('form > #lng').val(position.lng)
-				});
-			} else {
-				zoom = map.getZoom();
-				var center = map.getCenter();
-				
-				console.log(clicked)
-				var lat = clicked.lat;
-				var lng = clicked.lng;
-				var d = $(this).attr('d').split('a')[0];
-				var dxm = d.split(',')[0]
-				var dx = parseInt(dxm.replace('M', ''), 10);
-				var dy = parseInt(d.split(',')[1], 10);
-				var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
-				var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+5, dy+5, dy+5];
-				
-				var grid = [[]];
-				for (var x = 0; x < rangex.length; x++) {
-					grid[x] = [];
-					for (var y = 0; y < rangey.length; y++) {
-						grid[x][y] = 'M' + rangex[x] + ',' + rangey[y]
-					}
-				}
-				console.log(rangex, rangey, grid)
-				var that = $(document).find($("path[d^='"+d+"']"))
-				console.log(d, that)
-				var list = 0;
-				for (var i in grid) {
-					for (var j in grid[i]) {
-						var indexes = []
-						for (var k = 0; k < $('#map').find($("path[d^='"+grid[i][j]+"']")).length; k++) {
-							if ($('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class') !== undefined) {
-								list++;
-								var classi = $('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class');
-								var id = classi
-								$.ajax({
-									url: '/list/'+id+'/'+zoom+'/'+lat+'/'+lng+'',
-									processData: false,
-									contentType: false,
-									type: 'POST',
-									success: function(data){
-										$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/'+zoom+'/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-l">'+data.properties.label+'</span></a>')
-										map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
-										lMarker.remove()
-									}
-								});
-							} else {
-
-							}
-
-						}
-
-					}												
-				}
-				if (list > 1) {
-					console.log(list)
-					$('.list').css({display: 'block'})
-					$('.list > .ms-Panel-main').css({display: 'block'})
-					$('.list').addClass("is-open");
-					$('.listheader').remove()
-					$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader ms-fontWeight-semibold">'+list+' features nearby:</p>');
-					map.dragging.disable();
-					map.touchZoom.disable();
-					map.doubleClickZoom.disable();
-					map.scrollWheelZoom.disable();
-					map.boxZoom.disable();
-					map.keyboard.disable();
-					if (map.tap) map.tap.disable();
-					document.getElementById('map').style.cursor='default';
-					$('.list > .js-togglePanel').css('pointer-events', 'auto')
-
-
-				} else {
-					var id = $(this).attr('class').split(' ')[0]
-
-					console.log(id)
-
-					$.post('/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+'', function(){
-						window.location.href = '/focus/'+id+'/'+zoom+'/'+lat+'/'+lng+''
-					})
-				}
-				
-				
-			}
-		})
+		
+		
 		$(document).on('click', '.list > .js-togglePanel', function(){
 			$('.list > .ms-Panel-main').css({display: 'none'})
 			$('.list').removeClass('is-open')
@@ -452,6 +475,8 @@ block content
 								
 			}
 		})
+		
+		
 		$(document).on('click', '.ms-ChoiceField-field', function(e){
 			var that = $(this);
 			var id = that.attr('id');
