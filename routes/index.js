@@ -357,6 +357,23 @@ router.post('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	})	
 })
 
+router.get('/listing/:id/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	var id = parseInt(req.params.id, 10)
+	var zoom = req.params.zoom;
+	var lat = req.params.lat;
+	var lng = req.params.lng;
+	req.app.locals.zoom = zoom;
+	req.app.locals.lat = lat;
+	req.app.locals.lng = lng;
+	Content.findOne({_id: id}, function(err, doc){
+		if (err) {
+			return next(err)
+		}
+		return res.json(doc)				
+	})	
+})
+
 router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	var id = parseInt(req.params.id, 10)
