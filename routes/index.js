@@ -67,7 +67,7 @@ function ensureAuthenticated(req, res, next) {
 	return res.redirect('/login');
 }
 
-//if logged in, go to your own profile
+//if logged in, go to edit profile
 //if not, go to global profile (home)
 router.get('/', function (req, res) {
 	
@@ -243,19 +243,6 @@ router.post('/zoom/:zoom', function(req, res, next){
 	req.app.locals.zoom = zoom;
 	//req.app.locals.lat = lat;
 	//req.app.locals.lng = lng;
-	/*Content.find({}, function(err, data){
-		if (err) {
-			next(err)
-		}
-		var index;
-
-		var datarray = [];
-		for (var l in data) {
-			datarray.push(data[l])
-		}
-
-		return res.send('home')
-	})*/
 	return res.send('ok')
 })
 
@@ -704,28 +691,33 @@ router.get('/api/publish', function(req, res, next){
 
 router.all('/api/deletefeature/:id', function(req, res, next) {
 	var id = parseInt(req.params.id, 10);
-	Content.remove({_id: id}, 1, function(e, doc){
+	Content.remove({_id: id}, function(e, doc){
 		if (e) {
 			console.log('delete error: '+e)
 			return next(e);
 		}
-		Content.find({}, function(error, data){
-			if (error) {
-				return next(error)
+		Content.findOneAndUpdate({_id: {$gte:id}}, {$inc:{_id:-1}}, function(err, doc){
+			if (err){
+				return next(err)
 			}
-			var datarray = [];
-			for (var l in data) {
-				datarray.push(data[l])
-			}
-			return res.render('publish', {
-				loggedin: req.app.locals.loggedin,
-				username: req.app.locals.username,
-				id: datarray.length - 1,
-				zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
-				data: datarray,
-				lng: data[0].geometry.coordinates[0],
-				lat: data[0].geometry.coordinates[1],
-				info: 'Deleted'
+			Content.find({}, function(error, data){
+				if (error) {
+					return next(error)
+				}
+				var datarray = [];
+				for (var l in data) {
+					datarray.push(data[l])
+				}
+				return res.render('publish', {
+					loggedin: req.app.locals.loggedin,
+					username: req.app.locals.username,
+					id: datarray.length - 1,
+					zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
+					data: datarray,
+					lng: data[0].geometry.coordinates[0],
+					lat: data[0].geometry.coordinates[1],
+					info: 'Deleted'
+				})
 			})
 		})
 	})

@@ -38,7 +38,7 @@ var app = express();
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1) // trust first proxy	
 	app.use(function (req, res, next) {
-	    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:80');
+	    res.setHeader('Access-Control-Allow-Origin', '*');
 	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control, Origin, X-Requested-With, Content-Type, Accept, Authorization');
 	    res.setHeader('Access-Control-Allow-Credentials', true);
@@ -110,7 +110,9 @@ app.use(function (err, req, res) {
 
 var uri = process.env.DEVDB;
 
-mongoose.connect(uri, {authMechanism: 'ScramSHA1'});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+var promise = mongoose.connect(uri, { useMongoClient: true }/*, {authMechanism: 'ScramSHA1'}*/);
+promise.then(function(db){
+	db.on('error', console.error.bind(console, 'connection error:'));
+});
+
 module.exports = app;

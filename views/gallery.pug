@@ -793,7 +793,7 @@ if (infowindow === 'doc')
 				div.ms-Grid-row#sidepanel(class= sidepanel)
 					div.ms-Grid-col.ms-u-sm12
 						p.ms-font-xl #{doc.properties.label} 
-						if (doc.properties.website.split('/')[0] === 'http:')
+						if (doc.properties.website.split('/')[0] === 'http:' || doc.properties.website.split('/')[0] === 'https:')
 							a(href=""+doc.properties.website+"", target="_blank")
 								i.ms-Icon.ms-Icon--link
 						else

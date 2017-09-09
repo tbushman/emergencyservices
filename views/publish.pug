@@ -71,7 +71,7 @@ block content
 		$('.list').css({display: 'none'})
 		$('#dropdown').slideUp(100); 
 		$('#menu').removeClass('selected');
-	
+		
 		$.fn.Panel = function () {
 		    return this.each(function () {
 				var $panel = $(this);
@@ -131,7 +131,7 @@ block content
 
 			e.stopPropagation();
 		});
-
+		
 		var map;
 		
 		map = new L.map('map', { 
@@ -142,15 +142,15 @@ block content
 		  	maxZoom: 18
 		});
 		var options3 = {
-			attribution: 'Map tiles by <a href="http://carto.com/">Carto</a><a href="http://cartodb.com/attributions"</a>'
+			attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>'
 		};
 		
 		L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(map);
-		L.tileLayer('http://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
-
+		L.tileLayer('https://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
+		
 		var featurePane = map.createPane('featurePane');
 		featurePane.style.zIndex = 20000;
-
+		
 		var MyControl = L.Control.extend({
 		    options: {
 		        position: 'topright'
@@ -555,7 +555,7 @@ block content
 			}, 200)
 					
 		});
-
+		
 		function processImage() {
 			
 		    var dataurl = null;
