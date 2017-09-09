@@ -383,13 +383,15 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 router.all('/search/:term', function(req, res, next){
 	var term = req.params.term;
 	var regex = new RegExp(term);
-	console.log(regex)
 	Content.find({'properties.label': { $regex: regex }}, function(err, pu){
 		if (err) {
 			return next(err)
 		}
-		if (!err && pu === null) {
-			Content.find({regex: true}, function(er, doc){
+		if (!err && pu.length === 0) {
+			var key = 'properties.'+term+'';
+			var query = {}
+			query[key] = true;
+			Content.find(query, function(er, doc){
 				if (er) {
 					return next(err)
 				}
@@ -398,8 +400,9 @@ router.all('/search/:term', function(req, res, next){
 				}
 				return res.json(doc)
 			})			
+		} else {
+			return res.json(pu)			
 		}
-		return res.json(pu)
 	})
 })
 
