@@ -435,7 +435,7 @@ a.username:hover > .ms-font-l {
 .buttonbox .ms-Grid-col {
 	margin: 0 0 0 0;
 }
-#select {
+#select, #geolocate {
 	height: auto;
 	min-width: auto;
 	width: 100%;
@@ -443,22 +443,25 @@ a.username:hover > .ms-font-l {
 	border: 0px solid #000;
 	border-right: 0px solid #000;
 }
-#select p {
+#select p, #geolocate p {
 	display: none;
 }
-#select img {
+#select img, #geolocate img {
 	width: 25px;
 	height: 25px;
 	margin: 0px auto;
 	display: inline-block;
 	position: relative;
 }
+#geolocate {
+	background-color: #ccc;
+}
 .buttonlabel {
 	min-width: 25px;
 	margin: 2px auto;
 }
 @media (min-width: 640px) and (orientation: landscape) {
-#select p {
+#select p, #geolocate p {
 	display: block;
 }
 .list.leaflet-control {

@@ -8,7 +8,12 @@ block content
 	div.ms-Grid-row
 		div.ms-Grid-col.ms-u-sm7.buttonbox
 			div.ms-Grid-row
-				div.ms-Grid-col.ms-u-sm4
+				div.ms-Grid-col.ms-u-sm2
+					div.ms-Grid-row
+						a#geolocate.block.ms-Button(href="/near", name="geolocate", title="Geolocate") 
+							p.ms-font-m.buttonlabel Near Me
+							img(src="/images/geolocate.svg")
+				div.ms-Grid-col.ms-u-sm2
 					div.ms-Grid-row
 						a#select.all.block.ms-Button(href="#", name="all", title="All") 
 							p.ms-font-m.buttonlabel ALL
@@ -288,15 +293,12 @@ block content
 		$.getJSON('/mydata/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
 
 			function onEachFeature(feature, latlng) {
-
-				var cut = feature.geometry.coordinates[0];
-				feature.geometry.coordinates.splice(0, 1);
-				feature.geometry.coordinates.push(cut)
+				feature.geometry.coordinates.reverse()
 			}
 			
 			
 			dataLayer = L.geoJSON(data, {
-			    onEachFeature: onEachFeature,
+				onEachFeature: onEachFeature,
 				pointToLayer: function (feature, latlng) {
 					var fillColor;
 					
@@ -367,6 +369,44 @@ block content
 			$.post('/zoom/'+zoom+'', function(data){
 			})
 		})
+		var colors = {
+			B: '#3D7AB4',
+			H: '#E79404',
+			M: '#DA1912',
+			F: '#229701'
+		}
+		if (window.location.href.split('/')[3] === 'near') {
+			$.getJSON('/near/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
+				var bounds = []
+				function onEachFeature(feature, latlng) {
+					feature.geometry.coordinates.reverse();
+					bounds.push(feature.geometry.coordinates);
+				}
+				dataLayer.remove();
+				dataLayer = L.geoJSON(data, {
+					onEachFeature: onEachFeature,
+					pointToLayer: function (feature, latlng) {
+						
+						var circleMarker;
+
+						var geojsonMarkerOptions;
+
+						geojsonMarkerOptions = {
+							radius: 11,
+							fillColor: colors[feature.properties.cat],
+							color: "rgba(0, 0, 0, 0)",
+							weight: 2,
+							opacity: 1,
+							fillOpacity: 0.8,
+							className: ""+feature._id+""
+						};
+						circleMarker = L.circleMarker(latlng, geojsonMarkerOptions)
+						return circleMarker;
+					}
+				}).addTo(map);
+				map.fitBounds(bounds)
+			})
+		}
 		$(document).on('click', '#select', function(){
 			var cat = $(this).attr('name');
 			var fillColor;
@@ -394,13 +434,9 @@ block content
 			$.getJSON('/type/'+cat+'/'+#{zoom}+'/'+#{lat}+'/'+#{lng}+'', function(data){
 				var bounds = []
 				function onEachFeature(feature, latlng) {
-
-					var cut = feature.geometry.coordinates[0];
-					feature.geometry.coordinates.splice(0, 1);
-					feature.geometry.coordinates.push(cut)
-					bounds.push(feature.geometry.coordinates)
+					feature.geometry.coordinates.reverse();
+					bounds.push(feature.geometry.coordinates);
 				}
-				console.log(data)
 				dataLayer.remove()
 				dataLayer = L.geoJSON(data, {
 				    onEachFeature: onEachFeature,
@@ -425,8 +461,7 @@ block content
 				}).addTo(map);
 				map.fitBounds(bounds)
 			})
-		})
-		
+		});
 		
 		$(document).on('click', '.list > .js-togglePanel', function(){
 			$('.list > .ms-Panel-main').css({display: 'none'})

@@ -15,7 +15,6 @@ var Content = require('../models/content.js');
 var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
 
-//var uploadmedia = null;
 //Todo: user remove triggers userindex $inc -1
 
 var storage = multer.diskStorage({
@@ -256,9 +255,67 @@ router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 	})
 });
 
+router.get('/near', function(req, res, next){
+	var arp = spawn('arp', ['-a']);
+	//console.log(arp.stdio[0].Pipe)
+	var mac;
+	arp.stdout.on('data', function(data){
+		data += '';
+		data = data.split('\n');
+		mac = data[0].split(' ')[3];
+	})
+	// Configure API parameters 
+	const params = {
+		wifiAccessPoints: [{
+			macAddress: ''+mac+'',
+			signalStrength: -65,
+			signalToNoiseRatio: 40
+		}]
+	};
+	var loc;
+	geolocation(params, function(err, data) {
+		if (err) {
+			console.log (err);
+			return res.redirect('/')
+		} else {
+			loc = JSON.parse(JSON.stringify({ lng: data.location.lng, lat: data.location.lat }))
+		}
+		Content.find({}, function(err, data){
+			if (err) {
+				return next(err)
+			}
+			if (req.isAuthenticated()) {
+				return res.render('publish', {
+					loggedin: req.app.locals.loggedin,
+					data: data,
+					id: data.length - 1,
+					zoom: req.app.locals.zoom?req.app.locals.zoom:6,
+					lng: loc.lng,
+					lat: loc.lat
+				})
+			} else {
+				return res.render('publish', {
+					data: data,
+					id: data.length - 1,
+					zoom: req.app.locals.zoom?req.app.locals.zoom:6,
+					lng: loc.lng,
+					lat: loc.lat
+				})
+			}
+		})
+	});
+})
+router.all('/near/:zoom/:lat/:lng', function(req, res, next){
+	Content.find({geometry:{$near:{$geometry:{type:'Point', coordinates:[req.params.lng, req.params.lat]},$minDistance:0,$maxDistance:24000}}}, function(err, doc){
+		if (err) {
+			return next(err)
+		}
+		return res.json(doc)
+	})
+})
+
 router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
-	console.log(outputPath)
 	var cat = req.params.cat;
 	Content.find({'properties.cat': cat}, function(err, doc){
 		if (err) {
