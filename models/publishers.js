@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     passportLocalMongoose = require('passport-local-mongoose');
 
-
 var Publisher = new Schema({
 	username: {
 		type: String,
@@ -10,7 +9,11 @@ var Publisher = new Schema({
 		trim: true
 	},
 	password: String,
-	email: String	
+	email: String,
+  uploads: {
+    doc: [],
+    img: []
+  }
 }, { collection: 'publishers' });
 
 Publisher.plugin(passportLocalMongoose);

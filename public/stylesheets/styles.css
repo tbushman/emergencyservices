@@ -465,6 +465,31 @@ a.username:hover > .ms-font-l {
 	min-width: 25px;
 	margin: 2px auto;
 }
+
+.existing, .compare {
+	width: 50%;
+	display: inline-block;
+	float: left;
+	margin: 0 auto;
+	list-style-type: none;
+}
+.contentSchema {
+	list-style-type: none;
+}
+.existing ul, .existing li, .compare ul, .compare li {
+	margin: auto 0;
+	padding: 10px 0 10px 0;
+}
+.contentSchema ul {
+	background-color: #ccc;
+}
+.compare #keylist {
+	position: absolute;
+	background: #e9e9e9;
+}
+.selectKey {
+	float: right;
+}
 @media (min-width: 640px) and (orientation: landscape) {
 #select p, #geolocate p {
 	display: block;

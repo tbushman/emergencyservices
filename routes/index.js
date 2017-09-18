@@ -12,8 +12,10 @@ var spawn = require("child_process").exec;
 var dotenv = require('dotenv');
 var Publisher = require('../models/publishers.js');
 var Content = require('../models/content.js');
+var Import = require('../models/import.js');
 var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
+var Client = require('node-rest-client').Client;
 
 //Todo: user remove triggers userindex $inc -1
 
@@ -223,6 +225,168 @@ router.get('/logout', function(req, res) {
 	}
 });
 
+/*
+{ attributes: 
+   { SHELTER_ID: 299108,
+     SHELTER_NAME: 'GREATER SAINT LUKE BAPTIST CHURCH',
+     ADDRESS_1: '117 WALLACE ROAD',
+     CITY: 'JACKSON',
+     COUNTY_PARISH: 'MADISON',
+     FIPS_CODE: ' ',
+     STATE: 'TN',
+     ZIP: '38301',
+     MAIL_ADDR_SAME_AS_PHYS_ADDR: 'NO',
+     MAILING_ADDRESS_1: ' ',
+     MAILING_ADDRESS_2: ' ',
+     MAILING_CITY: ' ',
+     MAILING_COUNTY_PARISH: ' ',
+     MAILING_STATE: ' ',
+     MAILING_ZIP: ' ',
+     FACILITY_USAGE_CODE: 'EVAC',
+     EVACUATION_CAPACITY: 100,
+     POST_IMPACT_CAPACITY: 50,
+     ADA_COMPLIANT: ' ',
+     WHEELCHAIR_ACCESSIBLE: ' ',
+     PET_ACCOMMODATIONS_CODE: ' ',
+     PET_ACCOMMODATIONS_DESC: ' ',
+     GENERATOR_ONSITE: ' ',
+     SELF_SUFFICIENT_ELECTRICITY: ' ',
+     LATITUDE: 35.64111481,
+     LONGITUDE: -88.84749213,
+     IN_100_YR_FLOODPLAIN: ' ',
+     IN_500_YR_FLOODPLAIN: ' ',
+     IN_SURGE_SLOSH_AREA: ' ',
+     PRE_LANDFALL_SHELTER: ' ',
+     SHELTER_CODE: 'GENERAL',
+     ORG_ORGANIZATION_ID: 121505,
+     ORG_ORGANIZATION_NAME: 'JACKSON AREA CHAPTER',
+     ORG_MAIN_PHONE: ' ',
+     ORG_FAX: ' ',
+     ORG_EMAIL: ' ',
+     ORG_HOTLINE_PHONE: ' ',
+     ORG_OTHER_PHONE: ' ',
+     ORG_ADDRESS: '1981 HOLLYWOOD DR',
+     ORG_CITY: 'JACKSON',
+     ORG_STATE: 'TN',
+     ORG_ZIP: '38305',
+     ORG_POC_NAME: ' ',
+     ORG_POC_PHONE: ' ',
+     ORG_POC_AFTER_HOURS_PHONE: ' ',
+     ORG_POC_EMAIL: ' ',
+     ORG_HOURS_OF_OPERATION: '8',
+     POPULATION_CODE: 'GENERAL',
+     INCIDENT_ID: 0,
+     SHELTER_STATUS_CODE: 'CLOSED',
+     SHELTER_OPEN_DATE: null,
+     SHELTER_CLOSED_DATE: null,
+     REPORTING_PERIOD: ' ',
+     GENERAL_POPULATION: 0,
+     MEDICAL_NEEDS_POPULATION: 0,
+     OTHER_POPULATION: 0,
+     OTHER_POPULATION_DESCRIPTION: ' ',
+     TOTAL_POPULATION: 0,
+     PET_POPULATION: 0,
+     INCIDENT_NUMBER: ' ',
+     INCIDENT_NAME: ' ',
+     INCIDENT_CODE: ' ',
+     OBJECTID: 816,
+     SCORE: 100,
+     STATUS: 'M',
+     MATCH_TYPE: 'A',
+     LOC_NAME: 'Street',
+     GEOX: -88.84749213,
+     GEOY: 35.64111481,
+     FACILITY_TYPE: 'SHELTER',
+     SUBFACILITY_CODE: 'GENPOPSHEL',
+     DATA_SOURCE_ID: 0,
+     ADDRESS_1_OLD: '117 WALLACE ROAD' },
+  geometry: { x: -88.84749212700001, y: 35.641114813 } }
+
+*/
+router.get('/api/import', function(req, res, next){
+	Import.find({}, function(err, ret){
+		if (err) {
+			return next(err)
+		}
+		return res.render('import', {
+			loggedin: req.app.locals.loggedin,
+			data: ret,
+			info: ':)'
+		})
+	})
+})
+
+router.post('/api/import', function(req, res, next){
+	Content.find({}, function(err, data){
+		if (err) {
+			return next(err)
+		}
+		var client = new Client();
+		var index = data.length;
+		var body = req.body;
+		var iData = body.data;
+		consol.log(body)
+		/*client.get('https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/MapServer/5/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson', function(dat, raw){
+			if (Buffer.isBuffer(dat)){
+				dat = JSON.parse(dat.toString('utf8'));
+			}
+			var keys = Object.keys(dat);
+			//console.log(Object.keys(dat));
+			console.log(dat.features.length)
+			console.log(dat.aliases)
+			//console.log(dat.features[0])
+			for (var i = 0; i < dat.length; i++) {
+				var entry = new Content({
+					_id: index + i,
+					type: "Feature",
+					properties: {
+						label: ,
+						address1: ,
+						address2: "",
+						city: ,
+						state: ,
+						zip: ,
+						phone: ,
+						description: "",
+						//this could come in handy as app improves, but not currently in use:
+						current: false,
+						//for hours of operation
+						website: ,
+						cat: ,
+						hours: {
+							mo: ,
+							tu: ,
+							we: ,
+							th: ,
+							fr: ,
+							sa: ,
+							su: 
+						},
+						image: '',
+						thumb: '',
+						clothing: ,
+						computer: ,
+						dayroom: ,
+						dental: ,
+						pantry: ,
+						housing: ,
+						meals: ,
+						medical: ,
+						personalcare: ,
+						showers: ,
+						shelter: ,
+						transportation: 
+					},
+					geometry: {
+						type: "Point",
+							coordinates: [, ]
+					}
+				})
+			}
+			return res.redirect('/')
+		})*/
+	})
+})
 router.get('/home', function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
