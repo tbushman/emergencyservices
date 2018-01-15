@@ -87,6 +87,10 @@ app.use('/publishers', express.static(path.join(__dirname, '../../pu/publishers'
 app.use('/publishers/emergencyservices/images', express.static(path.join(__dirname, '../../pu/publishers/emergencyservices/images')));
 app.use('/publishers/emergencyservices/images/full', express.static(path.join(__dirname, '../../pu/publishers/emergencyservices/images/full')));
 app.use('/publishers/emergencyservices/images/thumbs', express.static(path.join(__dirname, '../../pu/publishers/emergencyservices/images/thumbs')));
+app.use(function (req, res, next) {
+  res.locals.session = req.session;
+  next();
+})
 app.use('/', routes);
 
 

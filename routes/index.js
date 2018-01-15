@@ -71,10 +71,10 @@ function ensureAuthenticated(req, res, next) {
 router.get('/', function (req, res) {
 	
 	if (req.user) {
-		req.app.locals.userId = req.user._id;
-		req.app.locals.givenName = req.user.givenName;
-		req.app.locals.loggedin = req.user.username;
-		req.app.locals.username = req.user.username;
+		req.session.userId = req.user._id;
+		req.session.givenName = req.user.givenName;
+		req.session.loggedin = req.user.username;
+		req.session.username = req.user.username;
 		return res.redirect('/api/publish')
 	} else {
 		return res.redirect('/home')
@@ -94,15 +94,15 @@ router.post('/register', upload.array(), function(req, res, next) {
 		if (err) {
 			return res.render('register', {info: "Sorry. That username already exists. Try again."});
 		}
-		req.app.locals.givenName = req.body.givenName;
-		req.app.locals.username = req.body.username;
+		req.session.givenName = req.body.givenName;
+		req.session.username = req.body.username;
 		passport.authenticate('local')(req, res, function () {
 			Publisher.findOne({username: req.body.username}, function(error, doc){
 				if (error) {
 					return next(error)
 				}
-				req.app.locals.userId = doc._id;
-				req.app.locals.loggedin = doc.username;
+				req.session.userId = doc._id;
+				req.session.loggedin = doc.username;
 				return res.redirect('/api/publish')
 			})
 		});
@@ -116,18 +116,18 @@ router.get('/login', function(req, res, next){
 });
 
 router.post('/login', upload.array(), passport.authenticate('local'), function(req, res, next) {
-	req.app.locals.userId = req.user._id;
-	req.app.locals.loggedin = req.user.username;
-	req.app.locals.username = req.user.username;
+	req.session.userId = req.user._id;
+	req.session.loggedin = req.user.username;
+	req.session.username = req.user.username;
     res.redirect('/api/publish')
 });
 
 router.get('/logout', function(req, res) {
 	
-	req.app.locals.username = null;
-	req.app.locals.userId = null;
-	req.app.locals.zoom = null;
-	req.app.locals.loggedin = null;
+	req.session.username = null;
+	req.session.userId = null;
+	req.session.zoom = null;
+	req.session.loggedin = null;
 	req.logout();
 	if (req.user || req.session) {
 		req.user = null;
@@ -147,7 +147,7 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/home', function(req, res, next) {
-	req.app.locals.username = null;
+	req.session.username = null;
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
 	var mac;
@@ -204,10 +204,10 @@ router.get('/home', function(req, res, next) {
 		var zoom;
 		var lat = loc[1]
 		var lng = loc[0]
-		if (req.app.locals.zoom) {
-			zoom = req.app.locals.zoom
-			//lat = req.app.locals.lat
-			//lng = req.app.locals.lng
+		if (req.session.zoom) {
+			zoom = req.session.zoom
+			//lat = req.session.lat
+			//lng = req.session.lng
 			info = 'Refreshed'
 		} else {
 			zoom = 3
@@ -216,7 +216,7 @@ router.get('/home', function(req, res, next) {
 
 		if (req.isAuthenticated()) {
 			return res.render('publish', {
-				loggedin: req.app.locals.loggedin,
+				loggedin: req.session.loggedin,
 				data: data,
 				id: data.length - 1,
 				zoom: zoom,
@@ -239,9 +239,9 @@ router.get('/home', function(req, res, next) {
 
 router.post('/zoom/:zoom', function(req, res, next){
 	var zoom = parseInt(req.params.zoom, 10);
-	req.app.locals.zoom = zoom;
-	//req.app.locals.lat = lat;
-	//req.app.locals.lng = lng;
+	req.session.zoom = zoom;
+	//req.session.lat = lat;
+	//req.session.lng = lng;
 	return res.send('ok')
 })
 
@@ -286,10 +286,10 @@ router.get('/near', function(req, res, next){
 			}
 			if (req.isAuthenticated()) {
 				return res.render('publish', {
-					loggedin: req.app.locals.loggedin,
+					loggedin: req.session.loggedin,
 					data: data,
 					id: data.length - 1,
-					zoom: req.app.locals.zoom?req.app.locals.zoom:6,
+					zoom: req.session.zoom?req.session.zoom:6,
 					lng: loc.lng,
 					lat: loc.lat
 				})
@@ -297,7 +297,7 @@ router.get('/near', function(req, res, next){
 				return res.render('publish', {
 					data: data,
 					id: data.length - 1,
-					zoom: req.app.locals.zoom?req.app.locals.zoom:6,
+					zoom: req.session.zoom?req.session.zoom:6,
 					lng: loc.lng,
 					lat: loc.lat
 				})
@@ -348,7 +348,7 @@ router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 			}
 			if (req.isAuthenticated()) { 
 					return res.render('publish', {
-						loggedin: req.app.locals.loggedin,
+						loggedin: req.session.loggedin,
 						infowindow: 'doc',
 						zoom: zoom,
 						id: id,
@@ -407,9 +407,9 @@ router.get('/listing/:id/:zoom/:lat/:lng', function(req, res, next){
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
 	var lng = req.params.lng;
-	req.app.locals.zoom = zoom;
-	req.app.locals.lat = lat;
-	req.app.locals.lng = lng;
+	req.session.zoom = zoom;
+	req.session.lat = lat;
+	req.session.lng = lng;
 	Content.findOne({_id: id}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -424,9 +424,9 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
 	var lng = req.params.lng;
-	req.app.locals.zoom = zoom;
-	req.app.locals.lat = lat;
-	req.app.locals.lng = lng;
+	req.session.zoom = zoom;
+	req.session.lat = lat;
+	req.session.lng = lng;
 	Content.findOne({_id: id}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -593,7 +593,7 @@ function convertAvailableServices(str) {
 router.all('/api/*', ensureAuthenticated)
 
 router.get('/api/publish', function(req, res, next){
-	req.app.locals.username = req.user.username;
+	req.session.username = req.user.username;
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
 	var mac;
@@ -724,10 +724,10 @@ router.get('/api/publish', function(req, res, next){
 			var zoom;
 			var lat;
 			var lng;
-			if (req.app.locals.zoom) {
-				zoom = req.app.locals.zoom
-				lat = req.app.locals.lat
-				lng = req.app.locals.lng
+			if (req.session.zoom) {
+				zoom = req.session.zoom
+				lat = req.session.lat
+				lng = req.session.lng
 				info = 'Refreshed'
 			} else {
 				zoom = 3
@@ -735,8 +735,8 @@ router.get('/api/publish', function(req, res, next){
 				lng = loc[0]
 			}
 			return res.render('publish', {
-				loggedin: req.app.locals.loggedin,
-				username: req.app.locals.username,
+				loggedin: req.session.loggedin,
+				username: req.session.username,
 				id: datarray.length - 1,
 				zoom: zoom,
 				data: datarray,
@@ -769,10 +769,10 @@ router.all('/api/deletefeature/:id', function(req, res, next) {
 					datarray.push(data[l])
 				}
 				return res.render('publish', {
-					loggedin: req.app.locals.loggedin,
-					username: req.app.locals.username,
+					loggedin: req.session.loggedin,
+					username: req.session.username,
 					id: datarray.length - 1,
-					zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
+					zoom: (req.session.zoom)?req.session.zoom:6,
 					data: datarray,
 					lng: data[0].geometry.coordinates[0],
 					lat: data[0].geometry.coordinates[1],
@@ -800,10 +800,10 @@ router.get('/api/editcontent/:id', function(req, res, next){
 			}
 			return res.render('publish', {
 				infowindow: 'edit',
-				loggedin: req.app.locals.loggedin,
-				username: req.app.locals.username,
+				loggedin: req.session.loggedin,
+				username: req.session.username,
 				id: id,
-				zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
+				zoom: (req.session.zoom)?req.session.zoom:6,
 				doc: doc,
 				data: datarray,
 				lng: loc[0],
@@ -979,10 +979,10 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 		}
 		return res.render('publish', {
 			infowindow: 'doc',
-			loggedin: req.app.locals.loggedin,
+			loggedin: req.session.loggedin,
 			username: doc.username,
 			id: parseInt(id, 10),
-			zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
+			zoom: (req.session.zoom)?req.session.zoom:6,
 			doc: doc,
 			data: datarray,
 			lng: loc[0],
@@ -1004,8 +1004,8 @@ router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
 			}
 			return res.render('publish', {
 				infowindow: 'new',
-				loggedin: req.app.locals.loggedin,
-				username: req.app.locals.username,
+				loggedin: req.session.loggedin,
+				username: req.session.username,
 				id: data.length - 1,
 				zoom: req.params.zoom,
 				data: datarray,
@@ -1195,10 +1195,10 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 		}
 		return res.render('publish', {
 			infowindow: 'doc',
-			loggedin: req.app.locals.loggedin,
-			username: req.app.locals.loggedin,
+			loggedin: req.session.loggedin,
+			username: req.session.loggedin,
 			id: id,
-			zoom: (req.app.locals.zoom)?req.app.locals.zoom:6,
+			zoom: (req.session.zoom)?req.session.zoom:6,
 			doc: entry,
 			data: datarray,
 			lng: loc[0],
