@@ -134,12 +134,24 @@ block content
 							$('.compare').append('<ul class="levelSchema">&nbsp</ul>')
 							for (var k in Object.keys(data[0][keys[i]][level1Key])) {
 								var level2Key = Object.keys(data[0][keys[i]][level1Key])[k];
-								$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+'</li>');
-								$('.compare').append('<li><a href="#keylist" id="compare">Select '+level2Key+' field</a></li>')
+								if (level2Key = 'coordinates') {
+									$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+' lat</li>');
+									$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+' lng</li>');
+									$('.compare').append('<li><a href="#keylist" id="compare">Select lat field</a></li>')
+									$('.compare').append('<li><a href="#keylist" id="compare">Select lat field</a></li>');
+									$('form').append('<input id="lat" name="lat"></input>')
+									$('form').append('<input id="lng" name="lng"></input>')
+
+								} else {
+									$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+'</li>');
+									$('.compare').append('<li><a href="#keylist" id="compare">Select '+level2Key+' field</a></li>')
+									$('form').append('<input id="'+level2Key+'" name="'+level2Key+'"></input>')
+								}
 							}
 						} else {
 							$('.contentSchema#'+keys[i]+'').append('<li>'+level1Key+'</li>');
 							$('.compare').append('<li><a href="#keylist" id="compare">Select '+level1Key+' field</a></li>')
+							$('form').append('<input id="'+level1Key+'" name="'+level1Key+'"></input>')
 						}
 					}
 				}

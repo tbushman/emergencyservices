@@ -309,7 +309,7 @@ router.get('/api/import', function(req, res, next){
 			return next(err)
 		}
 		return res.render('import', {
-			loggedin: req.app.locals.loggedin,
+			loggedin: req.session.loggedin,
 			data: ret,
 			info: ':)'
 		})
