@@ -69,7 +69,9 @@ function ensureAuthenticated(req, res, next) {
 //if logged in, go to edit profile
 //if not, go to global profile (home)
 router.get('/', function (req, res) {
-	
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
+
 	if (req.user) {
 		req.session.userId = req.user._id;
 		req.session.givenName = req.user.givenName;
@@ -83,11 +85,15 @@ router.get('/', function (req, res) {
 
 //improve error handling
 router.get('/register', function(req, res) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
     return res.render('register', { } );
 });
 
 
 router.post('/register', upload.array(), function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var imgurl;
 	var imgbuf;
 	Publisher.register(new Publisher({ username : req.body.username, givenName: req.body.givenName, email: req.body.email}), req.body.password, function(err, user) {
@@ -110,12 +116,16 @@ router.post('/register', upload.array(), function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	return res.render('login', { 
 		user: req.user
 	});
 });
 
 router.post('/login', upload.array(), passport.authenticate('local'), function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
 	req.session.username = req.user.username;
@@ -123,6 +133,8 @@ router.post('/login', upload.array(), passport.authenticate('local'), function(r
 });
 
 router.get('/logout', function(req, res) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	
 	req.session.username = null;
 	req.session.userId = null;
@@ -147,6 +159,8 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/home', function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	req.session.username = null;
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
@@ -238,6 +252,8 @@ router.get('/home', function(req, res, next) {
 })
 
 router.post('/zoom/:zoom', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var zoom = parseInt(req.params.zoom, 10);
 	req.session.zoom = zoom;
 	//req.session.lat = lat;
@@ -247,6 +263,8 @@ router.post('/zoom/:zoom', function(req, res, next){
 
 
 router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	Content.find({}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -256,6 +274,8 @@ router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 });
 
 router.get('/near', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
 	var mac;
@@ -306,6 +326,8 @@ router.get('/near', function(req, res, next){
 	});
 })
 router.all('/near/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	Content.find({geometry:{$near:{$geometry:{type:'Point', coordinates:[req.params.lng, req.params.lat]},$minDistance:0,$maxDistance:24000}}}, function(err, doc){
 		if (err) {
 			return next(err)
@@ -316,6 +338,7 @@ router.all('/near/:zoom/:lat/:lng', function(req, res, next){
 
 router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var cat = req.params.cat;
 	Content.find({'properties.cat': cat}, function(err, doc){
 		if (err) {
@@ -325,6 +348,8 @@ router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 	})
 });
 router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var outputPath = url.parse(req.url).pathname;
 	var id = parseInt(req.params.id, 10);
 	var zoom = req.params.zoom;
@@ -376,6 +401,7 @@ router.get('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 })
 router.post('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10);
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
@@ -403,6 +429,7 @@ router.post('/focus/:id/:zoom/:lat/:lng', function(req, res, next){
 
 router.get('/listing/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10)
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
@@ -420,6 +447,7 @@ router.get('/listing/:id/:zoom/:lat/:lng', function(req, res, next){
 
 router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10)
 	var zoom = req.params.zoom;
 	var lat = req.params.lat;
@@ -438,6 +466,8 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 
 
 router.all('/search/:term', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var term = req.params.term;
 	var regex = new RegExp(term);
 	Content.find({'properties.label': { $regex: regex }}, function(err, pu){
@@ -593,6 +623,8 @@ function convertAvailableServices(str) {
 router.all('/api/*', ensureAuthenticated)
 
 router.get('/api/publish', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	req.session.username = req.user.username;
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
@@ -750,6 +782,8 @@ router.get('/api/publish', function(req, res, next){
 })
 
 router.all('/api/deletefeature/:id', function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10);
 	Content.remove({_id: id}, function(e, doc){
 		if (e) {
@@ -784,6 +818,8 @@ router.all('/api/deletefeature/:id', function(req, res, next) {
 })
 
 router.get('/api/editcontent/:id', function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10);
 	Content.findOne({_id: id}, function(error, doc){
 		if (error) {
@@ -815,6 +851,8 @@ router.get('/api/editcontent/:id', function(req, res, next){
 })
 
 router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var id = parseInt(req.params.id, 10);
 	var body = req.body;
 	
@@ -993,6 +1031,8 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 })
 
 router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 
 	Content.find({}, function(er, data){
 			if (er) {
@@ -1017,10 +1057,14 @@ router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
 })
 
 router.all('/api/uploadmedia/:id/:type', uploadmedia.single('img'), function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	return res.send(req.file.path)
 });
 
 router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	var body = req.body;
 	
 	async.waterfall([
