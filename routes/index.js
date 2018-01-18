@@ -133,7 +133,7 @@ function ensureAuthenticated(req, res, next) {
 
 //if logged in, go to edit profile
 //if not, go to global profile (home)
-router.get('/', ensureNoOldImgs, function (req, res) {
+router.get('/', function (req, res) {
 	var outputPath = url.parse(req.url).pathname;
 	console.log(outputPath)
 
