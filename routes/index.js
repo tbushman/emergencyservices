@@ -58,6 +58,71 @@ var geolocation = require ('google-geolocation') ({
 	key: process.env.GOOGLE_KEY
 });
 
+function ensureNoOldImgs(req, res, next) {
+	Content.find({}, function(err, data) {
+		if (err) {
+			return next(err)
+		}
+		data = JSON.parse(JSON.stringify(data));
+		async.waterfall([
+			function(cb) {
+				var qs = [];
+				for (var i in data) {
+					i = parseInt(i, 10);
+					var doc = data[i];
+					var q1 = {
+						query: {_id: doc._id},
+						key: 'image',
+						index: i,
+						image: doc.properties.image.replace('http://pu.bli.sh/maps', '/publishers/emergencyservices/images/full')
+					}
+					qs.push(q1);
+					var q2 = {
+						query: {_id: doc._id},
+						key: 'thumb',
+						index: i,
+						image: doc.properties.thumb.replace('http://pu.bli.sh/maps', '/publishers/emergencyservices/images/full')
+					}
+					qs.push(q2);
+				}
+				cb(null, qs)
+			},
+			function(qs, cb) {
+				async.eachSeries(qs, function(q, nxt){
+				Content.findOne(q.query, function(err, doc){
+					if (err) {
+						nxt(err)
+					}
+					if (doc) {
+						doc.properties[q.key] = q.image;
+						doc.save(function(err){
+							if (err) {
+								nxt(err)
+							} else {
+								nxt(null)
+							}
+						})
+					} else {
+						nxt(null)
+					}
+				})
+			}, function(err){
+				if(err) {
+					cb(err)
+				} else {
+					cb(null)
+				}
+			})
+			}
+		], function(err) {
+			if (err) {
+				return next(err)
+			}
+			return next();
+		})
+	})
+}
+
 //for all /api/*
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) { 
@@ -68,7 +133,7 @@ function ensureAuthenticated(req, res, next) {
 
 //if logged in, go to edit profile
 //if not, go to global profile (home)
-router.get('/', function (req, res) {
+router.get('/', ensureNoOldImgs, function (req, res) {
 	var outputPath = url.parse(req.url).pathname;
 	console.log(outputPath)
 
