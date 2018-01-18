@@ -81,7 +81,7 @@ function ensureNoOldImgs(req, res, next) {
 						query: {_id: doc._id},
 						key: 'thumb',
 						index: i,
-						image: doc.properties.thumb.replace('http://pu.bli.sh/maps', '/publishers/emergencyservices/images/full')
+						image: doc.properties.thumb ? doc.properties.thumb.replace('http://pu.bli.sh/maps', '/publishers/emergencyservices/images/full') : doc.properties.image.replace('http://pu.bli.sh/maps', '/publishers/emergencyservices/images/full')
 					}
 					qs.push(q2);
 				}
