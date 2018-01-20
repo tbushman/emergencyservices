@@ -251,7 +251,7 @@ router.get('/home', function(req, res, next) {
 		function(next){
 			geolocation(params, function(err, data) {
 				if (err) {
-					console.log (err);
+					console.log ('Could not find your location');
 					loc = null;
 					info = 'Could not find your location'
 				} else {
@@ -360,7 +360,7 @@ router.get('/near', function(req, res, next){
 	var loc;
 	geolocation(params, function(err, data) {
 		if (err) {
-			console.log (err);
+			console.log ('Could not find your location');
 			return res.redirect('/')
 		} else {
 			loc = JSON.parse(JSON.stringify({ lng: data.location.lng, lat: data.location.lat }))
@@ -714,7 +714,7 @@ router.get('/api/publish', function(req, res, next){
 		function(next){
 			geolocation(params, function(err, data) {
 				if (err) {
-					console.log (err);
+					console.log ('Could not find your location');
 					loc = null;
 					info = 'Could not find your location'
 				} else {
