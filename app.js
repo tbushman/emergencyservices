@@ -3,6 +3,7 @@ var express = require('express');
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
 var path = require('path');
+var url = require('url');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
 var promise = require('bluebird');
@@ -96,8 +97,10 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+  var outputPath = url.parse(req.url).pathname;
   var err = new Error('Not Found');
   err.status = 404;
+  console.log(outputPath);
   next(err);
 });
 
