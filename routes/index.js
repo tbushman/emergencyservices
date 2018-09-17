@@ -324,10 +324,52 @@ router.get('/api/import', function(req, res, next){
 		if (err) {
 			return next(err)
 		}
-		return res.render('import', {
-			loggedin: req.session.loggedin,
-			data: ret,
-			info: ':)'
+		Content.find({}).lean().exec(function(err, data){
+			if (err) {
+				return next(err)
+			}
+			var newk = []
+			newk.push('lat')
+			newk.push('lng')
+			var keys = Object.keys(data[0]);
+			for (var i in keys) {
+				if (keys[i] === 'geometry') {
+					
+				} else {
+					if (Object.keys(data[0][keys[i]]).length > 0 && isNaN(parseInt(Object.keys(data[0][keys[i]]) ,10))) {
+
+						for (var j in Object.keys(data[0][keys[i]])) {
+							
+							var level1Key = Object.keys(data[0][keys[i]])[j]
+							if (!data[0][keys[i]][level1Key]) {
+								
+								//newk.push(keys[i])
+								//newk.push(level1Key)
+							} else {
+								if (!Object.keys(data[0][keys[i]][level1Key]) || !isNaN(parseInt(Object.keys(data[0][keys[i]][level1Key])[0], 10))) {
+									newk.push(level1Key)
+								} else {
+									for (var k in Object.keys(data[0][keys[i]][level1Key])) {
+										var level2Key = Object.keys(data[0][keys[i]][level1Key])[k];
+										newk.push(level2Key)
+									}
+									
+								}
+							}
+							
+						}
+					} else {
+						
+					}
+
+				}
+			}
+			return res.render('import', {
+				loggedin: req.session.loggedin,
+				data: ret,
+				datakeys: newk,
+				info: ':)'
+			})
 		})
 	})
 })
@@ -341,12 +383,15 @@ router.post('/api/import', function(req, res, next){
 		var index = data.length;
 		var body = req.body;
 		var iData = body.data;
-		consol.log(body)
-		/*client.get('https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/MapServer/5/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson', function(dat, raw){
+		console.log(body)
+		client.get(
+			'https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0'+
+			//'https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/MapServer/5/query'+
+			'/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson', function(dat, raw){
 			if (Buffer.isBuffer(dat)){
 				dat = JSON.parse(dat.toString('utf8'));
 			}
-			var keys = Object.keys(dat);
+			/*var keys = Object.keys(dat);
 			//console.log(Object.keys(dat));
 			console.log(dat.features.length)
 			console.log(dat.aliases)
@@ -398,9 +443,9 @@ router.post('/api/import', function(req, res, next){
 							coordinates: [, ]
 					}
 				})
-			}
+			}*/
 			return res.redirect('/')
-		})*/
+		})
 	})
 })
 router.get('/home', function(req, res, next) {

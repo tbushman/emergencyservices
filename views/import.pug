@@ -176,18 +176,6 @@ block content
 					return keylist;
 					
 				}
-								if (level2Key = 'coordinates') {
-									$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+' lat</li>');
-									$('.levelSchema#'+level1Key+'').append('<li>'+level2Key+' lng</li>');
-									$('.compare').append('<li><a href="#keylist" id="compare">Select lat field</a></li>')
-									$('.compare').append('<li><a href="#keylist" id="compare">Select lat field</a></li>');
-									$('form').append('<input id="lat" name="lat"></input>')
-									$('form').append('<input id="lng" name="lng"></input>')
-
-								} else {
-									$('form').append('<input id="'+level2Key+'" name="'+level2Key+'"></input>')
-								}
-							$('form').append('<input id="'+level1Key+'" name="'+level1Key+'"></input>')
 				$(document).on('click', '.key', function(){
 					//$('.appended').remove();
 					$(this).css('color', '#000');
@@ -245,7 +233,7 @@ block content
 								//						}
 							}
 						}
-					}
+							}
 				})*/
 			},
 
@@ -268,7 +256,30 @@ block content
 						console.log(dat)
 						self.importkeys = Object.keys(dat.fieldAliases)
 					})
-				}
+						}
+					}
+				})*/
+			},
+
+			methods: {
+				determineSelection: function(key) {
+					var self = this;
+					return self.importkeys.filter(function(k){ 
+						return self.datakeys.filter(function(d){ 
+							var rx = new RegExp(k.toLowerCase());
+							return rx.test(d)
+						}).length > 0
+					}).length > 0
+				},
+				loadDataUri: function(e){
+					var self = this;
+					e.preventDefault();
+					var uri = $(e.target).val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
+					$.getJSON(uri, function(dat){
+						console.log(dat)
+						self.importkeys = Object.keys(dat.fieldAliases)
+					})
+		
 			}
 		})
 		
