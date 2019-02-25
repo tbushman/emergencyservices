@@ -61,8 +61,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 var store = new MongoDBStore(
 	{
-		uri: 'mongodb://localhost/session_es',
-        collection: 'mySessions'
+		uri: process.env.DEVDB,
+        collection: 'esSession'
 	}
 )
 store.on('error', function(error, next){
