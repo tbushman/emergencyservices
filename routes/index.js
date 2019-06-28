@@ -227,37 +227,37 @@ router.get('/home', function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 	req.session.username = null;
-	var arp = spawn('arp', ['-a']);
-	//console.log(arp.stdio[0].Pipe)
-	var mac;
-	arp.stdout.on('data', function(data){
-		data += '';
-		data = data.split('\n');
-		mac = data[0].split(' ')[3];
-	})
-	// Configure API parameters 
-	const params = {
-		wifiAccessPoints: [{
-			macAddress: ''+mac+'',
-			signalStrength: -65,
-			signalToNoiseRatio: 40
-	    }]
-	};
+	// var arp = spawn('arp', ['-a']);
+	// //console.log(arp.stdio[0].Pipe)
+	// var mac;
+	// arp.stdout.on('data', function(data){
+	// 	data += '';
+	// 	data = data.split('\n');
+	// 	mac = data[0].split(' ')[3];
+	// })
+	// // Configure API parameters 
+	// const params = {
+	// 	wifiAccessPoints: [{
+	// 		macAddress: ''+mac+'',
+	// 		signalStrength: -65,
+	// 		signalToNoiseRatio: 40
+	//     }]
+	// };
 	
 	var loc;
 	var info;
 	// Get data 
 	async.waterfall([
 		function(next){
-			geolocation(params, function(err, data) {
-				if (err) {
-					console.log ('Could not find your location');
+			// geolocation(params, function(err, data) {
+			// 	if (err) {
+			// 		console.log ('Could not find your location');
 					loc = null;
 					info = 'Could not find your location'
-				} else {
-					loc = JSON.parse(JSON.stringify({ lng: data.location.lng, lat: data.location.lat }))
-					info = 'Publish something'
-				}
+				// } else {
+				// 	loc = JSON.parse(JSON.stringify({ lng: data.location.lng, lat: data.location.lat }))
+				// 	info = 'Publish something'
+				// }
 				next(null, loc, info)
 			});
 		},
