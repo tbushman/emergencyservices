@@ -259,7 +259,7 @@ router.get('/home', function(req, res, next) {
 				// 	info = 'Publish something'
 				// }
 				next(null, loc, info)
-			});
+			// });
 		},
 		function(loc, info, next){
 			
