@@ -382,9 +382,14 @@ hr {
 }
 
 .ms-Panel--small, .ms-Panel--medium {
+	display: none;
 	top: 50%;
 	background-color: rgba(255, 255, 255, 0);
 	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);
+}
+
+.ms-Panel--small.view, .ms-Panel--medium.view {
+	display: block;
 }
 
 .ms-Panel--small > #mainpanel, .ms-Panel--medium > #mainpanel {
