@@ -34,7 +34,7 @@
     "express-session": "^1.15.6",
     "google-geolocation": "^1.0.2",
     "i": "^0.3.6",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "leaflet": "^1.3.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
