@@ -1,0 +1,262 @@
+extends layout
+block page
+block content
+	
+	div#app.ms-Grid
+		div.ms-Grid-row
+			div.ms-Grid-col.ms-u-mdPush1.ms-u-md9.ms-u-lgPush1.ms-u-lg6
+				
+				p.ms-font-l Upload Dataset
+				div.ms-Grid-row
+					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+						input.ms-Button#dataset(type="file")
+				p.ms-font-l or Reload Dataset
+				div.ms-Grid-row
+					div.ms-Grid-col.ms-u-sm9.ms-u-xl11.ms-Dropdown(tabindex="0")
+						
+						label.ms-Label(for="datasources") Available datasets:
+						//input.ms-Dropdown-select(list="datasources", name="importpath")
+						select(id="datasources")
+							each item, i in data
+								- var keylength = data.featurekeypath.length
+								if (keylength > 0)
+									if (keylength === 1)
+										each key, j in item
+											option(value= key)
+									
+									if (keylength === 2)
+										each key, j in item
+											div.dropdown #{key}
+												each sub, k in item[key]
+													option.drop(value= sub)
+				
+				p.ms-font-l or Load via url
+				div.ms-Grid-row
+					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+						label.ms-Label JSON data url
+						input.ms-TextField-field#uri(@blur="loadDataUri", type="text", name="uri", value="https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0")
+				
+				div.ms-Grid-row
+					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+						table
+							tr
+								td(v-for="(doc)")
+						div.existing
+							
+						div.compare
+				form#form(enctype="multipart/form-data", method="POST", action="/api/import", style="margin-bottom: 50px")
+					input#data(type="hidden", name="data")
+					table
+						tr(v-if="importkeys", v-for="(key, i) in datakeys")
+							label(v-for="key")
+							td
+								span(v-text="key")
+							td
+								select(:id="key", :name="key")
+									option(value= "", v-text="'No '+ key + ' field'", :selected="!determineSelection(key)")
+									option(v-for="(item, j) in importkeys", :value="item", :selected="determineSelection(key)", v-text="item")
+							
+					p
+					button.ms-Button.ms-Button--primary#submit(type="submit", ariaDescription="Import Dataset")
+						span.ms-Button-label Import
+				#info #{info}
+		//-
+			
+	script(type="text/javascript").
+		
+		new Vue({
+		  //this targets the div id app
+		  el: '#app',
+		  data: function data(){
+				
+				return {
+					loggedin: !{JSON.stringify(loggedin)},
+					data: !{JSON.stringify(data)},
+					datakeys: !{JSON.stringify(datakeys)},
+					importkeys: null
+				}
+				
+			},
+			created: function ready() {
+			},
+			mounted: function(){
+				/*$('#dataset').change(function(e){
+					e.preventDefault();
+					var dataurl = null;
+					var filesToUpload = document.getElementById('dataset').files;
+					var file = filesToUpload[0];
+					var dataType = file.type;
+					console.log(dataType)
+					if(dataType !== "application/json") {
+						$('.upload-msg').html("<span class='msg-error'>Please Select A valid JSON File</span>");
+						return false;
+					} else {
+						var reader = new FileReader();
+						var myData = null;
+						reader.onloadend = function(e) {
+							myData = e.target.result;
+							console.log(myPdf)
+							$('#data').val(myData.replace(/^data:application\/json;base64,/, ''));
+						}
+						reader.readAsDataURL(file);
+					}
+				});*/
+				/*$('#uri').change(function(e){
+					e.preventDefault();
+					var uri = $('#uri').val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
+					$.getJSON(uri, function(dat){
+						console.log(dat)
+						
+						localStorage.setItem('_loadData', JSON.stringify(dat))
+						var keys = Object.keys(dat.fieldAliases);
+						console.log(keys)
+						$('form').append('<ul id="keylist"></ul>')
+						
+						keys.forEach(function(key){
+							var count = 0;
+							dat.features.forEach(function(feature){
+								if (!feature.attributes[key]) {
+									
+								} else {
+									count++
+								}
+									
+								
+							})
+							if (count = dat.features.length) {
+								//localStorage.setItem('_keylist', JSON.stringify([]));
+								$('#keylist').append('<li><a class="key" href="#" id="'+key+'">'+key+'</a></li>');
+							}
+						})
+						
+					})
+				});*/
+				
+				/*$(document).on('click', '#compare', function(e){
+					e.preventDefault();
+					var uri = $('#uri').val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
+					$.getJSON(uri, function(dat){
+						localStorage.setItem('_loadData', JSON.stringify(dat));
+						var keys = Object.keys(dat.fieldAliases);
+						$(e.target).parent('li').append('<ul id="keylist"></ul>');
+						keys.forEach(function(key){
+							var count = 0;
+							dat.features.forEach(function(feature){
+								if (!feature.attributes[key]) {
+									
+								} else {
+									count++
+								}
+									
+								
+							})
+							if (count = dat.features.length) {
+								//localStorage.setItem('_keylist', JSON.stringify([]));
+								$('#keylist').append('<li><a style="color:red" class="key" href="#keylist" id="'+key+'">'+key+'</a></li>');
+							}
+						})
+						
+							
+					});
+					return false;
+				})
+				var getKeys = function(data) {
+					var keys = Object.keys(data);
+					return keys;
+				}
+				// breadcrumbs
+				var updatedKeyList = function(data, key) {
+					var keylist;
+					if (!localStorage.getItem('_keylist')) {
+						keylist = [];
+					} else {
+						keylist = JSON.parse(localStorage.getItem('_keylist'));
+					}
+					keylist.push(key);
+					return keylist;
+					
+				}
+				$(document).on('click', '.key', function(){
+					//$('.appended').remove();
+					$(this).css('color', '#000');
+					var key = $(this).attr('id');
+					var keylist;
+					if (!localStorage.getItem('_keylist')){
+						keylist = []
+					} else {
+						keylist = JSON.parse(localStorage.getItem('_keylist'));				
+					}
+					if ($(this).parent('li').children('ul').length > 0) {
+						var thiskey = $(this).attr('id');
+						var thisindex = keylist.indexOf(thiskey)
+						keylist.splice(keylist.indexOf(thiskey), keylist.length - thisindex);
+						localStorage.setItem('_keylist', JSON.stringify(keylist));
+						console.log($(this).parent('li').children('ul'))
+						$(this).parent('li').children('ul').remove();
+						$(this).css('color', 'green');
+					} else {
+						var dat = JSON.parse(localStorage.getItem('_loadData'));
+						var check;
+						if (Array.isArray(dat)) {
+							localStorage.setItem('_loadData', JSON.stringify(dat));
+							dat = dat[0];
+						} else {
+							localStorage.setItem('_loadData', JSON.stringify(dat[key]));
+						}
+						if (Array.isArray(dat[key])){
+							check = dat[key][0]
+						} else {
+							check = dat[key]
+						}
+
+						if (check && Object.keys(check).length) {
+							keylist.push(key);
+							console.log(keylist, dat)
+							localStorage.setItem('_keylist', JSON.stringify(keylist))
+							$(this).parent('li').append('<ul class="appended" id="'+key+'"></ul>');
+							var sublevelKeys = [];
+							var levelKeys = getKeys(check);
+							//console.log(localStorage.getItem('_keylist'), localStorage.getItem('_loadData'))
+							for (var i in levelKeys) {
+								$('ul.appended#'+key+'').append('<li><a class="key" href="#keylist" id="'+levelKeys[i]+'">'+levelKeys[i]+'</a><a class="selectKey">&#9634;</a></li>');
+								//console.log(Object.keys(check[levelKeys[i]]));
+								/*sublevelKeys.push(getKeys(check[levelKeys[i]]));
+								if (!Array.isArray(check[levelKeys[i]])) {
+									if (check[levelKeys[i]] !== undefined) {
+										$('ul#'+key+'').append('<li><a class="key" href="#" id="'+Object.keys(check[levelKeys[i]])+'">'+Object.keys(check[levelKeys[i]])+'</a></li>');
+									}
+								} else {
+									if (check[levelKeys[i]][0] !== undefined) {
+										$('ul#'+key+'').append('<li><a class="key array" href="#" id="'+Object.keys(check[levelKeys[i]][0])+'">'+Object.keys(check[levelKeys[i]][0])+'</a></li>');					
+									}
+								}//for (var j in check[levelKeys[i]][0]){
+								//						}
+							}
+						}
+					}
+				})*/
+			},
+
+			methods: {
+				determineSelection: function(key) {
+					var self = this;
+					return self.importkeys.filter(function(k){ 
+						return self.datakeys.filter(function(d){ 
+							var rx = new RegExp(k.toLowerCase());
+							return rx.test(d)
+						}).length > 0
+					}).length > 0
+				},
+				loadDataUri: function(e){
+					var self = this;
+					e.preventDefault();
+					console.log(e)
+					var uri = $(e.target).val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
+					$.getJSON(uri, function(dat){
+						console.log(dat)
+						self.importkeys = Object.keys(dat.fieldAliases)
+					})
+				}
+			}
+		})
+		
