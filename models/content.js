@@ -17,6 +17,7 @@ var contentSchema = new Schema({
 		website: String,
 		cat: String,
 		hours: {
+			str: String,
 			mo: {
 				begin: Date,
 				end: Date,

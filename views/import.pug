@@ -34,7 +34,7 @@ block content
 				div.ms-Grid-row
 					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
 						label.ms-Label JSON data url
-						input.ms-TextField-field#uri(v-on:change="loadDataUri", type="text", name="uri", value="https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0")
+						input.ms-TextField-field#uri(@blur="loadDataUri", type="text", name="uri", value="https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0")
 				
 				div.ms-Grid-row
 					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
@@ -52,12 +52,12 @@ block content
 							td
 								span(v-text="key")
 							td
-								select(v-bind:id="key", v-bind:name="key")
-									option(disabled, value= "", v-text="'Select '+ key + ' field'", v-bind:selected="!determineSelection(key)")
-									option(v-for="(item, j) in importkeys", v-bind:value="item", v-bind:selected="determineSelection(key)")
+								select(:id="key", :name="key")
+									option(value= "", v-text="'No '+ key + ' field'", :selected="!determineSelection(key)")
+									option(v-for="(item, j) in importkeys", :value="item", :selected="determineSelection(key)", v-text="item")
 							
 					p
-					button.ms-Button.ms-Button--primary#submit(type="submit", ariaDescription="Import Dataset", style="display: none")
+					button.ms-Button.ms-Button--primary#submit(type="submit", ariaDescription="Import Dataset")
 						span.ms-Button-label Import
 				#info #{info}
 		//-
@@ -250,6 +250,7 @@ block content
 				loadDataUri: function(e){
 					var self = this;
 					e.preventDefault();
+					console.log(e)
 					var uri = $(e.target).val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
 					$.getJSON(uri, function(dat){
 						console.log(dat)

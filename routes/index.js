@@ -348,6 +348,8 @@ router.get('/api/import', function(req, res, next){
 
 				}
 			}
+			newk.push('open', 'close')
+			console.log(newk);
 			return res.render('import', {
 				loggedin: req.session.loggedin,
 				data: ret,
@@ -358,7 +360,7 @@ router.get('/api/import', function(req, res, next){
 	})
 })
 
-router.post('/api/import', function(req, res, next){
+router.post('/api/import', upload.array(), function(req, res, next){
 	Content.find({}, function(err, data){
 		if (err) {
 			return next(err)
@@ -375,12 +377,13 @@ router.post('/api/import', function(req, res, next){
 			if (Buffer.isBuffer(dat)){
 				dat = JSON.parse(dat.toString('utf8'));
 			}
-			/*var keys = Object.keys(dat);
-			//console.log(Object.keys(dat));
+			
+			// /*var keys = Object.keys(dat);
+			console.log(dat);
 			console.log(dat.features.length)
 			console.log(dat.aliases)
 			//console.log(dat.features[0])
-			for (var i = 0; i < dat.length; i++) {
+			/*for (var i = 0; i < dat.length; i++) {
 				var entry = new Content({
 					_id: index + i,
 					type: "Feature",
