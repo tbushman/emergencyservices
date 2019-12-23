@@ -198,8 +198,8 @@ block content
 			var latlng = clicked;
 			var lng = clicked.lng;
 			var lat = clicked.lat;
-			console.log($(e.originalEvent.explicitOriginalTarget))
-			var d = $(e.originalEvent.explicitOriginalTarget).attr('d').split('a')[0];
+			console.log(e, $(e.originalEvent.explicitOriginalTarget))
+			var d = $(e.target).attr('d').split('a')[0];
 			var dxm = d.split(',')[0]
 			var dx = parseInt(dxm.replace('M', ''), 10);
 			var dy = parseInt(d.split(',')[1], 10);
@@ -274,7 +274,7 @@ block content
 					map.setView([#{lat}, #{lng}])
 					//clicked = {lat: #{lat}, lng: #{lng}}
 				} else {
-					var id = $(e.originalEvent.explicitOriginalTarget).attr('class').split(' ')[0];
+					var id = $(e.target).attr('class').split(' ')[0];
 					var center = map.getCenter();
 					lat = center.lat;
 					lng = center.lng;
