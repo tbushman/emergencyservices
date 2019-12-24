@@ -151,7 +151,7 @@ block content
 		};
 		
 		L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(map);
-		L.tileLayer('https://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
+		//- L.tileLayer('https://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(map); //slc transit
 		
 		var featurePane = map.createPane('featurePane');
 		featurePane.style.zIndex = 20000;
@@ -198,7 +198,7 @@ block content
 			var latlng = clicked;
 			var lng = clicked.lng;
 			var lat = clicked.lat;
-			console.log(e, $(e.originalEvent.explicitOriginalTarget))
+			//- console.log(e, $(e.originalEvent.explicitOriginalTarget))
 			var d = $(e.target).attr('d').split('a')[0];
 			var dxm = d.split(',')[0]
 			var dx = parseInt(dxm.replace('M', ''), 10);
@@ -283,7 +283,7 @@ block content
 						var lat = result.geometry.coordinates[1];
 						var lng = result.geometry.coordinates[0];
 						
-						window.location.href = '/focus/'+id+'/14/'+lat+'/'+lng+''
+						return window.location.href = '/focus/'+id+'/14/'+lat+'/'+lng+''
 					})
 				}
 			}

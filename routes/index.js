@@ -131,9 +131,25 @@ function ensureAuthenticated(req, res, next) {
 	return res.redirect('/login');
 }
 
+async function ensureCorrectImageDir(req, res, next) {
+ const data =	await Content.find({}).then(data=>data).catch(err=>next(err));
+ const rx = /(http\:\/\/pu\.bli\.sh\/maps\/images_popups)/g
+ await data.forEach(doc=>{
+	 
+	 if (rx.test(doc.properties.thumb)) {
+		 const replacethumb = doc.properties.thumb.replace(rx, '/publishers/emergencyservices/images/full/images_popups')
+		 const replaceimg = doc.properties.image.replace(rx, '/publishers/emergencyservices/images/full/images_popups')
+		 Content.findOneAndUpdate({'properties.thumb':  {$regex:rx}}, {$set: {'properties.thumb': replacethumb, 'properties.image': replaceimg}}, {new:true}, (err,doc) => {
+			 if (err) return next(err);
+		 })
+	 }
+ });
+ return next()
+}
+
 //if logged in, go to edit profile
 //if not, go to global profile (home)
-router.get('/', function (req, res) {
+router.get('/', ensureCorrectImageDir, function (req, res) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 
