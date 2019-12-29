@@ -1,0 +1,823 @@
+if (infowindow)
+	- console.log(infowindow)
+	if (infowindow === 'new')
+		div(class="ms-Panel ms-Panel--small")
+			div.ms-Panel-main.ms-Grid#mainpanel
+				div.ms-Grid-row.ms-Panel-contentInner
+					a#closepanel
+						i.ms-Icon.ms-Icon--x
+					div.ms-Grid-col.ms-u-sm12#sidepanel
+
+					
+						form#form(enctype="multipart/form-data", method="POST", action="/api/addcontent/"+(id+1)+"", style="margin-bottom: 50px")
+							div.ms-TextField
+								label.ms-Label Label
+								input.ms-TextField-field(type="text", name="label")
+							div.ms-TextField
+								label.ms-Label Address
+								input.ms-TextField-field(type="text", name="address1")
+							div.ms-TextField
+								label.ms-Label Address2
+								input.ms-TextField-field(type="text", name="address2")
+							div.ms-TextField
+								label.ms-Label City
+								input.ms-TextField-field(type="text", name="city")
+							div.ms-TextField
+								label.ms-Label State
+								input.ms-TextField-field(type="text", name="state")
+							div.ms-TextField
+								label.ms-Label ZIP
+								input.ms-TextField-field(type="text", name="zip")
+							div.ms-TextField
+								label.ms-Label Phone
+								input.ms-TextField-field(type="tel", name="phone")
+							div.ms-TextField
+								label.ms-Label Description
+								textarea.ms-TextField-field(type="text", name="description")
+							div.ms-TextField
+								label.ms-Label Link
+								input.ms-TextField-field(type="text", name="website")
+							
+							p.ms-font-l Type
+							p.ms-font-s Please choose only one.
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											
+											input(id="b", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="b")
+											label.ms-ChoiceField-field#type_b(for="b")
+												span.ms-label Travel
+									
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											input(id="f", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="f")
+											label.ms-ChoiceField-field#type_f(for="f")
+												span.ms-label Food
+									
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											input(id="h", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="h")
+											label.ms-ChoiceField-field#type_h(for="h")
+												span.ms-label Housing
+									
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											input(id="m", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="m")
+											label.ms-ChoiceField-field#type_h(for="m")
+												span.ms-label Medical
+							p.ms-font-l Hours of Operation
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#mo_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Monday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-mo_b(type="text", name="mo_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-mo_e(type="text", name="mo_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="mo_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="mo_a")
+												label.ms-ChoiceField-field#mo_all(for="mo_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="mo_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="mo_c")
+												label.ms-ChoiceField-field#mo_closed(for="mo_c")
+													span.ms-label Closed
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#tu_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Tuesday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-tu_b(type="text", name="tu_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-tu_e(type="text", name="tu_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="tu_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="tu_a")
+												label.ms-ChoiceField-field#tu_all(for="tu_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="tu_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="tu_c")
+												label.ms-ChoiceField-field#tu_closed(for="tu_c")
+													span.ms-label Closed		
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#we_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Wednesday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-we_b(type="text", name="we_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-we_e(type="text", name="we_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="we_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="we_a")
+												label.ms-ChoiceField-field#we_all(for="we_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="we_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="we_c")
+												label.ms-ChoiceField-field#we_closed(for="we_c")
+													span.ms-label Closed
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#th_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Thursday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-th_b(type="text", name="th_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-th_e(type="text", name="th_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="th_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="th_a")
+												label.ms-ChoiceField-field#th_all(for="th_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="th_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="th_c")
+												label.ms-ChoiceField-field#th_closed(for="th_c")
+													span.ms-label Closed
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#fr_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Friday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-fr_b(type="text", name="fr_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-fr_e(type="text", name="fr_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="fr_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="fr_a")
+												label.ms-ChoiceField-field#fr_all(for="fr_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="fr_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="fr_c")
+												label.ms-ChoiceField-field#fr_closed(for="fr_c")
+													span.ms-label Closed
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#sa_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Saturday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-sa_b(type="text", name="sa_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-sa_e(type="text", name="sa_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="sa_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="sa_a")
+												label.ms-ChoiceField-field#sa_all(for="sa_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="sa_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="sa_c")
+												label.ms-ChoiceField-field#sa_closed(for="sa_c")
+													span.ms-label Closed
+							hr
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm8#su_hrs
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12.ms-font-m Sunday
+										div.ms-Grid-col.ms-u-sm6
+											
+											div.ms-TextField(style="width: 100%")
+												label.ms-Label From
+												input.ms-TextField-field#input-su_b(type="text", name="su_b", placeholder="Open", style=" min-width: 50px")
+												
+										div.ms-Grid-col.ms-u-sm6
+											div.ms-TextField(style="width: 100%; min-width: 50px")
+												label.ms-Label to
+												input.ms-TextField-field#input-su_e(type="text", name="su_e", placeholder="Close", style=" min-width: 50px")
+												
+								div.ms-Grid-col.ms-u-sm4
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="su_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="su_a")
+												label.ms-ChoiceField-field#su_all(for="su_a")
+													span.ms-label 24-hr
+										div.ms-Grid-col.ms-u-sm12
+											div.ms-ChoiceField
+												input(id="su_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="su_c")
+												label.ms-ChoiceField-field#su_closed(for="su_c")
+													span.ms-label Closed
+							p.ms-font-l Available Services
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="clothing", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="clothing")
+										label.ms-ChoiceField-field(for="clothing")
+											span.ms-label Clothing
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="computer", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="computer")
+										label.ms-ChoiceField-field(for="computer")
+											span.ms-label Computer Access
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="dayroom", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="dayroom")
+										label.ms-ChoiceField-field(for="dayroom")
+											span.ms-label Day Room
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="dental", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="dental")
+										label.ms-ChoiceField-field(for="dental")
+											span.ms-label Dental Services
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="pantry", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="pantry")
+										label.ms-ChoiceField-field(for="pantry")
+											span.ms-label Food Pantry
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="housing", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="housing")
+										label.ms-ChoiceField-field(for="housing")
+											span.ms-label Housing Assistance
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="meals", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="meals")
+										label.ms-ChoiceField-field(for="meals")
+											span.ms-label Meals
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="medical", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="medical")
+										label.ms-ChoiceField-field(for="medical")
+											span.ms-label Medical Services
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="personalcare", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="personalcare")
+										label.ms-ChoiceField-field(for="personalcare")
+											span.ms-label Personal Care items
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="showers", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="showers")
+										label.ms-ChoiceField-field(for="showers")
+											span.ms-label Showers
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="shelter", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="shelter")
+										label.ms-ChoiceField-field(for="shelter")
+											span.ms-label Overnight Shelter
+								div.ms-Grid-col.ms-u-sm12
+									div.ms-ChoiceField
+										input(id="transportation", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="transportation")
+										label.ms-ChoiceField-field(for="transportation")
+											span.ms-label Transportation Assistance
+							p.ms-font-l Image
+							div.ms-Grid-row
+								div.ms-Grid-col.ms-u-xl12
+									input.ms-Button#media(type="file")
+								div.ms-Grid-col.ms-u-xl12#appendcanvas
+									input(type="hidden", id="inputthumb", name="thumb")
+									input(type="hidden" id="inputimg" name="img")
+							input(style="display: none", type="number", step="any", id="lat", name="lat", value= lat)
+							input(style="display: none", type="number", step="any", id="lng", name="lng", value= lng)
+							hr
+							span.ms-font-m.ms-fontWeight-semibold Important: 
+							span#info.ms-font-m #{info}
+							p.ms-font-s Zoom in / pan map as necessary.
+							hr
+							p
+							button.ms-Button.ms-Button--primary(type="submit", ariaDescription="Submit Feature to map")
+								span.ms-Button-label Submit
+						
+	if (infowindow === 'edit')
+		div(class="ms-Panel ms-Panel--small")
+			div.ms-Panel-main.ms-Grid#mainpanel
+				div.ms-Grid-row.ms-Panel-contentInner
+					div.ms-Grid-col.ms-u-sm12#sidepanel
+						div#info.ms-font-s
+						form#form(enctype="multipart/form-data", method="POST", action="/api/editcontent/"+id+"", style="margin-bottom: 50px")
+							a#editform.ms-Button(href="#", role="button")
+								span.ms-Button-label Edit Feature details
+							
+							#formshow(style="display: none")
+								div.ms-TextField
+									label.ms-Label Label
+									input.ms-TextField-field(type="text", name="label", value= doc.properties.label)
+								div.ms-TextField
+									label.ms-Label Address
+									input.ms-TextField-field(type="text", name="address1", value= doc.properties.address1)
+								div.ms-TextField
+									label.ms-Label Address2
+									input.ms-TextField-field(type="text", name="address2", value= doc.properties.address2)
+								div.ms-TextField
+									label.ms-Label City
+									input.ms-TextField-field(type="text", name="city", value= doc.properties.city)
+								div.ms-TextField
+									label.ms-Label State
+									input.ms-TextField-field(type="text", name="state", value= doc.properties.state)
+								div.ms-TextField
+									label.ms-Label ZIP
+									input.ms-TextField-field(type="text", name="zip", value= doc.properties.zip)
+								div.ms-TextField
+									label.ms-Label Phone
+									input.ms-TextField-field(type="tel", name="phone", value= doc.properties.phone)
+								div.ms-TextField
+									label.ms-Label Description
+									textarea.ms-TextField-field(type="text", name="description", value= doc.properties.description)
+								div.ms-TextField
+									label.ms-Label Link
+									input.ms-TextField-field(type="text", name="website", value= doc.properties.website)
+							
+							div.ms-Grid-col.ms-u-sm12
+								p.ms-font-xl #{doc.properties.label}
+								p.ms-font-l Type
+								p.ms-font-s.ms-fontWeight-semibold Please choose only one.
+									div.ms-Grid-row
+										div.ms-Grid-col.ms-u-sm12
+											div(class=(doc.properties.cat === 'B')?"ms-ChoiceField":"ms-ChoiceField")
+												if (doc.properties.cat === 'B')
+													input(id="b", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="b")
+												else
+													input(id="b", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="b")
+												label.ms-ChoiceField-field#type_b(for="b")
+													span.ms-label Travel
+										
+										div.ms-Grid-col.ms-u-sm12
+											div(class=(doc.properties.cat === 'F')?"ms-ChoiceField":"ms-ChoiceField")
+												if (doc.properties.cat === 'F')
+													input(id="f", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="f")
+												else
+													input(id="f", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="f")
+												label.ms-ChoiceField-field#type_f(for="f")
+													span.ms-label Food
+										
+										div.ms-Grid-col.ms-u-sm12
+											div(class=(doc.properties.cat === 'H')?"ms-ChoiceField":"ms-ChoiceField")
+												if (doc.properties.cat === 'H')
+													input(id="h", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="h")
+												else
+													input(id="h", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="h")
+												label.ms-ChoiceField-field#type_h(for="h")
+													span.ms-label Housing
+										
+										div.ms-Grid-col.ms-u-sm12
+											div(class=(doc.properties.cat === 'M')?"ms-ChoiceField":"ms-ChoiceField")
+												if (doc.properties.cat === 'M')
+													input(id="m", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="m")
+												else
+													input(id="m", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="m")
+												label.ms-ChoiceField-field#type_h(for="m")
+													span.ms-label Medical
+								p.ms-font-l Hours of Operation
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#mo_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Monday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.mo.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-mo_b(type="text", name="mo_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.mo.begin !== null)?moment(doc.properties.hours.mo.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.mo.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-mo_e(type="text", name="mo_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.mo.end !== null)?moment(doc.properties.hours.mo.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.mo.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.mo.allday === true)
+														input(id="mo_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="mo_a")
+													else
+														input(id="mo_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="mo_a")
+													label.ms-ChoiceField-field#mo_all(for="mo_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.mo.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.mo.closed === true)
+														input(id="mo_c", type="checkbox", aria-checked="true", class="ms-ChoiceField-input is-checked", name="mo_c", "checked")
+													else
+														input(id="mo_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="mo_c")
+													label.ms-ChoiceField-field#mo_closed(for="mo_c")
+														span.ms-label Closed
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#tu_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Tuesday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.tu.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-tu_b(type="text", name="tu_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.tu.begin !== null)?moment(doc.properties.hours.tu.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.tu.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-tu_e(type="text", name="tu_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.tu.end !== null)?moment(doc.properties.hours.tu.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.tu.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.tu.allday === true)
+														input(id="tu_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="tu_a")
+													else
+														input(id="tu_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="tu_a")
+													label.ms-ChoiceField-field#tu_all(for="tu_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.tu.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.tu.closed === true)
+														input(id="tu_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="tu_c")
+													else
+														input(id="tu_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="tu_c")
+													label.ms-ChoiceField-field#tu_closed(for="tu_c")
+														span.ms-label Closed		
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#we_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Wednesday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.we.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-we_b(type="text", name="we_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.we.begin !== null)?moment(doc.properties.hours.we.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.we.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-we_e(type="text", name="we_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.we.end !== null)?moment(doc.properties.hours.we.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.we.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.we.allday === true)
+														input(id="we_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="we_a")
+													else
+														input(id="we_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="we_a")
+													label.ms-ChoiceField-field#we_all(for="we_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.we.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.we.closed === true)
+														input(id="we_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="we_c")
+													else
+														input(id="we_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="we_c")
+													label.ms-ChoiceField-field#we_closed(for="we_c")
+														span.ms-label Closed
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#th_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Thursday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.th.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-th_b(type="text", name="th_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.th.begin !== null)?moment(doc.properties.hours.th.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.th.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-th_e(type="text", name="th_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.th.end !== null)?moment(doc.properties.hours.th.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.th.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.th.allday === true)
+														input(id="th_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="th_a")
+													else
+														input(id="th_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="th_a")
+													label.ms-ChoiceField-field#th_all(for="th_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.th.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.th.closed === true)
+														input(id="th_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="th_c")
+													else
+														input(id="th_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="th_c")
+													label.ms-ChoiceField-field#th_closed(for="th_c")
+														span.ms-label Closed
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#fr_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Friday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.fr.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-fr_b(type="text", name="fr_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.fr.begin !== null)?moment(doc.properties.hours.fr.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.fr.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-fr_e(type="text", name="fr_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.fr.end !== null)?moment(doc.properties.hours.fr.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.fr.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.fr.allday === true)
+														input(id="fr_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="fr_a")
+													else
+														input(id="fr_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="fr_a")
+													label.ms-ChoiceField-field#fr_all(for="fr_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.fr.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.fr.closed === true)
+														input(id="fr_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="fr_c")
+													else
+														input(id="fr_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="fr_c")
+													label.ms-ChoiceField-field#fr_closed(for="fr_c")
+														span.ms-label Closed
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#sa_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Saturday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.sa.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-sa_b(type="text", name="sa_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.sa.begin !== null)?moment(doc.properties.hours.sa.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.sa.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-sa_e(type="text", name="sa_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.sa.end !== null)?moment(doc.properties.hours.sa.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.sa.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.sa.allday === true)
+														input(id="sa_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="sa_a")
+													else
+														input(id="sa_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="sa_a")
+													label.ms-ChoiceField-field#sa_all(for="sa_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.sa.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.sa.closed === true)
+														input(id="sa_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="sa_c")
+													else
+														input(id="sa_c", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="sa_c")
+													label.ms-ChoiceField-field#sa_closed(for="sa_c")
+														span.ms-label Closed
+								hr
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm8#su_hrs
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12.ms-font-m Sunday
+											div.ms-Grid-col.ms-u-sm6
+
+												div(class=(doc.properties.hours.su.begin !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label From
+													input.ms-TextField-field#input-su_b(type="text", name="su_b", placeholder="Open", style=" min-width: 50px", value=(doc.properties.hours.su.begin !== null)?moment(doc.properties.hours.su.begin).format('LT'):"")
+
+											div.ms-Grid-col.ms-u-sm6
+												div(class=(doc.properties.hours.su.end !== null)?"ms-TextField":"ms-TextField is-disabled")
+													label.ms-Label to
+													input.ms-TextField-field#input-su_e(type="text", name="su_e", placeholder="Close", style=" min-width: 50px", value=(doc.properties.hours.su.end !== null)?moment(doc.properties.hours.su.end).format('LT'):"")
+
+									div.ms-Grid-col.ms-u-sm4
+										div.ms-Grid-row
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.su.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.su.allday === true)
+														input(id="su_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="su_a")
+													else
+														input(id="su_a", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="su_a")
+													label.ms-ChoiceField-field#su_all(for="su_a")
+														span.ms-label 24-hr
+											div.ms-Grid-col.ms-u-sm12
+												div(class=(doc.properties.hours.su.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+													if (doc.properties.hours.su.closed === true)
+														input.ms-ChoiceField-input.is-checked(id="su_c", type="checkbox", "checked", aria-checked="true", name="su_c")
+													else
+														input.ms-ChoiceField-input(id="su_c", type="checkbox", aria-checked="false", name="su_c")
+													label.ms-ChoiceField-field#su_closed(for="su_c")
+														span.ms-label Closed
+								p.ms-font-l Available Services
+								div.ms-Grid-row
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.clothing === true)
+												input(id="clothing", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="clothing")
+											else
+												input(id="clothing", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="clothing")
+											label.ms-ChoiceField-field(for="clothing")
+												span.ms-label Clothing
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.computer === true)
+												input(id="computer", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="computer")
+											else
+												input(id="computer", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="computer")
+											label.ms-ChoiceField-field(for="computer")
+												span.ms-label Computer Access
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.dayroom === true)
+												input(id="dayroom", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="dayroom")
+											else
+												input(id="dayroom", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="dayroom")
+											label.ms-ChoiceField-field(for="dayroom")
+												span.ms-label Day Room
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.dental === true)
+												input(id="dental", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="dental")
+											else
+												input(id="dental", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="dental")
+											label.ms-ChoiceField-field(for="dental")
+												span.ms-label Dental Services
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.pantry === true)
+												input(id="pantry", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="pantry")
+											else
+												input(id="pantry", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="pantry")
+											label.ms-ChoiceField-field(for="pantry")
+												span.ms-label Food Pantry
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.housing === true)
+												input(id="housing", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="housing")
+											else
+												input(id="housing", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="housing")
+											label.ms-ChoiceField-field(for="housing")
+												span.ms-label Housing Assistance
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.meals === true)
+												input(id="meals", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="meals")
+											else
+												input(id="meals", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="meals")
+											label.ms-ChoiceField-field(for="meals")
+												span.ms-label Meals
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.medical === true)
+												input(id="medical", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="medical")
+											else
+												input(id="medical", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="medical")
+											label.ms-ChoiceField-field(for="medical")
+												span.ms-label Medical Services
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.personalcare === true)
+												input(id="personalcare", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="personalcare")
+											else
+												input(id="personalcare", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="personalcare")
+											label.ms-ChoiceField-field(for="personalcare")
+												span.ms-label Personal Care items
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.showers === true)
+												input(id="showers", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="showers")
+											else
+												input(id="showers", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="showers")
+											label.ms-ChoiceField-field(for="showers")
+												span.ms-label Showers
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.shelter === true)
+												input(id="shelter", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="shelter")
+											else
+												input(id="shelter", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="shelter")
+											label.ms-ChoiceField-field(for="shelter")
+												span.ms-label Overnight Shelter
+									div.ms-Grid-col.ms-u-sm12
+										div.ms-ChoiceField
+											if (doc.properties.transportation === true)	
+												input(id="transportation", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input", name="transportation")
+											else
+												input(id="transportation", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="transportation")
+											label.ms-ChoiceField-field(for="transportation")
+												span.ms-label Transportation Assistance
+							a#closepanel
+								i.ms-Icon.ms-Icon--x
+							div.ms-Grid-col.ms-u-sm12
+								
+								p
+								div.ms-Grid-col.ms-u-sm12.spacer#resize
+									a.ms-ListItem-image(href="#", id= doc._id, name= doc._id)
+										img(src= doc.thumb)
+									
+								p.ms-font-l Change Image
+								div.ms-Grid-col.ms-u-xl12
+									input.ms-Button#media(type="file")
+								div.ms-Grid-col.ms-u-xl12#appendcanvas
+									input(type="hidden", id="inputthumb", name="thumb", value= doc.properties.thumb)
+									input(type="hidden" id="inputimg" name="img", value= doc.properties.image)
+											
+								input(style="display: none", type="number", step="any", id="lat", name="lat", value= doc.geometry.coordinates[1])
+								input(style="display: none", type="number", step="any", id="lng", name="lng", value= doc.geometry.coordinates[0])
+							div.ms-Grid-row.spacer
+							div.ms-Grid-row.spacer
+								button.ms-Button.ms-Button--primary.ms-Grid-col.ms-u-sm12.block(type="submit", ariaDescription="Submit Feature to map")
+									span.ms-Button-label Submit
+							
+						div.ms-Grid-row
+							a.ms-Button.ms-Button--alert.ms-Grid-col.ms-u-sm12#deletefeature(href="#", role="button")
+								span.ms-Button-label Delete Feature
+								span.ms-font-s(style="display: none") This cannot be undone. Continue?
+						div.ms-Grid-row.spacer
+	else
+		if (doc)
+			//- if (infowindow === 'doc')
+			- var size = 'small'
+			- var append = 'ms-Grid-col ms-u-sm12'
+			- var sidepanel = 'ms-Grid-col ms-u-sm12'
+			include doc.pug
+		else
+			
+			- var size = 'small'
+			- var append = 'ms-Grid-col ms-u-sm12'
+			- var sidepanel = 'ms-Grid-col ms-u-sm12'
+			div(class="ms-Panel ms-Panel--"+ size + " list")
+				div.ms-Panel-main.ms-Grid#mainpanel
+					div.ms-Grid-row.ms-Panel-contentInner
+
+						include list.pug
+
+else
+	- console.log('list')
+	if (doc)
+		//- if (infowindow === 'doc')
+		- var size = 'small'
+		- var append = 'ms-Grid-col ms-u-sm12'
+		- var sidepanel = 'ms-Grid-col ms-u-sm12'
+		include doc.pug
+	else
+		- var size = 'small'
+		- var append = 'ms-Grid-col ms-u-sm12'
+		- var sidepanel = 'ms-Grid-col ms-u-sm12'
+		div(class="ms-Panel ms-Panel--"+ size + " list")
+			div.ms-Panel-main.ms-Grid#mainpanel
+				div.ms-Grid-row.ms-Panel-contentInner
+
+					include list.pug
+
+

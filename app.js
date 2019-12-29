@@ -118,7 +118,11 @@ app.use(function (err, req, res) {
 
 var uri = process.env.DEVDB;
 
-var promise = mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }/*, {authMechanism: 'ScramSHA1'}*/);
+var promise = mongoose.connect(uri, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+	// useMongoClient: true 
+}/*, {authMechanism: 'ScramSHA1'}*/);
 promise.then(function(db){
 	console.log('connected es')
 	// db.on('error', console.error.bind(console, 'connection error:'));
