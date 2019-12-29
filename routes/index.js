@@ -354,58 +354,88 @@ router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 	})
 });
 
-router.get('/near', function(req, res, next){
-	var outputPath = url.parse(req.url).pathname;
-	// console.log(outputPath)
-	var arp = spawn('arp', ['-a']);
-	//console.log(arp.stdio[0].Pipe)
-	var mac;
-	arp.stdout.on('data', function(data){
-		data += '';
-		data = data.split('\n');
-		mac = data[0].split(' ')[3];
-	})
-	// Configure API parameters 
-	const params = {
-		wifiAccessPoints: [{
-			macAddress: ''+mac+'',
-			signalStrength: -65,
-			signalToNoiseRatio: 40
-		}]
-	};
-	var loc;
-	geolocation(params, function(err, data) {
-		if (err) {
-			console.log ('Could not find your location');
-			return res.redirect('/')
-		} else {
-			loc = JSON.parse(JSON.stringify({ lng: data.location.lng, lat: data.location.lat }))
-		}
-		Content.find({}, function(err, data){
-			if (err) {
-				return next(err)
-			}
-			if (req.isAuthenticated()) {
-				return res.render('publish', {
-					loggedin: req.session.loggedin,
-					data: data,
-					id: data.length - 1,
-					zoom: req.session.zoom?req.session.zoom:6,
-					lng: loc.lng,
-					lat: loc.lat
-				})
-			} else {
-				return res.render('publish', {
-					data: data,
-					id: data.length - 1,
-					zoom: req.session.zoom?req.session.zoom:6,
-					lng: loc.lng,
-					lat: loc.lat
-				})
-			}
-		})
+router.get('/near', async function(req, res, next){
+	var ip = require("ip");
+	var ping = spawn('ping', [ip.address()]);
+	ping.stdout.on('data', function(d){
+		console.log(d)
 	});
+	console.dir ( ip.address() );
+	const arp = require('arp');
+	arp.getMAC(ip.address(), (err, mac) => {
+		console.log(mac)
+		const params = {
+			wifiAccessPoints: [{
+				macAddress: ''+mac+'',
+				signalStrength: -65,
+				signalToNoiseRatio: 40
+			}]
+		};
+		var loc;
+		geolocation(params, function(err, loca) {
+			console.log(loca)
+			if (err) {
+				console.log ('Could not find your location');
+				console.log(err)
+				return res.redirect('/')
+			} else {
+				loc = JSON.parse(JSON.stringify({ lng: loca.location.lng, lat: loca.location.lat }))
+				if (!req.session.position) req.session.position = {}
+				req.session.position.lat = loc.lat;
+				req.session.position.lng = loc.lng;
+			}
+			console.log(loc)
+			Content.find({}, function(err, data){
+				if (err) {
+					return next(err)
+				}
+				if (req.isAuthenticated()) {
+					return res.render('publish', {
+						loggedin: req.session.loggedin,
+						data: data,
+						id: data.length - 1,
+						zoom: req.session.zoom?req.session.zoom:6,
+						lng: loc.lng,
+						lat: loc.lat
+					})
+				} else {
+					return res.render('publish', {
+						data: data,
+						id: data.length - 1,
+						zoom: req.session.zoom?req.session.zoom:6,
+						lng: loc.lng,
+						lat: loc.lat
+					})
+				}
+			})
+		});
+	})
+	// var outputPath = url.parse(req.url).pathname;
+	// // console.log(outputPath)
+	// var arp = spawn('arp', ['-a']);
+	// //console.log(arp.stdio[0].Pipe)
+	// var mac;
+	// await arp.stdout.on('data', function(data){
+	// 	data += '';
+	// 	data = data.split('\n');
+	// 	mac = data[0].split(' ')[3];
+	// });
+	// console.log(mac)
+	// const macaddress = await require('macaddress');
+	// const mac = await macaddress.all(addr => {
+	// 	console.log(addr)
+	// 	return addr
+	// })
+	// const mac = await require('os').networkInterfaces();
+	// const network = require('network-config');
+	// network.interfaces((err, configs) => {
+	// 	console.log(configs)
+	// })
+	// console.log(mac)
+	// Configure API parameters 
+
 })
+
 router.all('/near/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
