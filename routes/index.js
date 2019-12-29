@@ -360,7 +360,7 @@ router.get('/near', async function(req, res, next){
 	ping.stdout.on('data', function(d){
 		console.log(d)
 	});
-	console.dir ( ip.address() );
+	console.log ( ip.address(), req.ip );
 	const arp = require('arp');
 	arp.getMAC(ip.address(), (err, mac) => {
 		console.log(mac)
