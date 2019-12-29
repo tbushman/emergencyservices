@@ -362,7 +362,8 @@ router.get('/near', async function(req, res, next){
 	});
 	console.log ( ip.address(), req.ip );
 	const arp = require('arp');
-	arp.getMAC(ip.address(), (err, mac) => {
+	const ipa = process.env.NODE_ENV === 'production' ? req.ip : ip.address();
+	arp.getMAC(ipa, (err, mac) => {
 		console.log(mac)
 		const params = {
 			wifiAccessPoints: [{
