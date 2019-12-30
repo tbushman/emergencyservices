@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/tbushman/emergencyservices#readme",
   "dependencies": {
+    "address": "^1.1.2",
     "arp": "0.0.3",
     "async": "^2.6.1",
     "bluebird": "^3.5.1",
