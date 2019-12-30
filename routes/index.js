@@ -360,9 +360,9 @@ router.get('/near', async function(req, res, next){
 	ping.stdout.on('data', function(d){
 		console.log(d)
 	});
-	console.log ( ip.address(), req.headers('X-Forwarded-For') );
+	console.log ( ip.address(), req.headers );
 	const arp = require('arp');
-	const ipa = process.env.NODE_ENV === 'production' ? req.headers('X-Forwarded-For') : ip.address();
+	const ipa = process.env.NODE_ENV === 'production' ? req.headers['X-Forwarded-For'] : ip.address();
 	arp.getMAC(ipa, (err, mac) => {
 		console.log(mac)
 		const params = {
