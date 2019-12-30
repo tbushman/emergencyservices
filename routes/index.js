@@ -378,36 +378,41 @@ router.get('/near', async function(req, res, next){
 	// })
 
 	const ipa = process.env.NODE_ENV === 'production' ? req.headers['!~passenger-client-address'] : ip.address();
-	const geo = await require('request-promise')({
+	const loc = await require('request-promise')({
 				uri: 'https://ipinfo.io/' + ipa + '/geo?token='+process.env.IP_INFO,
 				encoding: null
-			}).then(async response => {
-				console.log(response.toString())
+			}).then(response => {
+				var resp = response.toString();
+				console.log(resp)
+				var coords = (!resp.loc ? ["40.7608","-111.8911"] : resp.loc.split(','));
+				return {
+					lat: parseFloat(coords[0]),
+					lng: parseFloat(coords[1])
+				}
 			}).catch(err=>next(err));
-	arp.getMAC(ipa, (err, mac) => {
-
-	// address.mac('vboxnet', (err, mac) => {
-		console.log(mac)
-		const params = {
-			wifiAccessPoints: [{
-				macAddress: ''+mac+'',
-				signalStrength: -65,
-				signalToNoiseRatio: 40
-			}]
-		};
-		var loc;
-		geolocation(params, function(err, loca) {
-			console.log(loca)
-			if (err) {
-				console.log ('Could not find your location');
-				console.log(err)
-				return res.redirect('/')
-			} else {
-				loc = JSON.parse(JSON.stringify({ lng: loca.location.lng, lat: loca.location.lat }))
+	// arp.getMAC(ipa, (err, mac) => {
+	// 
+	// // address.mac('vboxnet', (err, mac) => {
+	// 	console.log(mac)
+	// 	const params = {
+	// 		wifiAccessPoints: [{
+	// 			macAddress: ''+mac+'',
+	// 			signalStrength: -65,
+	// 			signalToNoiseRatio: 40
+	// 		}]
+	// 	};
+	// 	geolocation(params, function(err, loca) {
+	// 		console.log(loca)
+	// 		if (err) {
+	// 			console.log ('Could not find your location');
+	// 			console.log(err)
+	// 			return res.redirect('/')
+	// 		} else {
+				// loc = JSON.parse(JSON.stringify({ lng: loca.location.lng, lat: loca.location.lat }))
 				if (!req.session.position) req.session.position = {}
 				req.session.position.lat = loc.lat;
 				req.session.position.lng = loc.lng;
-			}
+			// }
 			console.log(loc)
 			Content.find({}, function(err, data){
 				if (err) {
@@ -432,8 +437,8 @@ router.get('/near', async function(req, res, next){
 					})
 				}
 			})
-		});
-	})
+	// 	});
+	// })
 	// var outputPath = url.parse(req.url).pathname;
 	// // console.log(outputPath)
 	// var arp = spawn('arp', ['-a']);
