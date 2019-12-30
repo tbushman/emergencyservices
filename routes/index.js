@@ -355,31 +355,38 @@ router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 });
 
 router.get('/near', async function(req, res, next){
-	// var ip = require("ip");
+	var ip = require("ip");
 	// var ping = spawn('ping', [ip.address()]);
 	// ping.stdout.on('data', function(d){
 	// 	console.log(d)
 	// });
 	// console.log ( ip.address(), req.headers );
-	// const arp = require('arp');
-	const address = require('address');
-	var network = require('network');
-	network.get_public_ip(function(err, ip) {
-		console.log('public ip')
-		console.log(err || ip); // should return your public IP address
-	})
-	network.get_private_ip(function(err, ip) {
-		console.log('private ip')
-		console.log(err || ip); // err may be 'No active network interface found'.
-	});
-	network.get_gateway_ip(function(err, ip) {
-		console.log('gateway ip')
-		console.log(err || ip); // err may be 'No active network interface found.'
-	})
+	const arp = require('arp');
+	// const address = require('address');
+	// var network = require('network');
+	// network.get_public_ip(function(err, ip) {
+	// 	console.log('public ip')
+	// 	console.log(err || ip); // should return your public IP address
+	// })
+	// network.get_private_ip(function(err, ip) {
+	// 	console.log('private ip')
+	// 	console.log(err || ip); // err may be 'No active network interface found'.
+	// });
+	// network.get_gateway_ip(function(err, ip) {
+	// 	console.log('gateway ip')
+	// 	console.log(err || ip); // err may be 'No active network interface found.'
+	// })
 
-	// const ipa = process.env.NODE_ENV === 'production' ? req.headers['X-Forwarded-For'] : ip.address();
-	// arp.getMAC(ipa, (err, mac) => {
-	address.mac('vboxnet', (err, mac) => {
+	const ipa = process.env.NODE_ENV === 'production' ? req.headers['!~passenger-client-address'] : ip.address();
+	const geo = await require('request-promise')({
+				uri: 'https://ipinfo.io/' + ipa + '/geo?token='+process.env.IP_INFO,
+				encoding: null
+			}).then(async response => {
+				console.log(response.toString())
+			}).catch(err=>next(err));
+	arp.getMAC(ipa, (err, mac) => {
+
+	// address.mac('vboxnet', (err, mac) => {
 		console.log(mac)
 		const params = {
 			wifiAccessPoints: [{
