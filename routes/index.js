@@ -363,6 +363,20 @@ router.get('/near', async function(req, res, next){
 	// console.log ( ip.address(), req.headers );
 	// const arp = require('arp');
 	const address = require('address');
+	var network = require('network');
+	network.get_public_ip(function(err, ip) {
+		console.log('public ip')
+		console.log(err || ip); // should return your public IP address
+	})
+	network.get_private_ip(function(err, ip) {
+		console.log('private ip')
+		console.log(err || ip); // err may be 'No active network interface found'.
+	});
+	network.get_gateway_ip(function(err, ip) {
+		console.log('gateway ip')
+		console.log(err || ip); // err may be 'No active network interface found.'
+	})
+
 	// const ipa = process.env.NODE_ENV === 'production' ? req.headers['X-Forwarded-For'] : ip.address();
 	// arp.getMAC(ipa, (err, mac) => {
 	address.mac('vboxnet', (err, mac) => {
