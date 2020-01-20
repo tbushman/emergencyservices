@@ -253,20 +253,22 @@ var mapFunctions = {
 				return ll1.contains(cptll);
 			})
 			if (self.geo && self.geo.length > 0) {
-				if (ll1._southWest) {
-					self.map.fitBounds(ll1);
+				if (ll1._southWest && self.geo.length > 1) {
+					// self.map.fitBounds(ll1);
+					console.log(self.geo[0])
 					var mark = L.latLngBounds(ll1).getCenter();
 					self.map.panTo(mark);
 					self.lMarker.setLatLng(mark);
+					self.lMarker.setOpacity(1);
 				} else {
 					self.map.panTo(latlng);
 					self.lMarker.setLatLng(latlng);
+					window.location.href = '/focus/'+self.geo[0]._id+'/14/'+self.geo[0].geometry.coordinates[1]+'/'+self.geo[0].geometry.coordinates[0]+''
+					// window.location.href = 
 				}
-				self.lMarker.setOpacity(1);
 
 				// self.btn.x = (self.wWidth/2);
 				// self.btn.y = (self.wHeight/2);
-				self.viewerList = true;
 
 			} else {
 				console.log(ll1, latlng)
@@ -307,12 +309,16 @@ var mapFunctions = {
 		var self = this;
 		var dataLayer;
 		var dataCoords;
+		console.log(window.location.href.split('/'), parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 2]))
+		var lat = (/focus/.test(window.location.href) ? parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 2]) : (!self.position || !self.position.lat ? 40.7608 : self.position.lat));
+		var lng = (/focus/.test(window.location.href) ? parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 1]) : (!self.position || !self.position.lng ? -111.8910 : self.position.lng));
+		var zoom = (/focus/.test(window.location.href) ? parseInt(window.location.href.split('/')[window.location.href.split('/').length - 3], 10) : (!self.position || !self.position.zoom ? 6 : self.position.zoom));
 		var map = new L.map('map', { 
 			center: [
-				(!self.position || !self.position.lat ? 40.7608 : self.position.lat),
-				(!self.position || !self.position.lng ? -111.8910 : self.position.lng)
+				lat,
+				lng
 			], 
-			zoom: (!self.position || !self.position.zoom ? 6 : self.position.zoom),
+			zoom: zoom,
 			// zoomControl: false,
 			minZoom: 2,
 			maxZoom: 18,
@@ -342,5 +348,26 @@ var mapFunctions = {
 		}
 
 	},
-
+	dPathAttr: function() {
+		if (this.btn) {// make central clipping svg d value reactive
+			console.log(window.innerWidth)
+		var wW = ( !this.wWidth ? window.innerWidth : this.wWidth ), 
+		wH = ( !this.wHeight ? window.innerHeight : this.wHeight ), 
+		pW = ( !this.pWidth ? ( wW * (this.res?0.5:0.5) ) : this.pWidth ), 
+		pH = ( !this.pHeight ? (wH * (this.res?0.5:0.5) ) : this.pHeight ), 
+		r = this.btn.r, cRc = (r * 0.5523), cRr = 0.81, 
+		sY = (isNaN(this.btn.y)?(wH*(this.res?0.5:0.5)):this.btn.y);
+		var str =`M${wW},${wH}H0V0h${wW}V${wH}z 
+		M${(wW - pW) + r},${sY}c0-${cRc}-${(cRc * cRr)}-${r}-${r}-${r}
+			c-${cRc},0-${r},${(cRc * cRr)}-${r},${r} 
+		c0,${cRc},${(cRc * cRr)},${r},${r},${r}
+			C${(wW - pW) + cRc},${(sY+r)},${(wW - pW)+r},${(sY + cRc)},
+			${((wW - pW) + r)},${sY}z`
+		return str; }
+	},
+	resetView: function() {
+		var self = this;
+		self.doc = '';
+		self.geo = []// window.location.href = '/'
+	}
 }

@@ -6,18 +6,18 @@ if (menu === 'profile' || menu === 'home')
 				img(src="https://pu.bli.sh/images/menu_button.svg")
 
 			div#dropdown
-				a.drop.ms-Grid-col.ms-u-sm12#contact(href="/") 
+				a.drop.tb-11-m0#contact(href="/") 
 					span.ms-font-l Home
 				if (loggedin)
-					a.drop.ms-Grid-col.ms-u-sm12#addfeature(href="/api/addfeature/"+zoom+"/"+lat+"/"+lng+"") 
+					a.drop.tb-11-m0#addfeature(href="/api/addfeature/"+zoom+"/"+lat+"/"+lng+"") 
 						span.ms-font-l Add Feature
-					a.drop.ms-Grid-col.ms-u-sm12#logout(href="/logout") 
+					a.drop.tb-11-m0#logout(href="/logout") 
 						span.ms-font-l Log out
 					
 				else
-					a.drop.ms-Grid-col.ms-u-sm12#cv(href="/login") 
+					a.drop.tb-11-m0#cv(href="/login") 
 						span.ms-font-l Login
-					a.drop.ms-Grid-col.ms-u-sm12#gallery(href="/register") 
+					a.drop.tb-11-m0#gallery(href="/register") 
 						span.ms-font-l Register
 		
 	script(type="text/javascript").

@@ -1,5 +1,5 @@
 script(type="text/javascript").
-	//- Vue.prototype.moment = moment;
+	Vue.prototype.moment = moment;
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
 	Vue.prototype.L = L;
@@ -18,12 +18,21 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				infowindow: this.parseObj(!{JSON.stringify(infowindow)}),
+				res: (window.innerWidth < 600),
 				id: 0,
 				dragging: {isDragging: false, y: 0},
 				dropped: {drop: false, layers: false, new: false},
 				isSafari: /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)),
+				btn: { 
+					x: (window.innerWidth / 2),
+					y: (window.innerHeight / 2),
+					r: 18
+				},
 				wWidth: window.innerWidth,
 				wHeight: window.innerHeight,
+				pWidth: (!this.res ? (window.innerWidth / 2) : (window.innerWidth / 2)),
+				dPath: this.dPathAttr(),
 				menu: this.parseObj(!{JSON.stringify(menu)}),
 				data: this.parseObj(!{JSON.stringify(data)}),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
@@ -91,52 +100,52 @@ script(type="text/javascript").
 						scrollTop: ~~$node.offset().top - 60
 					})
 				}
-				//- $('.list > .ms-Panel-main').css({display: 'none'})
-				//- $('.list').removeClass('is-open')
-				//- $('.list').css({display: 'none'})
+				$('.list > .ms-Panel-main').css({display: 'none'})
+				$('.list').removeClass('is-open')
+				$('.list').css({display: 'none'})
 				$('#dropdown').slideUp(100); 
 				$('#menu').removeClass('selected');
 				
-				$.fn.Panel = function () {
-						return this.each(function () {
-						var $panel = $(this);
-						var $panelMain = $panel.find("#mainpanel");
-						//- $panelMain.css({display: "block"});
-						//- $panel.addClass("is-open");
-						$panelMain.on("animationend webkitAnimationEnd MSAnimationEnd", function(event) {
-							if (event.originalEvent.animationName === "fadeOut") {
-								//- $(this).css({display: "none"});
-								//- $panelMain.css({display: "none"});
-								//- $('.list > .ms-Panel-main').css({display: 'none'})
-								$('.list').removeClass('is-open')
-								//- $('.list').css({display: 'none'})
-								//- $('.js-togglePanel').remove()
-							}
-						});
-						$('.js-togglePanel').click(function(){
-							console.log('clicked shadow')
-							$panel.toggleClass("is-open");
-							//- $panelMain.css({display: "none"});
-							//- $('.list > .ms-Panel-main').css({display: 'none'})
-							$('.list').removeClass('is-open')
-							//- $('.list').css({display: 'none'})
-							//- $('.js-togglePanel').remove()
-						})
-						$(document).on('click', '#closepanel', function(){
-							$panel.toggleClass("is-open");
-							//- $panelMain.css({display: "none"});
-							//- $('.js-togglePanel').remove();
-							if (window.location.pathname.split('/')[1] === 'api') {
-								window.location.href = '/api/publish';
-							} else {
-								window.location.href = '/'
-							}
-						})
-					});
-				};
-				if ($.fn.Panel) {
-					$('.ms-Panel').Panel();
-				}
+				//- $.fn.Panel = function () {
+				//- 		return this.each(function () {
+				//- 		var $panel = $(this);
+				//- 		var $panelMain = $panel.find("#mainpanel");
+				//- 		$panelMain.css({display: "block"});
+				//- 		$panel.addClass("is-open");
+				//- 		$panelMain.on("animationend webkitAnimationEnd MSAnimationEnd", function(event) {
+				//- 			if (event.originalEvent.animationName === "fadeOut") {
+				//- 				$(this).css({display: "none"});
+				//- 				$panelMain.css({display: "none"});
+				//- 				$('.list > .ms-Panel-main').css({display: 'none'})
+				//- 				$('.list').removeClass('is-open')
+				//- 				$('.list').css({display: 'none'})
+				//- 				$('.js-togglePanel').remove()
+				//- 			}
+				//- 		});
+				//- 		$('.js-togglePanel').click(function(){
+				//- 			console.log('clicked shadow')
+				//- 			$panel.toggleClass("is-open");
+				//- 			$panelMain.css({display: "none"});
+				//- 			$('.list > .ms-Panel-main').css({display: 'none'})
+				//- 			$('.list').removeClass('is-open')
+				//- 			$('.list').css({display: 'none'})
+				//- 			$('.js-togglePanel').remove()
+				//- 		})
+				//- 		$(document).on('click', '#closepanel', function(){
+				//- 			$panel.toggleClass("is-open");
+				//- 			$panelMain.css({display: "none"});
+				//- 			$('.js-togglePanel').remove();
+				//- 			if (window.location.pathname.split('/')[1] === 'api') {
+				//- 				window.location.href = '/api/publish';
+				//- 			} else {
+				//- 				window.location.href = '/'
+				//- 			}
+				//- 		})
+				//- 	});
+				//- };
+				//- if ($.fn.Panel) {
+				//- 	$('.ms-Panel').Panel();
+				//- }
 				$(document).on('click', '#menu > li > a', function (e) { 
 					e.preventDefault()
 
@@ -185,7 +194,7 @@ script(type="text/javascript").
 				//- 				var container = L.DomUtil.create('div', 'ms-Panel ms-Panel--small list')
 				//- 		var shadow = L.DomUtil.create('div', 'ms-Overlay ms-Overlay--dark js-togglePanel')
 				//- 		var content = L.DomUtil.create('div', 'ms-Panel-main ms-Grid')
-				//- 		var inner = L.DomUtil.create('div', 'ms-Grid-row ms-Panel-contentInner')
+				//- 		var inner = L.DomUtil.create('div', 'row ms-Panel-contentInner')
 				//- 
 				//- 		content.append(inner);
 				//- 		container.append(shadow);
@@ -247,7 +256,7 @@ script(type="text/javascript").
 							return circleMarker;
 						}
 					}).addTo(self.map);
-					self.map.fitBounds(self.dataLayer.getBounds())
+					//- self.map.fitBounds(self.dataLayer.getBounds())
 
 				})
 				//- var lMarker;
@@ -487,7 +496,7 @@ script(type="text/javascript").
 					} else {
 						id = self.id
 					}
-					$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="ms-Grid-row"><img id="return"></img></div>')
+					$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="row"><img id="return"></img></div>')
 					setTimeout(function(){
 						processImage()	
 					}, 200)

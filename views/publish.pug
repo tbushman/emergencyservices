@@ -8,47 +8,62 @@ block content
 	script(type="text/javascript", src="/scripts/mapfunctions.js")
 	//- script(type="text/javascript", src="/scripts/adminfunctions.js")
 	
-	div.ms-Grid-row#vue
-		div.ms-Grid-col.ms-u-sm7.buttonbox
-			div.ms-Grid-row
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+	div.row#vue
+		svg(
+			version="1.1" xmlns="http://www.w3.org/2000/svg" 
+			v-if="!isNaN(wWidth)" xmlns:xlink="http://www.w3.org/1999/xlink" x="0"
+			y="0" :width="(!wWidth ? 0:wWidth)" :height="(!wHeight ? 0:wHeight)" 
+			:viewBox="'0 0 '+ wWidth +' '+ wHeight + ''" 
+			style="position:absolute;" xml:space="preserve" 
+			:style="{'enable-background':'new 0 0 '+ wWidth +' '+ wHeight}"
+			)
+			defs
+				clipPath#clipPath
+					path(
+						v-if="btn && !isNaN(wWidth)", :d="dPathAttr()"
+						)
+
+		div.tb-6-m0.buttonbox
+			div.row
+				div.tb-1-m0
+					div.row
 						a#geolocate.block.ms-Button(href="/near", name="geolocate", title="Geolocate") 
 							p.ms-font-m.buttonlabel Near Me
 							img(src="/images/geolocate.svg")
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+				div.tb-1-m0
+					div.row
 						a#select.all.block.ms-Button(href="#", name="all", title="All") 
 							p.ms-font-m.buttonlabel ALL
 							img(src="/images/refresh.svg")
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+				div.tb-1-m0
+					div.row
 						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
 							p.ms-font-m.buttonlabel Housing
 							img(src="/images/housing.svg")
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+				div.tb-1-m0
+					div.row
 						a#select.m.block.ms-Button(href="#", name="M", title="Medical") 
 							p.ms-font-m.buttonlabel Medical
 							img(src="/images/medical.svg")
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+				div.tb-1-m0
+					div.row
 						a#select.f.block.ms-Button(href="#", name="F", title="Food") 
 							p.ms-font-m.buttonlabel Food
 							img(src="/images/food.svg")
-				div.ms-Grid-col.ms-u-sm2
-					div.ms-Grid-row
+				div.tb-1-m0
+					div.row
 						a#select.b.block.ms-Button(href="#", name="B", title="Travel") 
 							p.ms-font-m.buttonlabel Travel
 							img(src="/images/travel.svg")
 		//- if (infowindow)
-		include includes/gallery.pug
-		
+		.container
+			include includes/gallery.pug
+			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(v-if="infowindow && infowindow !== 'new' && infowindow !== 'edit' && doc && doc !== '' || geo.length > 0")
 	#map
 	
 	
-	if (infowindow && infowindow !== 'new' && infowindow !== 'edit')
-		div.ms-Overlay.ms-Overlay--dark.js-togglePanel
+	//- if (infowindow && infowindow !== 'new' && infowindow !== 'edit')
+		
 	include vue/map.pug
 	script(type="text/javascript").
 		
@@ -168,7 +183,7 @@ block content
 		//-         var container = L.DomUtil.create('div', 'ms-Panel ms-Panel--small list')
 		//- 		var shadow = L.DomUtil.create('div', 'ms-Overlay ms-Overlay--dark js-togglePanel')
 		//- 		var content = L.DomUtil.create('div', 'ms-Panel-main ms-Grid')
-		//- 		var inner = L.DomUtil.create('div', 'ms-Grid-row ms-Panel-contentInner')
+		//- 		var inner = L.DomUtil.create('div', 'row ms-Panel-contentInner')
 		//- 
 		//- 		content.append(inner);
 		//- 		container.append(shadow);
@@ -587,7 +602,7 @@ block content
 		//- 	} else {
 		//- 		id = #{id}
 		//- 	}
-		//- 	$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="ms-Grid-row"><img id="return"></img></div>')
+		//- 	$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="row"><img id="return"></img></div>')
 		//- 	setTimeout(function(){
 		//- 		processImage()	
 		//- 	}, 200)

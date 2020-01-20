@@ -16,7 +16,7 @@ var baseFunctions = {
 	},
 	resizeFrame: function(e) {
 		var self = this;
-		self.dPath = self.dPathAttr()
+		// self.dPath = self.dPathAttr()
 		self.wWidth = window.innerWidth;
 		self.wHeight = window.innerHeight;
 	},

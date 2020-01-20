@@ -1,4 +1,7 @@
-p.ms-font-s.listheader.ms-fontWeight-semibold(v-if="geo.length > 0" v-text="geo.length +' features nearby:'")
+a#closepanel(@click="resetView")
+	i.ms-Icon.ms-Icon--x
 
-a.ms-Grid-col.ms-u-sm12(v-for="(doc, i) in geo" :href="'/focus/'+doc._id+'/14/'+doc.geometry.coordinates[1]+'/'+doc.geometry.coordinates[0]")
+p.ms-font-s.listheader.ms-fontWeight-semibold(v-text="geo.length +' features nearby:'")
+
+a.tb-11-m0(v-for="(doc, i) in geo" :href="'/focus/'+doc._id+'/14/'+doc.geometry.coordinates[1]+'/'+doc.geometry.coordinates[0]")
 	span.ms-font-l(v-text="doc.properties.label")

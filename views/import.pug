@@ -3,16 +3,16 @@ block page
 block content
 	
 	div#app.ms-Grid
-		div.ms-Grid-row
-			div.ms-Grid-col.ms-u-mdPush1.ms-u-md9.ms-u-lgPush1.ms-u-lg6
+		div.row
+			div.tb-1-m0.tb-9-m1.tb-1-m2
 				
 				p.ms-font-l Upload Dataset
-				div.ms-Grid-row
-					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+				div.row
+					div.tb-9-m0
 						input.ms-Button#dataset(type="file")
 				p.ms-font-l or Reload Dataset
-				div.ms-Grid-row
-					div.ms-Grid-col.ms-u-sm9.ms-u-xl11.ms-Dropdown(tabindex="0")
+				div.row
+					div.tb-9-m0.ms-Dropdown(tabindex="0")
 						
 						label.ms-Label(for="datasources") Available datasets:
 						//input.ms-Dropdown-select(list="datasources", name="importpath")
@@ -31,13 +31,13 @@ block content
 													option.drop(value= sub)
 				
 				p.ms-font-l or Load via url
-				div.ms-Grid-row
-					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+				div.row
+					div.tb-9-m0
 						label.ms-Label JSON data url
 						input.ms-TextField-field#uri(@blur="loadDataUri", type="text", name="uri", value="https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0")
 				
-				div.ms-Grid-row
-					div.ms-Grid-col.ms-u-sm9.ms-u-xl11
+				div.row
+					div.tb-9-m0
 						table
 							tr
 								td(v-for="(doc)")

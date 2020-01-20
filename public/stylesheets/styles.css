@@ -1,7 +1,128 @@
-body {
+* {
+    margin: 0;
+    padding: 0;
+		box-sizing: border-box;
+}
+html {
+	height: 100%;
+	left: 0;
+	right: 0;
+	/* top: 0;
+	bottom: 0; */
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
+	box-sizing: border-box;
 }
+body {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+	max-height: 100vh;
+	width: 100%;
+	/* height: 100vh; */
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	font-family: 'Ubuntu', sans-serif;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+body {
+	pointer-events: none;
+}
+
+.row {
+	width: 100%;
+	height: auto;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+*[class^='tb-1'], *[class^='tb-0'] {
+	padding-right: 10px;
+	display: inline-block;
+	margin: 0 auto;
+	width: auto;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	vertical-align: top;
+} 
+
+*[class^='tb-10-'] {
+	width: 100%;
+}
+*[class^='tb-9-'] {
+	width: 90%;
+}
+*[class^='tb-8-'] {
+	width: 80%;
+}
+*[class^='tb-7-'] {
+	width: 70%;
+}
+*[class^='tb-6-'] {
+	width: 60%;
+}
+*[class^='tb-5-'] {
+	width: 50%;
+}
+*[class^='tb-4-'] {
+	width: 40%;
+}
+*[class^='tb-3-'] {
+	width: 30%;
+}
+*[class^='tb-2-'] {
+	width: 20%;
+}
+*[class^='tb-1-'] {
+	width: 10%;
+}
+
+.tb-11-m0 {
+	width: 100%;
+	margin-right: 0;
+	padding-right: 0!important;
+}
+
+.tb-10-m0 {
+	width: 100%;
+}
+.tb-9-m0 {
+	width: 90%;
+}
+.tb-8-m0 {
+	width: 80%;
+}
+.tb-7-m0 {
+	width: 70%;
+}
+.tb-6-m0 {
+	width: 60%;
+}
+.tb-5-m0 {
+	width: 50%;
+}
+.tb-4-m0 {
+	width: 40%;
+}
+.tb-3-m0 {
+	width: 30%;
+}
+.tb-2-m0 {
+	width: 20%;
+}
+.tb-1-m0 {
+	width: 10%;
+}
+
 
 a {
 	pointer-events: auto;
@@ -22,6 +143,11 @@ hr {
 	border-bottom: 0
 }
 
+#vue {
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
 #map {
 	position: fixed;
 	margin: 0;
@@ -30,7 +156,10 @@ hr {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	z-index: -1;
+	z-index: -3;
+	pointer-events: all;
+	height: 100%;
+	width: 100%;
 }
 
 .block {
@@ -317,33 +446,56 @@ hr {
 	font-size: 13px;
 	color: #999;
 }
-
-.list.leaflet-control {
-	margin: 0;
+.container {
+	width: 100%;
+	height: 100%;
+	position: absolute;
 	pointer-events: none;
+	overflow-y: hidden;
+	clip-path: url(#clipPath);
 }
 
-.list > .ms-Panel-main {
-	max-height: 80%;
+#mainpanel {
+	height: 50%;
 	width: 100%;
 	bottom: 0;
 	position: absolute;
-	float: right;
+	/* float: right; */
+	
+	/* background-color: rgba(255, 255, 255, 0);
+	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	 */
+	/* z-index: -2; */
+	background-color: var(--background);
+	background-color: #fff;
+	pointer-events: auto;
+	overflow: hidden;
+	overflow-y: auto;	
+	padding: 20px 40px;
+	/* clip-path: url(#clipPath); */
+
+}
+
+.ms-Panel-contentInner {
 	background-color: rgba(255, 255, 255, 0);
-	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	
-	z-index: -2;
 	pointer-events: auto;
 }
 
-.list > .ms-Panel-contentInner {
-	background-color: rgba(255, 255, 255, 0);
-	pointer-events: auto;
+.listheader {
+	position: fixed;
+	top: 50%;
+	/* background-color: rgba(255, 255, 255, 0);
+	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, var(--background) 17px);	
+	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	 */
+	background-color: var(--background);
+	background-color: #fff;
+	width: 100%;
+	
 }
 
-.list a {
+#mainpanel a {
 	margin: 0 0 5px 0!important;
 }
-.list a:last-child {
+#mainpanel a:last-child {
 	margin: 0 0 23px 0!important;
 }
 
@@ -351,7 +503,7 @@ hr {
 	background-color: rgba(0, 0, 0, 0);
 }
 
-.list > .js-togglePanel {
+.js-togglePanel {
 	background-color: rgba(0, 0, 0, 0);
 	background-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 20px, rgba(0, 0, 0, .2) 19px);
 	position: fixed;
@@ -370,7 +522,7 @@ hr {
 
 #sidepanel {
 	height: auto;
-	max-height: 51%;
+	/* max-height: 51%; */
 	top: 0;
 	bottom: 0;
 	overflow-y: scroll;
@@ -381,25 +533,6 @@ hr {
 	position: absolute;
 }
 
-.ms-Panel--small, .ms-Panel--medium {
-	/* display: none; */
-	top: 50%;
-	background-color: rgba(255, 255, 255, 0);
-	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);
-}
-
-.ms-Panel--small.view, .ms-Panel--medium.view {
-	display: block;
-}
-
-.ms-Panel--small > #mainpanel, .ms-Panel--medium > #mainpanel {
-	position: absolute;
-	background-color: rgba(255, 255, 255, 0);
-}
-
-.ms-Panel--small #sidepanel, .ms-Panel--medium #sidepanel {
-	max-height: 100%;
-}
 .ms-ChoiceField-field > span {
 	margin-left: 25px;
 }
@@ -491,6 +624,37 @@ a.username:hover > .ms-font-l {
 	float: right;
 }
 @media (min-width: 640px) and (orientation: landscape) {
+.tb-10-m1 {
+	width: 100%;
+}
+.tb-9-m1 {
+	width: 90%;
+}
+.tb-8-m1 {
+	width: 80%;
+}
+.tb-7-m1 {
+	width: 70%;
+}
+.tb-6-m1 {
+	width: 60%;
+}
+.tb-5-m1 {
+	width: 50%;
+}
+.tb-4-m1 {
+	width: 40%;
+}
+.tb-3-m1 {
+	width: 30%;
+}
+.tb-2-m1 {
+	width: 20%;
+}
+.tb-1-m1 {
+	width: 10%;
+}
+
 #select p, #geolocate p {
 	display: block;
 }
@@ -524,6 +688,36 @@ a.username:hover > .ms-font-l {
 }
 
 @media (min-width: 1024px) and (orientation: landscape) {
+	.tb-10-m2 {
+	width: 100%;
+	}
+	.tb-9-m2 {
+		width: 90%;
+	}
+	.tb-8-m2 {
+		width: 80%;
+	}
+	.tb-7-m2 {
+		width: 70%;
+	}
+	.tb-6-m2 {
+		width: 60%;
+	}
+	.tb-5-m2 {
+		width: 50%;
+	}
+	.tb-4-m2 {
+		width: 40%;
+	}
+	.tb-3-m2 {
+		width: 30%;
+	}
+	.tb-2-m2 {
+		width: 20%;
+	}
+	.tb-1-m2 {
+		width: 10%;
+	}
 	.ms-Panel--medium  .ms-Panel-main {
 		width: 33%!important;
 	}
