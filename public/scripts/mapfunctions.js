@@ -235,6 +235,7 @@ var mapFunctions = {
 				latlng = bff.getBounds().getCenter();
 				var lltcp = self.map.latLngToContainerPoint(latlng);
 				var cptll = self.map.containerPointToLatLng(lltcp);
+				latlng = cptll;
 				bff.remove();
 				if (ll1.contains(cptll)) {
 					// console.log(cptll, ll1)
@@ -261,8 +262,8 @@ var mapFunctions = {
 					self.lMarker.setLatLng(mark);
 					self.lMarker.setOpacity(1);
 				} else {
-					self.map.panTo(latlng);
-					self.lMarker.setLatLng(latlng);
+					self.map.panTo(L.latLngBounds(ll1).getCenter());
+					self.lMarker.setLatLng(L.latLngBounds(ll1).getCenter());
 					window.location.href = '/focus/'+self.geo[0]._id+'/14/'+self.geo[0].geometry.coordinates[1]+'/'+self.geo[0].geometry.coordinates[0]+''
 					// window.location.href = 
 				}

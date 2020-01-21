@@ -133,6 +133,7 @@ function ensureAuthenticated(req, res, next) {
 	return res.redirect('/login');
 }
 
+// TODO verify if this is needed anymore
 async function ensureCorrectImageDir(req, res, next) {
  const data =	await Content.find({}).then(data=>data).catch(err=>next(err));
  const rx = /(http\:\/\/pu\.bli\.sh\/maps\/images_popups)/g
@@ -147,6 +148,15 @@ async function ensureCorrectImageDir(req, res, next) {
 	 }
  });
  return next()
+}
+
+async function convertTypeToArray(req, res, next) {
+	const data =	await Content.find({}).then(data=>data).catch(err=>next(err));
+	await data.forEach(async doc => {
+		const cat = [doc.properties.cat];
+		await Content.findOneAndUpdate({_id: doc._id}, {$set: { 'properties.cat': cat}}).then(doc => doc).catch(err => next(err));
+		
+	})
 }
 
 //if logged in, go to edit profile
@@ -1185,14 +1195,14 @@ router.get('/api/editcontent/:id', function(req, res, next){
 			return next(error)
 		}
 		var loc = doc.geometry.coordinates;
-		Content.find({}, function(er, data){
+		Content.find({}).lean().exec(function(er, data){
 			if (er) {
 				return next(er)
 			}
-			var datarray = [];
-			for (var l in data) {
-				datarray.push(data[l])
-			}
+			// var datarray = [];
+			// for (var l in data) {
+			// 	datarray.push(data[l])
+			// }
 			return res.render('publish', {
 				infowindow: 'edit',
 				loggedin: req.session.loggedin,
@@ -1200,7 +1210,7 @@ router.get('/api/editcontent/:id', function(req, res, next){
 				id: id,
 				zoom: (req.session.zoom)?req.session.zoom:6,
 				doc: doc,
-				data: datarray,
+				data: data,
 				lng: loc[0],
 				lat: loc[1],
 				info: 'Edit your entry.'
@@ -1261,21 +1271,21 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			next(null, id, thumburl, imgurl, body, keys)
 		},
 		function(id, thumburl, imgurl, body, keys, next) {
-			var type;
+			var type = [];
 			
 			if (keys.indexOf('b') !== -1) {
-				type = 'B'
+				type.push('B')
 			}
 			if (keys.indexOf('f') !== -1) {
-				type = 'F'
+				type.push('F')
 			}
 			if (keys.indexOf('h') !== -1) {
-				type = 'H'
+				type.push('H')
 			}
 			if (keys.indexOf('m') !== -1) {
-				type = 'M'
+				type.push('M')
 			}
-			
+			console.log(body)
 			var entry = {
 				label: body.label,
 				address1: body.address1,
@@ -1334,18 +1344,18 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 				},
 				image: imgurl,
 				thumb: thumburl,
-				clothing: body.clothing,
-				computer: body.computer,
-				dayroom: body.dayroom,
-				dental: body.dental,
-				pantry: body.pantry,
-				housing: body.housing,
-				meals: body.meals,
-				medical: body.medical,
-				personalcare: body.personalcare,
-				showers: body.showers,
-				shelter: body.shelter,
-				transportation: body.transportation
+				clothing: (body.clothing || body.clothing === 'on' ? true : false),
+				computer: (body.computer || body.computer === 'on' ? true : false),
+				dayroom: (body.dayroom || body.dayroom === 'on' ? true : false),
+				dental: (body.dental || body.dental === 'on' ? true : false),
+				pantry: (body.pantry || body.pantry === 'on' ? true : false),
+				housing: (body.housing || body.housing === 'on' ? true : false),
+				meals: (body.meals || body.meals === 'on' ? true : false),
+				medical: (body.medical || body.medical === 'on' ? true : false),
+				personalcare: (body.personalcare || body.personalcare === 'on' ? true : false),
+				showers: (body.showers || body.showers === 'on' ? true : false),
+				shelter: (body.shelter || body.shelter === 'on' ? true : false),
+				transportation: (body.transportation || body.transportation === 'on' ? true : false)
 			}
 			entry = JSON.parse(JSON.stringify(entry))
 			var key = 'properties'
@@ -1554,18 +1564,18 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 					},
 					image: imgurl,
 					thumb: thumburl,
-					clothing: body.clothing,
-					computer: body.computer,
-					dayroom: body.dayroom,
-					dental: body.dental,
-					pantry: body.pantry,
-					housing: body.housing,
-					meals: body.meals,
-					medical: body.medical,
-					personalcare: body.personalcare,
-					showers: body.showers,
-					shelter: body.shelter,
-					transportation: body.transportation
+					clothing: (body.clothing || body.clothing === 'on' ? true : false),
+					computer: (body.computer || body.computer === 'on' ? true : false),
+					dayroom: (body.dayroom || body.dayroom === 'on' ? true : false),
+					dental: (body.dental || body.dental === 'on' ? true : false),
+					pantry: (body.pantry || body.pantry === 'on' ? true : false),
+					housing: (body.housing || body.housing === 'on' ? true : false),
+					meals: (body.meals || body.meals === 'on' ? true : false),
+					medical: (body.medical || body.medical === 'on' ? true : false),
+					personalcare: (body.personalcare || body.personalcare === 'on' ? true : false),
+					showers: (body.showers || body.showers === 'on' ? true : false),
+					shelter: (body.shelter || body.shelter === 'on' ? true : false),
+					transportation: (body.transportation || body.transportation === 'on' ? true : false)
 				},
 				geometry: {
 					type: "Point",

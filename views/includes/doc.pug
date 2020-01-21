@@ -6,7 +6,7 @@ div.row#sidepanel(class= sidepanel)
 		a(v-else, :href="'http://'+doc.properties.website", target="_blank")
 			i.ms-Icon.ms-Icon--link
 		div#append(v-if="doc.properties.image !== ''", class= append)
-			img#if_missing(src= doc.properties.image)
+			img#if_missing(:src= "doc.properties.image")
 	div.tb-11-m0
 		p.ms-font-s.ms-fontWeight-semibold(v-text="doc.properties.city")
 			br
@@ -84,73 +84,6 @@ div.row#sidepanel(class= sidepanel)
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.su.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
-
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Tuesday: 
-		//- 	if (doc.properties.hours.tu.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.tu.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.tu.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.tu.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Wednesday: 
-		//- 	if (doc.properties.hours.we.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.we.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.we.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.we.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Thursday: 
-		//- 	if (doc.properties.hours.th.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.th.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.th.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.th.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Friday: 
-		//- 	if (doc.properties.hours.fr.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.fr.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.fr.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.fr.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Saturday: 
-		//- 	if (doc.properties.hours.sa.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.sa.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.sa.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.sa.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
-		//- div
-		//- 	span.ms-font-s.ms-fontWeight-semibold Sunday: 
-		//- 	if (doc.properties.hours.su.begin !== null)
-		//- 		span.ms-font-s #{moment(doc.properties.hours.su.begin).format('LT')}
-		//- 		span  – 
-		//- 		span.ms-font-s #{moment(doc.properties.hours.su.end).format('LT')}
-		//- 	else
-		//- 		if (doc.properties.hours.su.allday === true)
-		//- 			span.ms-font-s 24-hours
-		//- 		else
-		//- 			span.ms-font-s Closed
 	div.tb-11-m0
 		p.ms-font-m Available Services
 		div.tb-5-m0(v-if="doc.properties.clothing === true")

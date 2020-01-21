@@ -58,7 +58,7 @@ block content
 		//- if (infowindow)
 		.container
 			include includes/gallery.pug
-			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(v-if="infowindow && infowindow !== 'new' && infowindow !== 'edit' && doc && doc !== '' || geo.length > 0")
+			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView", v-if="infowindow && infowindow !== 'new' && infowindow !== 'edit' && doc && doc !== '' || geo.length > 0")
 	#map
 	
 	

@@ -40,6 +40,7 @@ body {
 	height: auto;
 	overflow-y: hidden;
 	overflow-x: hidden;
+	padding-bottom: 10px;
 }
 
 *[class^='tb-1'], *[class^='tb-0'] {

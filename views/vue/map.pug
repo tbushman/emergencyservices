@@ -234,7 +234,7 @@ script(type="text/javascript").
 					self.dataLayer = L.geoJSON(data, {
 						onEachFeature: onEachFeature,
 						pointToLayer: function (feature, latlng) {
-							var fillColor = self.catColor(feature.properties.cat);
+							var fillColor = self.catColor(feature.properties.cat[0]);
 							
 							var circleMarker;
 							
@@ -498,7 +498,7 @@ script(type="text/javascript").
 					}
 					$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="row"><img id="return"></img></div>')
 					setTimeout(function(){
-						processImage()	
+						self.processImage()	
 					}, 200)
 							
 				});
