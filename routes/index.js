@@ -1488,19 +1488,19 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 		},
 		function(thumburl, imgurl, body, keys, id, next) {
 			var loc = [parseFloat(body.lng), parseFloat(body.lat)]
-			var type;
+			var type = [];
 			
 			if (keys.indexOf('b') !== -1) {
-				type = 'B'
+				type.push('B')
 			}
 			if (keys.indexOf('f') !== -1) {
-				type = 'F'
+				type.push('F')
 			}
 			if (keys.indexOf('h') !== -1) {
-				type = 'H'
+				type.push('H')
 			}
 			if (keys.indexOf('m') !== -1) {
-				type = 'M'
+				type.push('M')
 			}
 			
 			var entry = {

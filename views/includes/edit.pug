@@ -1,8 +1,8 @@
 if (infowindow === 'new')
 	
-	a#closepanel(@click="resetView")
-		i.ms-Icon.ms-Icon--x
-	div.tb-11-m0#sidepanel
+	div.tb-11-m0#sidepanel(v-if="doc && doc !== ''")
+		a#closepanel(@click="resetView")
+			i.ms-Icon.ms-Icon--x
 
 	
 		form#form(enctype="multipart/form-data", method="POST", action="/api/addcontent/"+(id+1)+"", style="margin-bottom: 50px")
@@ -338,7 +338,10 @@ if (infowindow === 'new')
 				span.ms-Button-label Submit
 					
 if (infowindow === 'edit')
-	div.tb-11-m0#sidepanel
+	div.tb-11-m0#sidepanel(v-if="doc && doc !== ''")
+		a#closepanel(@click="resetView")
+			i.ms-Icon.ms-Icon--x
+
 		div#info.ms-font-s
 		form#form(enctype="multipart/form-data", method="POST", action="/api/editcontent/"+id+"", style="margin-bottom: 50px")
 			a#editform.ms-Button(href="#", role="button")
@@ -749,8 +752,6 @@ if (infowindow === 'edit')
 								input(id="transportation", type="checkbox", aria-checked="false", class="ms-ChoiceField-input", name="transportation")
 							label.ms-ChoiceField-field(for="transportation")
 								span.ms-label Transportation Assistance
-			a#closepanel(@click="resetView")
-				i.ms-Icon.ms-Icon--x
 			div.tb-11-m0
 				
 				p

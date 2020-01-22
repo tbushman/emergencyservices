@@ -2,7 +2,7 @@
 - var append = 'tb-11-m0'
 - var sidepanel = 'tb-11-m0'
 
-div.ms-Grid#mainpanel(v-if="infowindow && infowindow === 'edit' || infowindow === 'new'")
+div.ms-Grid#mainpanel(v-if="doc && doc !== '' && infowindow && infowindow === 'edit' || infowindow === 'new'")
 	//- div.row.ms-Panel-contentInner
 	include edit.pug
 div.ms-Grid#mainpanel(v-else-if="doc && doc !== ''")

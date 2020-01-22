@@ -34,7 +34,10 @@ body {
 body {
 	pointer-events: none;
 }
-
+p, #mainpanel > a.tb-11-m0 {
+	padding-top: 3px;
+	padding-bottom: 8px;
+}
 .row {
 	width: 100%;
 	height: auto;
@@ -356,6 +359,7 @@ hr {
 	pointer-events: auto;
 	padding: 8px;
 	width: 100%;
+	display: inline-block;
 }
 .drop:hover {
 	background: linear-gradient(to right, #EEF4DE,  #fff);

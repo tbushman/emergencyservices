@@ -79,102 +79,102 @@ var mapFunctions = {
 			})
 		}
 	},
-	onClick: function(e) {
-		var self = this;
-		zoom = self.map.getZoom();
-		var center = self.map.getCenter();
-		var latlng = self.clicked;
-		var lng = self.clicked.lng;
-		var lat = self.clicked.lat;
-		// console.log($(e.originalEvent.explicitOriginalTarget))
-		var d = $(e.originalEvent.explicitOriginalTarget).attr('d').split('a')[0];
-		var dxm = d.split(',')[0]
-		var dx = parseInt(dxm.replace('M', ''), 10);
-		var dy = parseInt(d.split(',')[1], 10);
-		var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
-		var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+6, dy+7, dy+8];
-
-		var grid = [[]];
-		for (var x = 0; x < rangex.length; x++) {
-			grid[x] = [];
-			for (var y = 0; y < rangey.length; y++) {
-				grid[x][y] = 'M' + rangex[x] + ',' + rangey[y]
-			}
-		}
-		// console.log(rangex, rangey, grid)
-		var that = $(document).find($("path[d^='"+d+"']"))
-		// console.log(d, that)
-		var list = 0;
-		var bounds = [];
-		$('.list > .ms-Grid > .ms-Panel-contentInner').html('')
-		for (var i in grid) {
-			for (var j in grid[i]) {
-				var indexes = []
-				for (var k = 0; k < $('#map').find($("path[d^='"+grid[i][j]+"']")).length; k++) {
-					if ($('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class') !== undefined) {
-						list++;
-						var classi = $('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class');
-						var id = classi
-						$.ajax({
-							url: '/list/'+id+'/'+zoom+'/'+lat+'/'+lng+'',
-							processData: false,
-							contentType: false,
-							type: 'POST',
-							success: function(data){
-								$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/14/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-l">'+data.properties.label+'</span></a>')
-								self.map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
-								self.lMarker.remove()
-							}
-						});
-					} else {
-
-					}
-
-				}
-
-			}												
-		}
-		
-		if (list > 1) {
-			console.log(list)
-			$('.list').css({display: 'block'})
-			$('.list > .ms-Panel-main').css({display: 'block'})
-			$('.list').addClass("is-open");
-			$('.listheader').remove()
-			$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader ms-fontWeight-semibold">'+list+' features nearby:</p>');
-			var center = self.map.getCenter();
-			var lat = center.lat;
-			var lng = center.lng;
-			self.map.setView([lat, lng])
-			self.map.dragging.disable();
-			self.map.touchZoom.disable();
-			self.map.doubleClickZoom.disable();
-			self.map.scrollWheelZoom.disable();
-			self.map.boxZoom.disable();
-			self.map.keyboard.disable();
-			if (self.map.tap) self.map.tap.disable();
-			document.getElementById('map').style.cursor='default';
-			$('.list > .js-togglePanel').css('pointer-events', 'auto')
-			console.log(bounds)
-		} else {
-			if (list === 0) {
-				self.map.setView([self.position.lat, self.position.lng])
-				//clicked = {lat: self.position.lat, lng: self.position.lng}
-			} else {
-				var id = $(e.target).attr('class').split(' ')[0];
-				var center = self.map.getCenter();
-				lat = center.lat;
-				lng = center.lng;
-				console.log(id)
-				$.post('/focus/'+id+'/14/'+lat+'/'+lng+'').done(function(result){
-					var lat = result.geometry.coordinates[1];
-					var lng = result.geometry.coordinates[0];
-					
-					window.location.href = '/focus/'+id+'/14/'+lat+'/'+lng+''
-				})
-			}
-		}
-	},
+	// onClick: function(e) {
+	// 	var self = this;
+	// 	zoom = self.map.getZoom();
+	// 	var center = self.map.getCenter();
+	// 	var latlng = self.clicked;
+	// 	var lng = self.clicked.lng;
+	// 	var lat = self.clicked.lat;
+	// 	// console.log($(e.originalEvent.explicitOriginalTarget))
+	// 	var d = $(e.originalEvent.explicitOriginalTarget).attr('d').split('a')[0];
+	// 	var dxm = d.split(',')[0]
+	// 	var dx = parseInt(dxm.replace('M', ''), 10);
+	// 	var dy = parseInt(d.split(',')[1], 10);
+	// 	var rangex = [dx-8, dx-7, dx-6, dx-5, dx-4, dx-2, dx-1, dx, dx+1, dx+2, dx+3, dx+4, dx+5, dx+6, dx+7, dx+8];
+	// 	var rangey = [dy-8, dy-7, dy-6, dy-5, dy-4, dy-2, dy-1, dy, dy+1, dy+2, dy+3, dy+4, dy+5, dy+6, dy+7, dy+8];
+	// 
+	// 	var grid = [[]];
+	// 	for (var x = 0; x < rangex.length; x++) {
+	// 		grid[x] = [];
+	// 		for (var y = 0; y < rangey.length; y++) {
+	// 			grid[x][y] = 'M' + rangex[x] + ',' + rangey[y]
+	// 		}
+	// 	}
+	// 	// console.log(rangex, rangey, grid)
+	// 	var that = $(document).find($("path[d^='"+d+"']"))
+	// 	// console.log(d, that)
+	// 	var list = 0;
+	// 	var bounds = [];
+	// 	$('.list > .ms-Grid > .ms-Panel-contentInner').html('')
+	// 	for (var i in grid) {
+	// 		for (var j in grid[i]) {
+	// 			var indexes = []
+	// 			for (var k = 0; k < $('#map').find($("path[d^='"+grid[i][j]+"']")).length; k++) {
+	// 				if ($('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class') !== undefined) {
+	// 					list++;
+	// 					var classi = $('#map').find($("path[d^='"+grid[i][j]+"']")[k]).attr('class');
+	// 					var id = classi
+	// 					$.ajax({
+	// 						url: '/list/'+id+'/'+zoom+'/'+lat+'/'+lng+'',
+	// 						processData: false,
+	// 						contentType: false,
+	// 						type: 'POST',
+	// 						success: function(data){
+	// 							$('.list > .ms-Grid > .ms-Panel-contentInner').append('<a href="/focus/'+data._id+'/14/'+data.geometry.coordinates[1]+'/'+data.geometry.coordinates[0]+'" class="ms-Grid-col ms-u-sm12"><span class="ms-font-l">'+data.properties.label+'</span></a>')
+	// 							self.map.setView([data.geometry.coordinates[1], data.geometry.coordinates[0]])
+	// 							self.lMarker.remove()
+	// 						}
+	// 					});
+	// 				} else {
+	// 
+	// 				}
+	// 
+	// 			}
+	// 
+	// 		}												
+	// 	}
+	// 
+	// 	if (list > 1) {
+	// 		console.log(list)
+	// 		$('.list').css({display: 'block'})
+	// 		$('.list > .ms-Panel-main').css({display: 'block'})
+	// 		$('.list').addClass("is-open");
+	// 		$('.listheader').remove()
+	// 		$('.list > .ms-Grid > .ms-Panel-contentInner').prepend('<p class="ms-font-s listheader ms-fontWeight-semibold">'+list+' features nearby:</p>');
+	// 		var center = self.map.getCenter();
+	// 		var lat = center.lat;
+	// 		var lng = center.lng;
+	// 		self.map.setView([lat, lng])
+	// 		self.map.dragging.disable();
+	// 		self.map.touchZoom.disable();
+	// 		self.map.doubleClickZoom.disable();
+	// 		self.map.scrollWheelZoom.disable();
+	// 		self.map.boxZoom.disable();
+	// 		self.map.keyboard.disable();
+	// 		if (self.map.tap) self.map.tap.disable();
+	// 		document.getElementById('map').style.cursor='default';
+	// 		$('.list > .js-togglePanel').css('pointer-events', 'auto')
+	// 		console.log(bounds)
+	// 	} else {
+	// 		if (list === 0) {
+	// 			self.map.setView([self.position.lat, self.position.lng])
+	// 			//clicked = {lat: self.position.lat, lng: self.position.lng}
+	// 		} else {
+	// 			var id = $(e.target).attr('class').split(' ')[0];
+	// 			var center = self.map.getCenter();
+	// 			lat = center.lat;
+	// 			lng = center.lng;
+	// 			console.log(id)
+	// 			$.post('/focus/'+id+'/14/'+lat+'/'+lng+'').done(function(result){
+	// 				var lat = result.geometry.coordinates[1];
+	// 				var lng = result.geometry.coordinates[0];
+	// 
+	// 				window.location.href = '/focus/'+id+'/14/'+lat+'/'+lng+''
+	// 			})
+	// 		}
+	// 	}
+	// },
 	//- arrayEqArray(arr1, arr2)
 	setView: function(feature, id, latlng, e){
 		var self = this;
