@@ -2,9 +2,9 @@ extends layout
 block page
 	- var menu = 'login'
 block content
-	div.ms-Grid
-		div.ms-Grid-row
-			div.ms-Grid-col.ms-u-mdPush1.ms-u-md9.ms-u-lgPush1.ms-u-lg6
+	div.ms-Grid(style="pointer-events: auto;")
+		div.row
+			div.tb-11-m0.tb-9-m1.tb-2-m2
 				p.ms-font-xl Enter username and password
 				form(enctype="multipart/form-data", method="POST", action="/login")
 					div.ms-TextField

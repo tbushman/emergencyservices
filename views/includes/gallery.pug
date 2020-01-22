@@ -1,0 +1,56 @@
+- var size = 'small'
+- var append = 'tb-11-m0'
+- var sidepanel = 'tb-11-m0'
+
+div.ms-Grid#mainpanel(v-if="doc && doc !== '' && infowindow && infowindow === 'edit' || infowindow === 'new'")
+	//- div.row.ms-Panel-contentInner
+	include edit.pug
+div.ms-Grid#mainpanel(v-else-if="doc && doc !== ''")
+	//- div.row.ms-Panel-contentInner
+	include doc.pug
+div.ms-Grid#mainpanel(v-else-if="geo.length > 0")
+	//- div.row.ms-Panel-contentInner
+	include list.pug
+//- if (infowindow)
+//- 	- console.log(infowindow)
+//- 	if (infowindow === 'edit' || infowindow === 'new')
+//- 		include edit.pug
+//- 	else
+//- 		if (doc && doc !== '')
+//- 			- console.log('infowindow = edit; doc !== null')
+//- 			//- if (infowindow === 'doc')
+//- 			- var size = 'small'
+//- 			- var append = 'tb-11-m0'
+//- 			- var sidepanel = 'tb-11-m0'
+//- 			include doc.pug
+//- 		else
+//- 			- console.log('infowindow = edit; doc === null')
+//- 
+//- 			- var size = 'small'
+//- 			- var append = 'tb-11-m0'
+//- 			- var sidepanel = 'tb-11-m0'
+//- 			div.ms-Grid#mainpanel(v-if="geo.length > 0")
+//- 				div.row.ms-Panel-contentInner
+//- 
+//- 					include list.pug
+//- 
+//- else
+//- 	- console.log('list')
+//- 	if (doc && doc !== '')
+//- 		- console.log('infowindow = null; doc !== null')
+//- 		//- if (infowindow === 'doc')
+//- 		- var size = 'small'
+//- 		- var append = 'tb-11-m0'
+//- 		- var sidepanel = 'tb-11-m0'
+//- 		include doc.pug
+//- 	else
+//- 		- console.log('infowindow = null; doc === null')
+//- 		- var size = 'small'
+//- 		- var append = 'tb-11-m0'
+//- 		- var sidepanel = 'tb-11-m0'
+//- 		div.ms-Grid#mainpanel(v-if="geo.length > 0")
+//- 			div.row.ms-Panel-contentInner
+//- 
+//- 				include list.pug
+//- 
+//- 

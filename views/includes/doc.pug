@@ -1,0 +1,133 @@
+div.row#sidepanel(class= sidepanel)
+	div.tb-11-m0
+		p.ms-font-xl(v-text="doc.properties.label")
+		a(v-if="doc.properties.website.split('/')[0] === 'http:' || doc.properties.website.split('/')[0] === 'https:'", :href="doc.properties.website", target="_blank")
+			i.ms-Icon.ms-Icon--link
+		a(v-else, :href="'http://'+doc.properties.website", target="_blank")
+			i.ms-Icon.ms-Icon--link
+		div#append(v-if="doc.properties.image !== ''", class= append)
+			img#if_missing(:src= "doc.properties.image")
+	div.tb-11-m0
+		p.ms-font-s.ms-fontWeight-semibold(v-text="doc.properties.city")
+			br
+			span.ms-font-s.ms-fontWeight-light(v-text="doc.properties.address1") 
+
+		p.ms-font-xs(v-text="doc.properties.phone")
+	div.tb-11-m0
+		p.ms-font-m Hours of Operation
+		div
+			span.ms-font-s.ms-fontWeight-semibold Monday: 
+			span(v-if="doc.properties.hours.mo.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.mo.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.mo.begin !== null", v-text="moment(doc.properties.hours.mo.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.mo.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Tuesday: 
+			span(v-if="doc.properties.hours.tu.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.tu.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.tu.begin !== null", v-text="moment(doc.properties.hours.tu.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.tu.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Wednesday: 
+			span(v-if="doc.properties.hours.we.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.we.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.we.begin !== null", v-text="moment(doc.properties.hours.we.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.we.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Thursday: 
+			span(v-if="doc.properties.hours.th.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.th.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.th.begin !== null", v-text="moment(doc.properties.hours.th.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.th.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Friday: 
+			span(v-if="doc.properties.hours.fr.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.fr.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.fr.begin !== null", v-text="moment(doc.properties.hours.fr.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.fr.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Saturday: 
+			span(v-if="doc.properties.hours.sa.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.sa.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.sa.begin !== null", v-text="moment(doc.properties.hours.sa.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.sa.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+		
+		div
+			span.ms-font-s.ms-fontWeight-semibold Sunday: 
+			span(v-if="doc.properties.hours.su.begin !== null")
+				span.ms-font-s(v-text="moment(doc.properties.hours.su.begin).format('LT')")
+				span  – 
+				span.ms-font-s(v-if="doc.properties.hours.su.begin !== null", v-text="moment(doc.properties.hours.su.end).format('LT')")
+			span(v-else)
+				span.ms-font-s(v-if="doc.properties.hours.su.allday === true") 24-hours
+				span.ms-font-s(v-else) Closed
+	div.tb-11-m0
+		p.ms-font-m Available Services
+		div.tb-5-m0(v-if="doc.properties.clothing === true")
+			div.row
+				span.ms-font-s Clothing
+		div.tb-5-m0(v-if="doc.properties.computer === true")
+			div.row
+				span.ms-font-s Computer Access
+		div.tb-5-m0(v-if="doc.properties.dayroom === true")
+			div.row
+				span.ms-font-s Day Room
+		div.tb-5-m0(v-if="doc.properties.dental === true")
+			div.row
+				span.ms-font-s Dental Services
+		div.tb-5-m0(v-if="doc.properties.pantry === true")
+			div.row
+				span.ms-font-s Computer Access
+		div.tb-5-m0(v-if="doc.properties.housing === true")
+			div.row
+				span.ms-font-s Housing Assistance
+		div.tb-5-m0(v-if="doc.properties.meals === true")
+			div.row
+				span.ms-font-s Meals
+		div.tb-5-m0(v-if="doc.properties.medical === true")
+			div.row
+				span.ms-font-s Medical Services
+		div.tb-5-m0(v-if="doc.properties.personalcare === true")
+			div.row
+				span.ms-font-s Personal Care items
+		div.tb-5-m0(v-if="doc.properties.showers === true")
+			div.row
+				span.ms-font-s Showers
+		div.tb-5-m0(v-if="doc.properties.shelter === true")
+			div.row
+				span.ms-font-s Shelter
+		div.tb-5-m0(v-if="doc.properties.transportation === true")
+			div.row
+				span.ms-font-s Transportation Assistance
+if (loggedin)
+	a#editbutton(v-if="doc && doc !== ''", :href="'/api/editcontent/'+doc._id")
+		i.ms-Icon.ms-Icon--editBox
+	a#closepanel(@click="resetView")
+		i.ms-Icon.ms-Icon--x
+			
+else
+	a#closepanel(@click="resetView")
+		i.ms-Icon.ms-Icon--x

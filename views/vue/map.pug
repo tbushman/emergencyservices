@@ -1,0 +1,527 @@
+script(type="text/javascript").
+	Vue.prototype.moment = moment;
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	Vue.prototype.L = L;
+	
+	
+	//- $.get('/listing/'+self.id+'/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'').done(function(doc){
+	//- 	if (doc !== null) {
+	//- 		$('img#if_missing').attr('src', ''+doc.properties.image+'').on('error', function() {
+	//- 			$('img#if_missing').attr( 'src', '' );
+	//- 		})
+	//- 	}
+	//- 
+	//- })
+	
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				infowindow: this.parseObj(!{JSON.stringify(infowindow)}),
+				res: (window.innerWidth < 600),
+				id: 0,
+				dragging: {isDragging: false, y: 0},
+				dropped: {drop: false, layers: false, new: false},
+				isSafari: /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)),
+				btn: { 
+					x: (window.innerWidth / 2),
+					y: (window.innerHeight / 2),
+					r: 18
+				},
+				wWidth: window.innerWidth,
+				wHeight: window.innerHeight,
+				pWidth: (!this.res ? (window.innerWidth / 2) : (window.innerWidth / 2)),
+				dPath: this.dPathAttr(),
+				menu: this.parseObj(!{JSON.stringify(menu)}),
+				data: this.parseObj(!{JSON.stringify(data)}),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
+				position: (!this.parseObj(!{JSON.stringify(session.position)}) ? {lat: 40, lng: -111.89, zoom: 6}/*null*/ : this.parseObj(!{JSON.stringify(session.position)})),
+				map: '',
+				mapReady: false,
+				mapEdit: false,
+				mapEditable: false,
+				tileLayer: null,
+				dataLayer: '',
+				lMarker: '',
+				res: this.isResponsive(),
+				modal: {msg:null},
+				base: 0,
+				baseMaps: [
+					{
+						attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>',
+						url: 'https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png'
+					},
+					{
+						url: 'https://api.mapbox.com/styles/v1/tbushman/ciq7gm0ov008kbfm580v9mm9c/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGJ1c2htYW4iLCJhIjoiSmI0aU94OCJ9.SZytljBzoWupPUYeu_OR9A',
+						attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+					},
+					{
+						url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+						attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+					}
+					
+				],
+				viewerList: false,
+				clicked: '',
+				buf: [],
+				geo: []
+				
+			}
+		},
+		mounted: function(){
+			var self = this;
+			$(document).ready(function(){
+				document.addEventListener('keydown', function(event) {
+					var keyName = event.key;
+					if (keyName === 'Enter') event.preventDefault()
+				});
+				setTimeout(function(){
+					$('.submenu.drop').slideUp(100);
+					$('.slidedown').slideUp(100);
+				},3000)
+
+			})
+			$(document).on('click', '.href', function(e){
+				e.stopPropagation();
+			});
+			window.addEventListener('resize', self.resizeFrame);
+
+			self.loadMap(function(dataCoords){
+				/* TODO DRY this out: */
+				//- console.log(self.lMarker.getLatLng());
+				self.map.panTo(dataCoords);
+				$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
+					format: 'h:i A',
+					formatSubmit: 'h:i A',
+					hiddenName: true,
+					onOpen: function() {
+						scrollIntoView( this.$node )
+					}
+				})
+				function scrollIntoView( $node ) {
+					$('html,body').animate({
+						scrollTop: ~~$node.offset().top - 60
+					})
+				}
+				$('.list > .ms-Panel-main').css({display: 'none'})
+				$('.list').removeClass('is-open')
+				$('.list').css({display: 'none'})
+				$('#dropdown').slideUp(100); 
+				$('#menu').removeClass('selected');
+				
+				//- $.fn.Panel = function () {
+				//- 		return this.each(function () {
+				//- 		var $panel = $(this);
+				//- 		var $panelMain = $panel.find("#mainpanel");
+				//- 		$panelMain.css({display: "block"});
+				//- 		$panel.addClass("is-open");
+				//- 		$panelMain.on("animationend webkitAnimationEnd MSAnimationEnd", function(event) {
+				//- 			if (event.originalEvent.animationName === "fadeOut") {
+				//- 				$(this).css({display: "none"});
+				//- 				$panelMain.css({display: "none"});
+				//- 				$('.list > .ms-Panel-main').css({display: 'none'})
+				//- 				$('.list').removeClass('is-open')
+				//- 				$('.list').css({display: 'none'})
+				//- 				$('.js-togglePanel').remove()
+				//- 			}
+				//- 		});
+				//- 		$('.js-togglePanel').click(function(){
+				//- 			console.log('clicked shadow')
+				//- 			$panel.toggleClass("is-open");
+				//- 			$panelMain.css({display: "none"});
+				//- 			$('.list > .ms-Panel-main').css({display: 'none'})
+				//- 			$('.list').removeClass('is-open')
+				//- 			$('.list').css({display: 'none'})
+				//- 			$('.js-togglePanel').remove()
+				//- 		})
+				//- 		$(document).on('click', '#closepanel', function(){
+				//- 			$panel.toggleClass("is-open");
+				//- 			$panelMain.css({display: "none"});
+				//- 			$('.js-togglePanel').remove();
+				//- 			if (window.location.pathname.split('/')[1] === 'api') {
+				//- 				window.location.href = '/api/publish';
+				//- 			} else {
+				//- 				window.location.href = '/'
+				//- 			}
+				//- 		})
+				//- 	});
+				//- };
+				//- if ($.fn.Panel) {
+				//- 	$('.ms-Panel').Panel();
+				//- }
+				$(document).on('click', '#menu > li > a', function (e) { 
+					e.preventDefault()
+
+					if ($('#menu').hasClass('selected')) {
+
+								$('#dropdown').slideUp(100); 
+								$('#menu').removeClass("selected");
+
+						} 
+					else 
+					{
+								$('#menu').addClass('selected');
+						$('#dropdown').slideDown(200);
+						$('.drop').slideDown(200)
+								$('.username').css('z-index', 9999999);
+					}
+
+					e.stopPropagation();
+				});
+				
+				//- var map;
+				
+				//- self.map = new L.map('map', { 
+				//- 		zoomControl: true,
+				//- 		center: [self.position.lat, self.position.lng], 
+				//- 		zoom: self.position.zoom,
+				//- 	minZoom: 2,
+				//- 		maxZoom: 18
+				//- });
+				//- var options3 = {
+				//- 	attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>'
+				//- };
+				//- 
+				//- L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(self.map);
+				//- //- L.tileLayer('https://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(self.map); //slc transit
+				
+				//- var featurePane = self.map.createPane('featurePane');
+				//- featurePane.style.zIndex = 20000;
+				//- 
+				//- var MyControl = L.Control.extend({
+				//- 		options: {
+				//- 				position: 'topright'
+				//- 		},
+				//- 
+				//- 		onAdd: function (map) {
+				//- 				var container = L.DomUtil.create('div', 'ms-Panel ms-Panel--small list')
+				//- 		var shadow = L.DomUtil.create('div', 'ms-Overlay ms-Overlay--dark js-togglePanel')
+				//- 		var content = L.DomUtil.create('div', 'ms-Panel-main ms-Grid')
+				//- 		var inner = L.DomUtil.create('div', 'row ms-Panel-contentInner')
+				//- 
+				//- 		content.append(inner);
+				//- 		container.append(shadow);
+				//- 		container.append(content);
+				//- 				return container;
+				//- 		}
+				//- });
+				//- self.map.addControl(new MyControl());
+				self.map.dragging.enable();
+				self.map.touchZoom.enable();
+				self.map.doubleClickZoom.enable();
+				self.map.scrollWheelZoom.enable();
+				self.map.boxZoom.enable();
+				self.map.keyboard.enable();
+				if (self.map.tap) self.map.tap.enable();
+				document.getElementById('map').style.cursor='grab';
+				//- var clicked;
+				self.map.on('click', function(e){
+					self.clicked = e.latlng;
+				})
+				
+				//- $(document).on('click', '.leaflet-interactive', function(e){
+				//- 	self.onClick(e)
+				//- 
+				//- })
+				
+				var datalength = self.data.length
+				console.log(datalength)
+				//- var dataLayer;
+				$.getJSON('/mydata/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'', function(data){
+
+					function onEachFeature(feature, latlng) {
+						feature.geometry.coordinates.reverse()
+					}
+					
+					
+					self.dataLayer = L.geoJSON(data, {
+						onEachFeature: onEachFeature,
+						pointToLayer: function (feature, latlng) {
+							var fillColor = self.catColor(feature.properties.cat[0]);
+							
+							var circleMarker;
+							
+							var geojsonMarkerOptions;
+							
+							geojsonMarkerOptions = {
+									radius: 11,
+									fillColor: fillColor,
+									color: "rgba(0, 0, 0, 0)",
+									weight: 2,
+									opacity: 1,
+									fillOpacity: 0.8,
+								className: ""+feature._id+""					    
+							};
+							circleMarker = new L.circleMarker(latlng, geojsonMarkerOptions)
+							.on('click', function(){
+								self.setView(feature, feature._id, latlng)
+							});
+							return circleMarker;
+						}
+					}).addTo(self.map);
+					if (/home/.test(window.location.href) || /api\/publish/.test(window.location.href)) {
+						self.map.fitBounds(self.dataLayer.getBounds())
+					}
+
+				})
+				//- var lMarker;
+				if (window.location.pathname.split('/')[2] !== 'addfeature' && window.location.pathname.split('/')[2] !== 'editcontent') {
+					
+					self.lMarker = L.marker([self.position.lat, self.position.lng]).addTo(self.map);
+					
+				} else {
+					self.lMarker = L.marker([self.position.lat, self.position.lng], {draggable: true}).addTo(self.map);
+					
+				}
+				if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
+					self.lMarker.on('dragend', function(event){
+						var marker = event.target;
+							var position = marker.getLatLng();
+						console.log(position);
+						marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+						self.map.panTo(new L.LatLng(position.lat, position.lng))
+						$('form > #lat').val(position.lat)
+						$('form > #lng').val(position.lng)
+					});
+				}
+				//- self.map.setView([self.position.lat, self.position.lng])
+							
+				self.map.on('zoomend', function(e){
+					if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent') {
+						return false;
+					}
+					
+					zoom = self.map.getZoom();
+					$.post('/zoom/'+zoom+'', function(data){
+					})
+				})
+				var colors = {
+					B: '#3D7AB4',
+					H: '#E79404',
+					M: '#DA1912',
+					F: '#229701'
+				}
+				//- if (window.location.href.split('/')[3] === 'near') {
+				//- 	$.getJSON('/near/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'', function(data){
+				//- 		var bounds = []
+				//- 		function onEachFeature(feature, latlng) {
+				//- 			feature.geometry.coordinates.reverse();
+				//- 			//- console.log(bounds)
+				//- 			//- bounds.push(feature.geometry.coordinates);
+				//- 			//- console.log(bounds)
+				//- 		}
+				//- 		self.dataLayer.remove();
+				//- 		self.dataLayer = L.geoJSON(data, {
+				//- 			onEachFeature: onEachFeature,
+				//- 			pointToLayer: function (feature, latlng) {
+				//- 
+				//- 				var circleMarker;
+				//- 
+				//- 				var geojsonMarkerOptions;
+				//- 
+				//- 				geojsonMarkerOptions = {
+				//- 					radius: 11,
+				//- 					fillColor: colors[feature.properties.cat],
+				//- 					color: "rgba(0, 0, 0, 0)",
+				//- 					weight: 2,
+				//- 					opacity: 1,
+				//- 					fillOpacity: 0.8,
+				//- 					className: ""+feature._id+""
+				//- 				};
+				//- 				circleMarker = L.circleMarker(latlng, geojsonMarkerOptions)
+				//- 				return circleMarker;
+				//- 			}
+				//- 		}).addTo(self.map);
+				//- 		console.log(self.dataLayer.getBounds())
+				//- 		self.map.fitBounds(self.dataLayer.getBounds())
+				//- 	})
+				//- }
+				//- 
+				$(document).on('click', '#select', function(){
+					var cat = $(this).attr('name');
+					var fillColor = self.catColor(cat);
+
+					$.getJSON('/type/'+cat+'/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'', function(data){
+						var bounds = []
+						function onEachFeature(feature, latlng) {
+							feature.geometry.coordinates.reverse();
+						}
+						self.dataLayer.remove()
+						self.dataLayer = L.geoJSON(data, {
+								onEachFeature: onEachFeature,
+							pointToLayer: function (feature, latlng) {
+								
+								var circleMarker;
+
+								var geojsonMarkerOptions, newFillColor = null;
+								if (!fillColor) {
+									newFillColor = self.catColor(feature.properties.cat[0])
+								}
+								geojsonMarkerOptions = {
+										radius: 11,
+										fillColor: (!fillColor ? newFillColor : fillColor),
+										color: "rgba(0, 0, 0, 0)",
+										weight: 2,
+										opacity: 1,
+										fillOpacity: 0.8,
+									className: ""+feature._id+""
+								};
+								circleMarker = new L.circleMarker(latlng, geojsonMarkerOptions)
+								.on('click', function(){
+									self.setView(feature, feature._id, latlng)
+								});
+								return circleMarker;
+							}
+						}).addTo(self.map);
+						setTimeout(function(){
+							console.log(self.dataLayer.getBounds())
+							self.map.fitBounds(self.dataLayer.getBounds())
+						},100)
+					})
+				});
+				
+				$(document).on('click', '.list > .js-togglePanel', function(){
+					//- $('.list > .ms-Panel-main').css({display: 'none'})
+					$('.list').removeClass('is-open')
+					//- $('.list').css({display: 'none'})
+					//- $('.list > .ms-Grid > .ms-Panel-contentInner').html('')
+				})
+				$(document).on('click', '#editform', function(){
+					if ($('#formshow').css('display') === 'none') {
+						$('#formshow').css('display', 'block');
+						$('#editform > span').html('Hide Feature details')
+					} else {
+						$('#formshow').css('display', 'none');
+						$('#editform > span').html('Show Feature details')
+					}
+				})
+				$(document).on('click', '#deletefeature', function(){
+
+					if ($('#deletefeature span').css('display') === 'block') {
+						$(this).attr("href", "/api/deletefeature/"+self.id+"");
+					} else {
+						$('#deletefeature span').css('display', 'block')
+					}
+				})
+				$(document).on('focus', 'textarea', function(){
+					var text = $(this).attr('placeholder');
+					$(this).val(text)
+					$(this).css('max-width', '100%')
+				});
+				$(document).on('change', '.ms-TextField-field', function(){
+					var id = $(this).attr('id');
+					if (id.split('-')[1] !== undefined) {
+						var thisid = id.split('-')[1];
+						var day = thisid.split('_')[0];
+						var status = thisid.split('_')[1];
+						switch (status) {
+							case "b":
+								if ($(this).val() === '' && $('#input-'+day+'_e').val() === '') {
+									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+									
+								} else {
+									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+								}
+								break;
+							case "e":
+								if ($(this).val() === '' && $('#input-'+day+'_b').val() === '') {
+									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+									
+								} else {
+									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+								}
+								break;
+							default:
+								break;
+						}
+										
+					}
+				})
+				
+				
+				$(document).on('click', '.ms-ChoiceField-field', function(e){
+					var that = $(this);
+					var id = that.attr('id');
+					if (id !== undefined) {
+						var day = id.split('_')[0];
+						var status = id.split('_')[1];
+						if (that.siblings('input').hasClass('is-checked')) {
+							that.siblings('input').removeClass('is-checked')
+							that.siblings('input').attr('aria-checked', 'false')
+							that.siblings('input').attr('checked', '')
+							switch (status) {
+								case "all":
+									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+									$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+									$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+									break;
+								case "closed":
+									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+									$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+									$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+										break;
+								default:
+										break;
+							}
+						} else {
+							that.siblings('input').addClass('is-checked')
+							that.siblings('input').attr('aria-checked', 'true');
+							//that.siblings('input').attr('checked', 'checked');
+							switch (status) {
+								case "all":
+									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+									$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+									$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+									break;
+								case "closed":
+									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+									$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+									$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+										break;
+								default:
+										break;
+							}
+						}
+					}
+				})
+				var uploadurl;
+				var index;
+				var img;
+				
+				
+				$(document).on('change', '#media', function(e){
+					e.preventDefault();
+
+					if (window.location.pathname.split('/')[2] === 'addfeature') {
+						id = self.id + 1
+					} else {
+						id = self.id
+					}
+					$('#appendcanvas').prepend('<div class="ms-ListItem-image spacer" style="margin: 10px 10px 10px 0"><canvas id="canvas"></canvas></div><div class="row"><img id="return"></img></div>')
+					setTimeout(function(){
+						self.processImage()	
+					}, 200)
+							
+				});
+
+			})
+
+		},
+		beforeDestroy: function(){
+			//TODO clearTimout
+			var self = this;
+			window.removeEventListener('resize', self.resizeFrame)
+
+		},
+		methods: Object.assign(
+			{},
+			baseFunctions,
+			mapFunctions
+		)
+	});
+

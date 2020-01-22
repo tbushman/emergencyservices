@@ -2,9 +2,12 @@ doctype html
 html
 	head
 		title= appTitle
-		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
-		link(rel="stylesheet", href="/stylesheets/jquery-ui.min.css")
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge; charset=utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		//- link(rel="stylesheet", href="/stylesheets/jquery-ui.min.css")
 		link(rel="stylesheet", href="/stylesheets/leaflet.css")
+		link(href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet")
 		link(rel="stylesheet", href="/stylesheets/fabric.css")
 		link(rel="stylesheet", href="/stylesheets/fabric.components.css")
 		link(rel="stylesheet" href="/scripts/pickadate/default.css")
@@ -12,16 +15,50 @@ html
 		link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
 		link(rel="stylesheet", href="/stylesheets/styles.css")
 		script(type="text/javascript", src="/scripts/jquery.min.js")
-		script(type="text/javascript", src="/scripts/jquery-ui.min.js")
+		//- script(type="text/javascript", src="/scripts/jquery-ui.min.js")
 		script(type="text/javascript", src="/scripts/leaflet.js")
+		script(type="text/javascript", src="/scripts/vue.js")
 		script(type="text/javascript", src="/scripts/d3.v3.min.js")
-		script(type="text/javascript", src="/scripts/fabric.min.js")
+		//- script(type="text/javascript", src="/scripts/fabric.min.js")
 		script(type="text/javascript", src="/scripts/pickadate/picker.js")
 		script(type="text/javascript", src="/scripts/pickadate/picker.date.js")
 		script(type="text/javascript", src="/scripts/pickadate/picker.time.js")
-		script(type="text/javascript", src="/scripts/Dropdown.js")
-		script(type="text/javascript", src="/scripts/navbar.js")
-		script(type="text/javascript", src="/scripts/Panel.js")
+		script(type="text/javascript", src="/scripts/moment-with-locales.min.js")
+		//- script(type="text/javascript", src="/scripts/Dropdown.js")
+		//- script(type="text/javascript", src="/scripts/navbar.js")
+		//- script(type="text/javascript", src="/scripts/Panel.js")
+		script.
+			// Polyfill Object.assign 
+			if (typeof Object.assign !== 'function') {
+				// Must be writable: true, enumerable: false, configurable: true
+				Object.defineProperty(Object, "assign", {
+					value: function assign(target, varArgs) { // .length of function is 2
+						'use strict';
+						if (target === null || target === undefined) {
+							throw new TypeError('Cannot convert undefined or null to object');
+						}
+
+						var to = Object(target);
+
+						for (var index = 1; index < arguments.length; index++) {
+							var nextSource = arguments[index];
+
+							if (nextSource !== null && nextSource !== undefined) { 
+								for (var nextKey in nextSource) {
+									// Avoid bugs when hasOwnProperty is shadowed
+									if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+										to[nextKey] = nextSource[nextKey];
+									}
+								}
+							}
+						}
+						return to;
+					},
+					writable: true,
+					configurable: true
+				});
+			}
+
 	body
 		block page
 		

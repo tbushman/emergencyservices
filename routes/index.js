@@ -12,8 +12,10 @@ var spawn = require("child_process").exec;
 var dotenv = require('dotenv');
 var Publisher = require('../models/publishers.js');
 var Content = require('../models/content.js');
+var Import = require('../models/import.js');
 var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
+var Client = require('node-rest-client').Client;
 
 //Todo: user remove triggers userindex $inc -1
 
@@ -131,6 +133,7 @@ function ensureAuthenticated(req, res, next) {
 	return res.redirect('/login');
 }
 
+// TODO verify if this is needed anymore
 async function ensureCorrectImageDir(req, res, next) {
  const data =	await Content.find({}).then(data=>data).catch(err=>next(err));
  const rx = /(http\:\/\/pu\.bli\.sh\/maps\/images_popups)/g
@@ -145,6 +148,15 @@ async function ensureCorrectImageDir(req, res, next) {
 	 }
  });
  return next()
+}
+
+async function convertTypeToArray(req, res, next) {
+	const data =	await Content.find({}).then(data=>data).catch(err=>next(err));
+	await data.forEach(async doc => {
+		const cat = [doc.properties.cat];
+		await Content.findOneAndUpdate({_id: doc._id}, {$set: { 'properties.cat': cat}}).then(doc => doc).catch(err => next(err));
+		
+	})
 }
 
 //if logged in, go to edit profile
@@ -239,6 +251,213 @@ router.get('/logout', function(req, res) {
 	}
 });
 
+/*
+{ attributes: 
+   { SHELTER_ID: 299108,
+     SHELTER_NAME: 'GREATER SAINT LUKE BAPTIST CHURCH',
+     ADDRESS_1: '117 WALLACE ROAD',
+     CITY: 'JACKSON',
+     COUNTY_PARISH: 'MADISON',
+     FIPS_CODE: ' ',
+     STATE: 'TN',
+     ZIP: '38301',
+     MAIL_ADDR_SAME_AS_PHYS_ADDR: 'NO',
+     MAILING_ADDRESS_1: ' ',
+     MAILING_ADDRESS_2: ' ',
+     MAILING_CITY: ' ',
+     MAILING_COUNTY_PARISH: ' ',
+     MAILING_STATE: ' ',
+     MAILING_ZIP: ' ',
+     FACILITY_USAGE_CODE: 'EVAC',
+     EVACUATION_CAPACITY: 100,
+     POST_IMPACT_CAPACITY: 50,
+     ADA_COMPLIANT: ' ',
+     WHEELCHAIR_ACCESSIBLE: ' ',
+     PET_ACCOMMODATIONS_CODE: ' ',
+     PET_ACCOMMODATIONS_DESC: ' ',
+     GENERATOR_ONSITE: ' ',
+     SELF_SUFFICIENT_ELECTRICITY: ' ',
+     LATITUDE: 35.64111481,
+     LONGITUDE: -88.84749213,
+     IN_100_YR_FLOODPLAIN: ' ',
+     IN_500_YR_FLOODPLAIN: ' ',
+     IN_SURGE_SLOSH_AREA: ' ',
+     PRE_LANDFALL_SHELTER: ' ',
+     SHELTER_CODE: 'GENERAL',
+     ORG_ORGANIZATION_ID: 121505,
+     ORG_ORGANIZATION_NAME: 'JACKSON AREA CHAPTER',
+     ORG_MAIN_PHONE: ' ',
+     ORG_FAX: ' ',
+     ORG_EMAIL: ' ',
+     ORG_HOTLINE_PHONE: ' ',
+     ORG_OTHER_PHONE: ' ',
+     ORG_ADDRESS: '1981 HOLLYWOOD DR',
+     ORG_CITY: 'JACKSON',
+     ORG_STATE: 'TN',
+     ORG_ZIP: '38305',
+     ORG_POC_NAME: ' ',
+     ORG_POC_PHONE: ' ',
+     ORG_POC_AFTER_HOURS_PHONE: ' ',
+     ORG_POC_EMAIL: ' ',
+     ORG_HOURS_OF_OPERATION: '8',
+     POPULATION_CODE: 'GENERAL',
+     INCIDENT_ID: 0,
+     SHELTER_STATUS_CODE: 'CLOSED',
+     SHELTER_OPEN_DATE: null,
+     SHELTER_CLOSED_DATE: null,
+     REPORTING_PERIOD: ' ',
+     GENERAL_POPULATION: 0,
+     MEDICAL_NEEDS_POPULATION: 0,
+     OTHER_POPULATION: 0,
+     OTHER_POPULATION_DESCRIPTION: ' ',
+     TOTAL_POPULATION: 0,
+     PET_POPULATION: 0,
+     INCIDENT_NUMBER: ' ',
+     INCIDENT_NAME: ' ',
+     INCIDENT_CODE: ' ',
+     OBJECTID: 816,
+     SCORE: 100,
+     STATUS: 'M',
+     MATCH_TYPE: 'A',
+     LOC_NAME: 'Street',
+     GEOX: -88.84749213,
+     GEOY: 35.64111481,
+     FACILITY_TYPE: 'SHELTER',
+     SUBFACILITY_CODE: 'GENPOPSHEL',
+     DATA_SOURCE_ID: 0,
+     ADDRESS_1_OLD: '117 WALLACE ROAD' },
+  geometry: { x: -88.84749212700001, y: 35.641114813 } }
+
+*/
+router.get('/api/import', function(req, res, next){
+	Import.find({}, function(err, ret){
+		if (err) {
+			return next(err)
+		}
+		Content.find({}).lean().exec(function(err, data){
+			if (err) {
+				return next(err)
+			}
+			var newk = []
+			newk.push('lat')
+			newk.push('lng')
+			var keys = Object.keys(data[0]);
+			for (var i in keys) {
+				if (keys[i] === 'geometry') {
+					
+				} else {
+					if (Object.keys(data[0][keys[i]]).length > 0 && isNaN(parseInt(Object.keys(data[0][keys[i]]) ,10))) {
+
+						for (var j in Object.keys(data[0][keys[i]])) {
+							
+							var level1Key = Object.keys(data[0][keys[i]])[j]
+							if (!data[0][keys[i]][level1Key]) {
+								
+								//newk.push(keys[i])
+								//newk.push(level1Key)
+							} else {
+								if (!Object.keys(data[0][keys[i]][level1Key]) || !isNaN(parseInt(Object.keys(data[0][keys[i]][level1Key])[0], 10))) {
+									newk.push(level1Key)
+								} else {
+									for (var k in Object.keys(data[0][keys[i]][level1Key])) {
+										var level2Key = Object.keys(data[0][keys[i]][level1Key])[k];
+										newk.push(level2Key)
+									}
+									
+								}
+							}
+							
+						}
+					} else {
+						
+					}
+
+				}
+			}
+			return res.render('import', {
+				loggedin: req.session.loggedin,
+				data: ret,
+				datakeys: newk,
+				info: ':)'
+			})
+		})
+	})
+})
+
+router.post('/api/import', function(req, res, next){
+	Content.find({}, function(err, data){
+		if (err) {
+			return next(err)
+		}
+		var client = new Client();
+		var index = data.length;
+		var body = req.body;
+		var iData = body.data;
+		console.log(body)
+		client.get(
+			'https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/MapServer/0'+
+			//'https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/MapServer/5/query'+
+			'/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson', function(dat, raw){
+			if (Buffer.isBuffer(dat)){
+				dat = JSON.parse(dat.toString('utf8'));
+			}
+			/*var keys = Object.keys(dat);
+			//console.log(Object.keys(dat));
+			console.log(dat.features.length)
+			console.log(dat.aliases)
+			//console.log(dat.features[0])
+			for (var i = 0; i < dat.length; i++) {
+				var entry = new Content({
+					_id: index + i,
+					type: "Feature",
+					properties: {
+						label: ,
+						address1: ,
+						address2: "",
+						city: ,
+						state: ,
+						zip: ,
+						phone: ,
+						description: "",
+						//this could come in handy as app improves, but not currently in use:
+						current: false,
+						//for hours of operation
+						website: ,
+						cat: ,
+						hours: {
+							mo: ,
+							tu: ,
+							we: ,
+							th: ,
+							fr: ,
+							sa: ,
+							su: 
+						},
+						image: '',
+						thumb: '',
+						clothing: ,
+						computer: ,
+						dayroom: ,
+						dental: ,
+						pantry: ,
+						housing: ,
+						meals: ,
+						medical: ,
+						personalcare: ,
+						showers: ,
+						shelter: ,
+						transportation: 
+					},
+					geometry: {
+						type: "Point",
+							coordinates: [, ]
+					}
+				})
+			}*/
+			return res.redirect('/')
+		})
+	})
+})
 router.get('/home', function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
@@ -356,112 +575,113 @@ router.all('/mydata/:zoom/:lat/:lng', function(req, res, next){
 
 router.get('/near', async function(req, res, next){
 	var ip = require("ip");
-	// var ping = spawn('ping', [ip.address()]);
-	// ping.stdout.on('data', function(d){
-	// 	console.log(d)
-	// });
-	// console.log ( ip.address(), req.headers );
-	const arp = require('arp');
-	// const address = require('address');
-	// var network = require('network');
-	// network.get_public_ip(function(err, ip) {
-	// 	console.log('public ip')
-	// 	console.log(err || ip); // should return your public IP address
-	// })
-	// network.get_private_ip(function(err, ip) {
-	// 	console.log('private ip')
-	// 	console.log(err || ip); // err may be 'No active network interface found'.
-	// });
-	// network.get_gateway_ip(function(err, ip) {
-	// 	console.log('gateway ip')
-	// 	console.log(err || ip); // err may be 'No active network interface found.'
-	// })
+		// var ping = spawn('ping', [ip.address()]);
+		// ping.stdout.on('data', function(d){
+		// 	console.log(d)
+		// });
+		// console.log ( ip.address(), req.headers );
+		const arp = require('arp');
+		// const address = require('address');
+		// var network = require('network');
+		// network.get_public_ip(function(err, ip) {
+		// 	console.log('public ip')
+		// 	console.log(err || ip); // should return your public IP address
+		// })
+		// network.get_private_ip(function(err, ip) {
+		// 	console.log('private ip')
+		// 	console.log(err || ip); // err may be 'No active network interface found'.
+		// });
+		// network.get_gateway_ip(function(err, ip) {
+		// 	console.log('gateway ip')
+		// 	console.log(err || ip); // err may be 'No active network interface found.'
+		// })
 
-	const ipa = process.env.NODE_ENV === 'production' ? req.headers['!~passenger-client-address'] : ip.address();
-	const loc = await require('request-promise')({
-				uri: 'https://ipinfo.io/' + ipa + '/geo?token='+process.env.IP_INFO,
-				encoding: null
-			}).then(response => {
-				var resp = response.toString();
-				console.log(resp)
-				var coords = (!resp.loc ? ["40.7608","-111.8911"] : resp.loc.split(','));
-				return {
-					lat: parseFloat(coords[0]),
-					lng: parseFloat(coords[1])
-				}
-			}).catch(err=>next(err));
-	// arp.getMAC(ipa, (err, mac) => {
-	// 
-	// // address.mac('vboxnet', (err, mac) => {
-	// 	console.log(mac)
-	// 	const params = {
-	// 		wifiAccessPoints: [{
-	// 			macAddress: ''+mac+'',
-	// 			signalStrength: -65,
-	// 			signalToNoiseRatio: 40
-	// 		}]
-	// 	};
-	// 	geolocation(params, function(err, loca) {
-	// 		console.log(loca)
-	// 		if (err) {
-	// 			console.log ('Could not find your location');
-	// 			console.log(err)
-	// 			return res.redirect('/')
-	// 		} else {
-				// loc = JSON.parse(JSON.stringify({ lng: loca.location.lng, lat: loca.location.lat }))
-				if (!req.session.position) req.session.position = {}
-				req.session.position.lat = loc.lat;
-				req.session.position.lng = loc.lng;
-			// }
-			console.log(loc)
-			Content.find({}, function(err, data){
-				if (err) {
-					return next(err)
-				}
-				if (req.isAuthenticated()) {
-					return res.render('publish', {
-						loggedin: req.session.loggedin,
-						data: data,
-						id: data.length - 1,
-						zoom: req.session.zoom?req.session.zoom:6,
-						lng: loc.lng,
-						lat: loc.lat
-					})
-				} else {
-					return res.render('publish', {
-						data: data,
-						id: data.length - 1,
-						zoom: req.session.zoom?req.session.zoom:6,
-						lng: loc.lng,
-						lat: loc.lat
-					})
-				}
-			})
-	// 	});
-	// })
-	// var outputPath = url.parse(req.url).pathname;
-	// // console.log(outputPath)
-	// var arp = spawn('arp', ['-a']);
-	// //console.log(arp.stdio[0].Pipe)
-	// var mac;
-	// await arp.stdout.on('data', function(data){
-	// 	data += '';
-	// 	data = data.split('\n');
-	// 	mac = data[0].split(' ')[3];
-	// });
-	// console.log(mac)
-	// const macaddress = await require('macaddress');
-	// const mac = await macaddress.all(addr => {
-	// 	console.log(addr)
-	// 	return addr
-	// })
-	// const mac = await require('os').networkInterfaces();
-	// const network = require('network-config');
-	// network.interfaces((err, configs) => {
-	// 	console.log(configs)
-	// })
-	// console.log(mac)
-	// Configure API parameters 
+		const ipa = process.env.NODE_ENV === 'production' ? req.headers['!~passenger-client-address'] : ip.address();
+		const loc = await require('request-promise')({
+					uri: 'https://ipinfo.io/' + ipa + '/geo?token='+process.env.IP_INFO,
+					encoding: null
+				}).then(response => {
+					var resp = response.toString();
+					console.log(resp)
+					var coords = (!resp.loc ? ["40.7608","-111.8911"] : resp.loc.split(','));
+					return {
+						lat: parseFloat(coords[0]),
+						lng: parseFloat(coords[1])
+					}
+				}).catch(err=>next(err));
+		// arp.getMAC(ipa, (err, mac) => {
+		// 
+		// // address.mac('vboxnet', (err, mac) => {
+		// 	console.log(mac)
+		// 	const params = {
+		// 		wifiAccessPoints: [{
+		// 			macAddress: ''+mac+'',
+		// 			signalStrength: -65,
+		// 			signalToNoiseRatio: 40
+		// 		}]
+		// 	};
+		// 	geolocation(params, function(err, loca) {
+		// 		console.log(loca)
+		// 		if (err) {
+		// 			console.log ('Could not find your location');
+		// 			console.log(err)
+		// 			return res.redirect('/')
+		// 		} else {
+					// loc = JSON.parse(JSON.stringify({ lng: loca.location.lng, lat: loca.location.lat }))
+					if (!req.session.position) req.session.position = {}
+					req.session.position.lat = loc.lat;
+					req.session.position.lng = loc.lng;
+				// }
+				console.log(loc)
+				Content.find({}, function(err, data){
+					if (err) {
+						return next(err)
+					}
+					if (req.isAuthenticated()) {
+						return res.render('publish', {
+							loggedin: req.session.loggedin,
+							data: data,
+							id: data.length - 1,
+							zoom: req.session.zoom?req.session.zoom:6,
+							lng: loc.lng,
+							lat: loc.lat
+						})
+					} else {
+						return res.render('publish', {
+							data: data,
+							id: data.length - 1,
+							zoom: req.session.zoom?req.session.zoom:6,
+							lng: loc.lng,
+							lat: loc.lat
+						})
+					}
+				})
+		// 	});
+		// })
+		// var outputPath = url.parse(req.url).pathname;
+		// // console.log(outputPath)
+		// var arp = spawn('arp', ['-a']);
+		// //console.log(arp.stdio[0].Pipe)
+		// var mac;
+		// await arp.stdout.on('data', function(data){
+		// 	data += '';
+		// 	data = data.split('\n');
+		// 	mac = data[0].split(' ')[3];
+		// });
+		// console.log(mac)
+		// const macaddress = await require('macaddress');
+		// const mac = await macaddress.all(addr => {
+		// 	console.log(addr)
+		// 	return addr
+		// })
+		// const mac = await require('os').networkInterfaces();
+		// const network = require('network-config');
+		// network.interfaces((err, configs) => {
+		// 	console.log(configs)
+		// })
+		// console.log(mac)
+		// Configure API parameters 
+
 
 })
 
@@ -478,9 +698,18 @@ router.all('/near/:zoom/:lat/:lng', function(req, res, next){
 
 router.all('/type/:cat/:zoom/:lat/:lng', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
-	// console.log(outputPath)
+	console.log(outputPath)
 	var cat = req.params.cat;
-	Content.find({'properties.cat': cat}, function(err, doc){
+	var query = {};
+	if (cat === 'all') {
+		query = {} 
+	} else {
+		query = {'properties.cat': cat} 
+		
+	};
+	
+	
+	Content.find(query, function(err, doc){
 		if (err) {
 			return next(err)
 		}
@@ -966,14 +1195,14 @@ router.get('/api/editcontent/:id', function(req, res, next){
 			return next(error)
 		}
 		var loc = doc.geometry.coordinates;
-		Content.find({}, function(er, data){
+		Content.find({}).lean().exec(function(er, data){
 			if (er) {
 				return next(er)
 			}
-			var datarray = [];
-			for (var l in data) {
-				datarray.push(data[l])
-			}
+			// var datarray = [];
+			// for (var l in data) {
+			// 	datarray.push(data[l])
+			// }
 			return res.render('publish', {
 				infowindow: 'edit',
 				loggedin: req.session.loggedin,
@@ -981,7 +1210,7 @@ router.get('/api/editcontent/:id', function(req, res, next){
 				id: id,
 				zoom: (req.session.zoom)?req.session.zoom:6,
 				doc: doc,
-				data: datarray,
+				data: data,
 				lng: loc[0],
 				lat: loc[1],
 				info: 'Edit your entry.'
@@ -1042,21 +1271,21 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			next(null, id, thumburl, imgurl, body, keys)
 		},
 		function(id, thumburl, imgurl, body, keys, next) {
-			var type;
+			var type = [];
 			
 			if (keys.indexOf('b') !== -1) {
-				type = 'B'
+				type.push('B')
 			}
 			if (keys.indexOf('f') !== -1) {
-				type = 'F'
+				type.push('F')
 			}
 			if (keys.indexOf('h') !== -1) {
-				type = 'H'
+				type.push('H')
 			}
 			if (keys.indexOf('m') !== -1) {
-				type = 'M'
+				type.push('M')
 			}
-			
+			console.log(body)
 			var entry = {
 				label: body.label,
 				address1: body.address1,
@@ -1115,18 +1344,18 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 				},
 				image: imgurl,
 				thumb: thumburl,
-				clothing: body.clothing,
-				computer: body.computer,
-				dayroom: body.dayroom,
-				dental: body.dental,
-				pantry: body.pantry,
-				housing: body.housing,
-				meals: body.meals,
-				medical: body.medical,
-				personalcare: body.personalcare,
-				showers: body.showers,
-				shelter: body.shelter,
-				transportation: body.transportation
+				clothing: (body.clothing || body.clothing === 'on' ? true : false),
+				computer: (body.computer || body.computer === 'on' ? true : false),
+				dayroom: (body.dayroom || body.dayroom === 'on' ? true : false),
+				dental: (body.dental || body.dental === 'on' ? true : false),
+				pantry: (body.pantry || body.pantry === 'on' ? true : false),
+				housing: (body.housing || body.housing === 'on' ? true : false),
+				meals: (body.meals || body.meals === 'on' ? true : false),
+				medical: (body.medical || body.medical === 'on' ? true : false),
+				personalcare: (body.personalcare || body.personalcare === 'on' ? true : false),
+				showers: (body.showers || body.showers === 'on' ? true : false),
+				shelter: (body.shelter || body.shelter === 'on' ? true : false),
+				transportation: (body.transportation || body.transportation === 'on' ? true : false)
 			}
 			entry = JSON.parse(JSON.stringify(entry))
 			var key = 'properties'
@@ -1259,19 +1488,19 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 		},
 		function(thumburl, imgurl, body, keys, id, next) {
 			var loc = [parseFloat(body.lng), parseFloat(body.lat)]
-			var type;
+			var type = [];
 			
 			if (keys.indexOf('b') !== -1) {
-				type = 'B'
+				type.push('B')
 			}
 			if (keys.indexOf('f') !== -1) {
-				type = 'F'
+				type.push('F')
 			}
 			if (keys.indexOf('h') !== -1) {
-				type = 'H'
+				type.push('H')
 			}
 			if (keys.indexOf('m') !== -1) {
-				type = 'M'
+				type.push('M')
 			}
 			
 			var entry = {
@@ -1335,18 +1564,18 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 					},
 					image: imgurl,
 					thumb: thumburl,
-					clothing: body.clothing,
-					computer: body.computer,
-					dayroom: body.dayroom,
-					dental: body.dental,
-					pantry: body.pantry,
-					housing: body.housing,
-					meals: body.meals,
-					medical: body.medical,
-					personalcare: body.personalcare,
-					showers: body.showers,
-					shelter: body.shelter,
-					transportation: body.transportation
+					clothing: (body.clothing || body.clothing === 'on' ? true : false),
+					computer: (body.computer || body.computer === 'on' ? true : false),
+					dayroom: (body.dayroom || body.dayroom === 'on' ? true : false),
+					dental: (body.dental || body.dental === 'on' ? true : false),
+					pantry: (body.pantry || body.pantry === 'on' ? true : false),
+					housing: (body.housing || body.housing === 'on' ? true : false),
+					meals: (body.meals || body.meals === 'on' ? true : false),
+					medical: (body.medical || body.medical === 'on' ? true : false),
+					personalcare: (body.personalcare || body.personalcare === 'on' ? true : false),
+					showers: (body.showers || body.showers === 'on' ? true : false),
+					shelter: (body.shelter || body.shelter === 'on' ? true : false),
+					transportation: (body.transportation || body.transportation === 'on' ? true : false)
 				},
 				geometry: {
 					type: "Point",
