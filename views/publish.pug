@@ -25,32 +25,35 @@ block content
 
 		div.tb-6-m0.buttonbox
 			div.row
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2(style="max-height: 50vh; margin-bottom: 10px;")
+					input#mySearch.catchphrase(type="search", placeholder="search", @keypress="searchThis")
+
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#geolocate.block.ms-Button(href="/near", name="geolocate", title="Geolocate") 
 							p.ms-font-m.buttonlabel Near Me
 							img(src="/images/geolocate.svg")
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#select.all.block.ms-Button(href="#", name="all", title="All") 
 							p.ms-font-m.buttonlabel ALL
 							img(src="/images/refresh.svg")
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
 							p.ms-font-m.buttonlabel Housing
 							img(src="/images/housing.svg")
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#select.m.block.ms-Button(href="#", name="M", title="Medical") 
 							p.ms-font-m.buttonlabel Medical
 							img(src="/images/medical.svg")
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#select.f.block.ms-Button(href="#", name="F", title="Food") 
 							p.ms-font-m.buttonlabel Food
 							img(src="/images/food.svg")
-				div.tb-1-m0
+				div.tb-2-m0.tb-1-m2
 					div.row
 						a#select.b.block.ms-Button(href="#", name="B", title="Travel") 
 							p.ms-font-m.buttonlabel Travel

@@ -176,7 +176,35 @@ var baseFunctions = {
 			$('#inputthumb').val(dataurl.replace(/data:image\/jpeg;base64,/, ''))
 	 
 		}, 100)
-	 }
+	},
+	searchThis: function(e) {
+		var self = this;
+		// e.preventDefault();
+		if (!$('.searchbox')) {
+			
+		} else {
+			$('.searchbox').slideUp(100);
+			$('.searchbox').remove();
+		}
+		var term = $(e.target).val();
+		console.log(term)
+		$.get('/search/'+term+'').done(function(response){
+			console.log(response)
+			
+			$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
+			if (response == 'none') {
+				$('.searchbox').slideDown(200);
+				$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No results</p>')
+			}
+			for (var i in response) {
+				$('.searchbox').slideDown(200);
+				$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/focus/'+response[i]._id+'/'+6+'/'+response[i].geometry.coordinates[1]+'/'+response[i].geometry.coordinates[0]+'"><span class="ms-font-l">'+response[i].properties.label+'</span></a>')
+			}
+		})
+		.catch(function(err){
+			console.log(err)
+		})
+	}
 
 	// processImage: function() {
 	// 

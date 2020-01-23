@@ -833,6 +833,9 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	
 })
 
+router.all('/search', function(req, res, next) {
+	return res.status(404).send(new Error('not found'))
+})
 
 router.all('/search/:term', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
