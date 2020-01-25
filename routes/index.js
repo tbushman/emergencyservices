@@ -1193,7 +1193,7 @@ router.get('/api/editcontent/:id', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 	var id = parseInt(req.params.id, 10);
-	Content.findOne({_id: id}, function(error, doc){
+	Content.findOne({_id: id}).lean().exec(function(error, doc){
 		if (error) {
 			return next(error)
 		}
@@ -1288,7 +1288,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			if (keys.indexOf('m') !== -1) {
 				type.push('M')
 			}
-			console.log(body)
+			// console.log(body)
 			var entry = {
 				label: body.label,
 				address1: body.address1,
@@ -1407,21 +1407,21 @@ router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 
-	Content.find({}, function(er, data){
+	Content.find({}).lean().exec(function(er, data){
 			if (er) {
 				return next(er)
 			}
-			var datarray = [];
-			for (var l in data) {
-				datarray.push(data[l])
-			}
+			// var datarray = [];
+			// for (var l in data) {
+			// 	datarray.push(data[l])
+			// }
 			return res.render('publish', {
 				infowindow: 'new',
 				loggedin: req.session.loggedin,
 				username: req.session.username,
 				id: data.length - 1,
 				zoom: req.params.zoom,
-				data: datarray,
+				data: data,
 				lng: req.params.lng,
 				lat: req.params.lat,
 				info: 'drag the feature to the desired location'

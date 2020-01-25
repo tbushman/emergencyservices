@@ -262,16 +262,26 @@ script(type="text/javascript").
 					}).addTo(self.map);
 					if (/home/.test(window.location.href) || /api\/publish/.test(window.location.href)) {
 						self.map.fitBounds(self.dataLayer.getBounds())
+					} else if (/near/.test(window.location.href)) {
+						self.map.setZoom(14);
+					} else if (/focus/.test(window.location.href)){
+						self.map.setZoom(16);
+					} else {
+						self.map.setZoom(11);
 					}
 
 				})
 				//- var lMarker;
 				if (window.location.pathname.split('/')[2] !== 'addfeature' && window.location.pathname.split('/')[2] !== 'editcontent') {
-					
-					self.lMarker = L.marker([self.position.lat, self.position.lng]).addTo(self.map);
+					if (self.doc && self.doc !== '') {
+						self.lMarker = L.marker([self.doc.geometry.coordinates[1], self.doc.geometry.coordinates[0]]).addTo(self.map);
+
+					} else {
+						self.lMarker = L.marker([self.position.lat, self.position.lng]).addTo(self.map);
+					}
 					
 				} else {
-					self.lMarker = L.marker([self.position.lat, self.position.lng], {draggable: true}).addTo(self.map);
+					self.lMarker = L.marker([self.doc.geometry.coordinates[1], self.doc.geometry.coordinates[0]], {draggable: true}).addTo(self.map);
 					
 				}
 				if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
@@ -294,6 +304,12 @@ script(type="text/javascript").
 					
 					zoom = self.map.getZoom();
 					$.post('/zoom/'+zoom+'', function(data){
+						if( /focus/.test(window.location.href)) {
+							setTimeout(function(){
+								var mll = self.lMarker.getLatLng();
+								self.map.panTo(mll);
+							}, 500);
+						}
 					})
 				})
 				var colors = {
