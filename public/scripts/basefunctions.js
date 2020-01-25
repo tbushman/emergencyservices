@@ -204,7 +204,74 @@ var baseFunctions = {
 		.catch(function(err){
 			console.log(err)
 		})
-	}
+	},
+	onGapiLoad: function() {
+		var self = this;
+		console.log(gapi)
+		self.initPicker(self.gp.access_token)
+	},
+	initPicker: function(authresult) {
+		var self = this;
+		
+				gapi.load('picker', {
+					callback: function() {
+						self.createPicker(authresult);
+					},
+					onerror: function() {
+						alert('gapi.client failed to load!');
+					},
+					timeout: 5000, // 5 seconds.
+					ontimeout: function() {
+						alert('gapi.client could not load in a timely manner!');
+					}
+				});
+
+	},
+	// Create and render a Picker object for picking user Photos.
+	createPicker: function(authresult) {
+		console.log(authresult)
+		var self = this;
+		if (self.gp && self.gp.access_token) {
+			var picker = new google.picker.PickerBuilder().
+				addView(google.picker.ViewId.DOCUMENTS).
+				setOAuthToken(authresult).
+				setDeveloperKey(self.gp.picker_key).
+				setCallback(self.pickerCallback).
+				build();
+			picker.setVisible(true);
+		}
+	},
+	// A simple callback implementation.
+	pickerCallback: function (data) {
+		var self = this;
+		google.picker.Response.ACTION
+		var url = 'nothing';
+		if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+			var doc = data[google.picker.Response.DOCUMENTS][0];
+			url = doc[google.picker.Document.URL];
+			self.initGdocFileUploader(doc, 'doc');
+			//self.initGdriveRevisionGetter(doc);
+		}
+	},
+	initGdriveRevisionGetter: function(file){
+		var self = this;
+		console.log(file)
+		$.post('/api/importgdriverev/'+file.id, function(err, doc){
+			
+			window.location.href = '/'
+		})
+		
+
+		
+	},
+	initGdocFileUploader: function(file, type){
+		var self = this;
+		
+		$.post('/api/importgdoc/'+file.id, function(err, doc){
+			
+			window.location.href = '/'
+		})
+	},
 
 	// processImage: function() {
 	// 

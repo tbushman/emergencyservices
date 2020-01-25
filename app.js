@@ -18,8 +18,70 @@ var Content = require('./models/content');
 var pug = require('pug');
 dotenv.load();
 
-passport.use(new LocalStrategy(Publisher.authenticate()));
 mongoose.Promise = promise;
+passport.use(new LocalStrategy(Publisher.authenticate()));
+passport.use(new GoogleStrategy({
+	clientID: process.env.GOOGLE_OAUTH_CLIENTID,
+	clientSecret: process.env.GOOGLE_OAUTH_SECRET,
+	callbackURL: (process.env.NODE_ENV === 'production' ? process.env.GOOGLE_CALLBACK_URL : process.env.GOOGLE_CALLBACK_URL_DEV),
+	passReqToCallback: true
+	},
+	function(req, accessToken, refreshToken, profile, done) {
+		console.log(accessToken, refreshToken, profile)
+		Publisher.find({}, function(err, data){
+			if (err) {
+				return done(err)
+			}
+			Publisher.findOne({ 'google.oauthID': profile.id }, function(err, user) {
+				if(err) {
+					console.log(err);  // handle errors!
+				}
+				//console.log(profile, user)
+				if (!err && user !== null) {
+					done(null, user);
+				} else {
+					if (!req.session || !req.session.userId) {
+						user = new Publisher({
+							userindex: data.length,
+							username: profile.name.givenName,
+							email: profile.emails[0].value,
+							admin: true,
+							avatar: profile.photos[0].value,
+							gaaccess: accessToken,
+							garefresh: refreshToken,
+							google: {
+								oauthID: profile.id,
+								name: profile.displayName,
+								created: Date.now()
+							}
+						});
+					} else {
+						user = await Publisher.findOne({_id: req.session.userId}).then(pu=>pu).catch(err=>next(err));
+						user.gaaccess = accessToken;
+						user.garefresh = refreshToken,
+						user.google = {
+							oauthID: profile.id,
+							name: profile.displayName,
+							created: Date.now()
+						}
+						user.admin = true;
+					}
+
+					user.save(function(err) {
+						if(err) {
+							console.log(err);  // handle errors!
+						} else {
+							console.log("saving user ...");
+							done(null, user);
+						}
+					});
+
+				}
+			});
+		})
+
+	}
+));
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {

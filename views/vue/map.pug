@@ -65,7 +65,8 @@ script(type="text/javascript").
 				viewerList: false,
 				clicked: '',
 				buf: [],
-				geo: []
+				geo: [],
+				gp: (this.parseObj(#{session.importgdrive}) !== '' ? this.parseObj(!{JSON.stringify(gp)}) : null),
 				
 			}
 		},
@@ -524,6 +525,15 @@ script(type="text/javascript").
 					}, 200)
 							
 				});
+				if (self.gp && self.gp !== '') {
+					let script = document.createElement('script')
+					script.setAttribute('src', 'https://apis.google.com/js/api.js')
+					script.async = true
+					script.onload = () => {
+						self.onGapiLoad()
+					}
+					document.head.appendChild(script)
+				}
 
 			})
 

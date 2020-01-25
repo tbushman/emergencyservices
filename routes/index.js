@@ -5,7 +5,7 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var moment = require("moment");
-var async = require("async");
+var asynk = require("async");
 var multer = require('multer');
 var mkdirp = require('mkdirp');
 var spawn = require("child_process").exec;
@@ -18,6 +18,247 @@ var upload = multer();
 var Client = require('node-rest-client').Client;
 
 //Todo: user remove triggers userindex $inc -1
+
+//todo: google drive auth
+function ensureApiTokens(req, res, next){
+	var OAuth2 = google.auth.OAuth2;
+
+	var authClient = new OAuth2(process.env.GOOGLE_OAUTH_CLIENTID, process.env.GOOGLE_OAUTH_SECRET, (process.env.NODE_ENV === 'production' ? process.env.GOOGLE_CALLBACK_URL : process.env.GOOGLE_CALLBACK_URL_DEV));
+	/*if (!req.user) {
+		return res.redirect('/login')
+	}*/
+	Publisher.findOne({_id: req.session.userId}, function(err, pu){
+		if (err) {
+			return next(err)
+		}
+		if (!pu) {
+			return res.redirect('/logout')
+		}
+		if (!pu.properties.admin) {
+			return res.redirect('/')
+		}
+		authClient.setCredentials({
+			refresh_token: pu.garefresh,
+			access_token: pu.gaaccess
+		});
+		google.options({auth:authClient})
+		authClient.refreshAccessToken()
+		.then(function(response){
+			if (!response.tokens && !response.credentials) {
+				return res.redirect('/login');
+  		}
+			var tokens = response.tokens || response.credentials;
+			Publisher.findOneAndUpdate({_id: req.user._id}, {$set:{garefresh:tokens.refresh_token, gaaccess:tokens.access_token}}, {safe:true,new:true}, function(err, pub){
+				if (err) {
+					return next(err)
+				}
+				if (req.session.importgdrive) {
+					req.session.gp = {
+						google_key: process.env.GOOGLE_KEY,
+						scope: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 'https://www.googleapis.com/auth/drive.file'],
+						//google_clientid: process.env.GOOGLE_OAUTH_CLIENTID,
+						access_token: pub.gaaccess,
+						picker_key: process.env.GOOGLE_PICKER_KEY
+					}
+					req.session.authClient = true;
+				}
+				return next()
+			})
+		})
+	})
+}
+
+router.get('/sw', ensureApiTokens, async (req, res, next) => {
+	
+	return res.render('publish', {
+		gp: (req.isAuthenticated() && req.session.authClient ? req.session.gp : null),
+	})
+
+})
+
+function mkdirpIfNeeded(p, cb){
+	fs.access(p, function(err) {
+		if (err && err.code === 'ENOENT') {
+			mkdirp(p, function(err){
+				if (err) {
+					console.log("err", err);
+				} else {
+					cb()
+				}
+			})
+		} else {
+			cb()
+		}
+	})
+	
+}
+
+function textImporter(req, str, gid, cb) {
+	
+	console.log(str)
+	cb(str)
+}
+router.post('/api/importgdoc/:fileid', function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
+	var fileId = req.params.fileid;
+	var now = Date.now();
+	var os = require('os');
+	var p = ''+publishers+'/pu/publishers/es/tmp';
+	mkdirpIfNeeded(p, function(){
+
+		var dest = fs.createWriteStream(''+publishers+'/pu/publishers/es/tmp/'+now+'.xlsx');
+		dest.on('open', function(){
+			var OAuth2 = google.auth.OAuth2;
+			Publisher.findOne({_id: req.session.userId}, function(err, pu){
+				if (err) {
+					return next(err)
+				}
+				var authClient = new OAuth2(process.env.GOOGLE_OAUTH_CLIENTID, process.env.GOOGLE_OAUTH_SECRET, (process.env.NODE_ENV === 'production' ? process.env.GOOGLE_CALLBACK_URL : process.env.GOOGLE_CALLBACK_URL_DEV));
+				authClient.setCredentials({refresh_token: pu.garefresh, access_token: pu.gaaccess});
+				google.options({auth:authClient})
+				req.session.authClient = true;
+				var drive = google.drive({version: 'v3'});
+				drive.revisions.list({
+					fileId: fileId
+				}).then(function(rev){
+					//console.log(rev.data.revisions)
+					var revs = rev.data.revisions.sort(function(a,b){
+						if (a.modifiedTime < b.modifiedTime) {
+							return -1;
+						} else {
+							return 1;
+						}
+					})
+					var revId = revs[revs.length-1].id;
+					drive.files.get({
+						fileId: fileId,
+						fields: 'webContentLink'
+					})
+					.then(function(file){
+						//console.log(file)
+						//console.log(file.downloadUrl)
+						var dlurl = 
+						//file.downloadUrl
+						file.data.webContentLink.split('&')[0];
+						//console.log(dlurl);
+						//https://stackoverflow.com/a/29296405/3530394
+						require('request').get({
+							url: dlurl,
+							encoding: null,
+							headers: {
+								Authorization: 'Bearer'+ pu.gaaccess
+							}
+						}//)
+						//.on('response'
+						, function(error, result){
+							if (error) {
+								return next(error)
+							}
+							result.pipe(dest);
+							await fs.writeFile(''+publishers+'/pu/publishers/ordinancer/tmp/'+now+'.docx', result.body);
+							require('mammoth').extractRawText({path: ''+publishers+'/pu/publishers/ordinancer/tmp/'+now+'.xlsx'})
+							.then(function(result){
+								var text = result.value;
+								//console.log(text)
+								var messages = result.messages;
+								//console.log(messages)
+								var str = text.toString();
+								var gid = {
+									fileId: fileId,
+									revisionId: revId
+								}
+								textImporter(req, str, gid, function(err, chind){
+									if (err) {
+										return cbk(err)
+									}
+									//console.log('hooray')
+									req.session.importgdrive = false;
+									//console.log(req.session)
+									//return res.status(200).send(data)
+									//return cbk(null, gid, chind)
+								})
+
+							})
+							.done()
+							// .then(() => {
+							// 
+							// 	// save draft to gdrive
+							// 	// return res.redirect('/api/exportgdriverev/'+gid.fileId+'/'+chind)
+							// 	//return res.status(200).send('ok')
+							// })
+							// .catch(err=>next(err));
+						})
+					})
+					.catch(function(err){
+						return next(err)
+					})
+					
+				})
+				.catch(function(err){
+					return next(err)
+				}) 
+				
+			})
+		})
+	});
+})
+
+
+
+
+router.get('/importgdrive', function(req, res, next){
+	req.session.importgdrive = true;
+	if (!req.session.authClient) {
+		return res.redirect('/auth/google');
+	}
+	var OAuth2 = google.auth.OAuth2;
+	Publisher.findOne({_id: req.session.userId}, function(err, pu){
+		if (err) {
+			return next(err)
+		}
+		req.session.gp = {
+			google_key: process.env.GOOGLE_KEY,
+			scope: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 'https://www.googleapis.com/auth/drive.file'],
+			//google_clientid: process.env.GOOGLE_OAUTH_CLIENTID,
+			access_token: pu.gaaccess,
+			picker_key: process.env.GOOGLE_PICKER_KEY
+		}
+		return res.redirect('/')
+	})
+
+})
+
+router.get('/auth/google', passport.authenticate('google', {
+	scope: 
+		[
+			//'https://www.googleapis.com/auth/plus.login', 
+			'https://www.googleapis.com/auth/userinfo.email', 
+			'https://www.googleapis.com/auth/userinfo.profile', 
+			'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 'https://www.googleapis.com/auth/drive.file'
+		],
+		authType: 'rerequest',
+		accessType: 'offline',
+		prompt: 'consent',
+		includeGrantedScopes: true
+	}), function(req, res, next){
+	return next();
+});
+
+router.get('/auth/google/callback', passport.authenticate('google', { 
+	failureRedirect: '/' 
+}), function(req, res, next) {
+	req.session.userId = req.user._id;
+	req.session.loggedin = req.user.username;
+	req.session.authClient = true;
+	if (!req.session.importgdrive) {
+		return res.redirect('/');
+		
+	} else {
+		return res.redirect('/importgdrive');
+	}
+	
+});
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -66,7 +307,7 @@ function ensureNoOldImgs(req, res, next) {
 			return next(err)
 		}
 		data = JSON.parse(JSON.stringify(data));
-		async.waterfall([
+		asynk.waterfall([
 			function(cb) {
 				var qs = [];
 				for (var i in data) {
@@ -90,7 +331,7 @@ function ensureNoOldImgs(req, res, next) {
 				cb(null, qs)
 			},
 			function(qs, cb) {
-				async.eachSeries(qs, function(q, nxt){
+				asynk.eachSeries(qs, function(q, nxt){
 				Content.findOne(q.query, function(err, doc){
 					if (err) {
 						nxt(err)
@@ -482,7 +723,7 @@ router.get('/home', function(req, res, next) {
 	var loc;
 	var info;
 	// Get data 
-	async.waterfall([
+	asynk.waterfall([
 		function(next){
 			// geolocation(params, function(err, data) {
 			// 	if (err) {
@@ -1017,7 +1258,7 @@ router.get('/api/publish', function(req, res, next){
 	var loc;
 	var info;
 	// Get data 
-	async.waterfall([
+	asynk.waterfall([
 		function(next){
 			geolocation(params, function(err, data) {
 				if (err) {
@@ -1227,7 +1468,7 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 	var id = parseInt(req.params.id, 10);
 	var body = req.body;
 	
-	async.waterfall([
+	asynk.waterfall([
 		function(next){
 			var keys = Object.keys(body);
 			keys.splice(keys.indexOf('label'), 1)
@@ -1440,7 +1681,7 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 	// console.log(outputPath)
 	var body = req.body;
 	
-	async.waterfall([
+	asynk.waterfall([
 		function(next){
 			var keys = Object.keys(body);
 			keys.splice(keys.indexOf('label'), 1)
