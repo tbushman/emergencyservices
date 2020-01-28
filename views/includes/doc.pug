@@ -1,6 +1,7 @@
 div.row#sidepanel(class= sidepanel)
 	div.tb-11-m0
 		p.ms-font-xl(v-text="doc.properties.label")
+		p.ms-font-l(v-if="doc.properties.description !== ''", v-text="doc.properties.description")
 		a(v-if="doc.properties.website.split('/')[0] === 'http:' || doc.properties.website.split('/')[0] === 'https:'", :href="doc.properties.website", target="_blank")
 			i.ms-Icon.ms-Icon--link
 		a(v-else, :href="'http://'+doc.properties.website", target="_blank")
@@ -122,6 +123,12 @@ div.row#sidepanel(class= sidepanel)
 		div.tb-5-m0(v-if="doc.properties.transportation === true")
 			div.row
 				span.ms-font-s Transportation Assistance
+	
+	div.tb-11-m0
+		div.row
+			p.ms-font-l Shelter Watch
+			div.tb-10-m0#graph(v-if="doc.properties.sw && doc.properties.sw.length > 0")
+
 if (loggedin)
 	a#editbutton(v-if="doc && doc !== ''", :href="'/api/editcontent/'+doc._id")
 		i.ms-Icon.ms-Icon--editBox

@@ -10,7 +10,7 @@ html
 		link(href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet")
 		link(rel="stylesheet", href="/stylesheets/fabric.css")
 		link(rel="stylesheet", href="/stylesheets/fabric.components.css")
-		link(rel="stylesheet" href="/scripts/pickadate/default.css")
+		//- link(rel="stylesheet" href="/scripts/pickadate/default.css")
 		link(rel="stylesheet" href="/scripts/pickadate/default.date.css")
 		link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
 		link(rel="stylesheet", href="/stylesheets/styles.css?v=1.0")
@@ -24,6 +24,7 @@ html
 		script(type="text/javascript", src="/scripts/pickadate/picker.date.js")
 		script(type="text/javascript", src="/scripts/pickadate/picker.time.js")
 		script(type="text/javascript", src="/scripts/moment-with-locales.min.js")
+		script(src="https://d3js.org/d3.v4.min.js")
 		//- script(type="text/javascript", src="/scripts/Dropdown.js")
 		//- script(type="text/javascript", src="/scripts/navbar.js")
 		//- script(type="text/javascript", src="/scripts/Panel.js")
@@ -67,4 +68,5 @@ html
 		block content
 		a#publish_logo(href="https://github.com/tbushman/emergencyservices" target="_blank")
 			img(src="/images/publish_logo.svg")
-			
+		
+		a#publish_logo.tb-font-xxs(href="//bli.sh/pp/blish", target="_blank", style="color: #fff;top: calc(var(--panelh) + var(--thumbw));right: 8px;margin:0;text-align:right;bottom: auto;") Privacy policy

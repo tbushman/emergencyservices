@@ -13,7 +13,16 @@ var Publisher = new Schema({
   uploads: {
     doc: [],
     img: []
-  }
+  },
+	admin: Boolean,
+	garefresh: String,
+	gaaccess: String,
+	avatar: String,
+	google: {
+		oauthID: String,
+		name: String,
+		created: String
+	}
 }, { collection: 'publishers' });
 
 Publisher.plugin(passportLocalMongoose);

@@ -31,6 +31,10 @@ body {
 	box-sizing: border-box;
 }
 
+.picker {
+	pointer-events: auto;
+}
+
 body {
 	pointer-events: none;
 }

@@ -12,6 +12,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth2').Strategy;
 var routes = require('./routes/index');
 var Publisher = require('./models/publishers');
 var Content = require('./models/content');
@@ -28,11 +29,11 @@ passport.use(new GoogleStrategy({
 	},
 	function(req, accessToken, refreshToken, profile, done) {
 		console.log(accessToken, refreshToken, profile)
-		Publisher.find({}, function(err, data){
+		Publisher.find({}).lean().exec(function(err, data){
 			if (err) {
 				return done(err)
 			}
-			Publisher.findOne({ 'google.oauthID': profile.id }, function(err, user) {
+			Publisher.findOne({ 'google.oauthID': profile.id }).lean().exec(async function(err, user) {
 				if(err) {
 					console.log(err);  // handle errors!
 				}
@@ -40,6 +41,7 @@ passport.use(new GoogleStrategy({
 				if (!err && user !== null) {
 					done(null, user);
 				} else {
+					console.log(req.session)
 					if (!req.session || !req.session.userId) {
 						user = new Publisher({
 							userindex: data.length,
@@ -101,9 +103,9 @@ var app = express();
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1) // trust first proxy	
 	app.use(function (req, res, next) {
-	    res.setHeader('Access-Control-Allow-Origin', '*');
-	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-	    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control, Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	    res.setHeader('Access-Control-Allow-Origin', /*'*'*/req.headers.origin);
+	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE');
+	    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control, Origin, Content-Type, Accept');
 	    res.setHeader('Access-Control-Allow-Credentials', true);
 	    next();
 	});
@@ -182,7 +184,8 @@ var uri = process.env.DEVDB;
 
 var promise = mongoose.connect(uri, {
 	useNewUrlParser: true,
-	useUnifiedTopology: true
+	useUnifiedTopology: true,
+	useFindAndModify: false
 	// useMongoClient: true 
 }/*, {authMechanism: 'ScramSHA1'}*/);
 promise.then(function(db){
