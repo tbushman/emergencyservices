@@ -282,8 +282,8 @@ hr {
 }
 
 #closepanel {
-	position: fixed;
-	top: 55%;
+	position: absolute;
+	top: 30px;
 	right: 18px;
 	bottom: auto;
 	left: auto;
@@ -292,8 +292,8 @@ hr {
 }
 
 #editbutton {
-	position: fixed;
-	top: 55%;
+	position: absolute;
+	top: 30px;
 	right: 42px;
 	bottom: auto;
 	left: auto;
@@ -485,8 +485,8 @@ hr {
 }
 
 #mainpanel {
-	height: 50%;
-	width: 100%;
+	/* height: 50%;
+	width: 100%; */
 	bottom: 0;
 	position: absolute;
 	/* float: right; */
@@ -517,7 +517,7 @@ hr {
 	background-image: radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0) 18px, rgba(255, 255, 255, 1) 17px);	 */
 	background-color: var(--background);
 	background-color: #fff;
-	width: 100%;
+	padding-bottom: 20px;
 	
 }
 

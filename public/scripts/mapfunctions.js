@@ -255,7 +255,7 @@ var mapFunctions = {
 			})
 			if (self.geo && self.geo.length > 0) {
 				if (ll1._southWest && self.geo.length > 1) {
-					// self.map.fitBounds(ll1);
+					self.map.fitBounds(ll1);
 					console.log(self.geo[0])
 					var mark = L.latLngBounds(ll1).getCenter();
 					self.map.panTo(mark);
@@ -351,6 +351,7 @@ var mapFunctions = {
 	},
 	rePan: function(href) {
 		var self = this;
+		console.log(href)
 		if( /focus/.test(href)) {
 			setTimeout(function(){
 				var mll = self.lMarker.getLatLng();
@@ -364,16 +365,16 @@ var mapFunctions = {
 			// console.log(window.innerWidth)
 		var wW = ( !self.wWidth ? window.innerWidth : self.wWidth ), 
 		wH = ( !self.wHeight ? window.innerHeight : self.wHeight ), 
-		pW = ( !self.pWidth ? ( wW * (self.res?0.5:0.5) ) : self.pWidth ), 
-		pH = ( !self.pHeight ? (wH * (self.res?0.5:0.5) ) : self.pHeight ), 
+		pW = ( !self.pWidth ? ( wW * (wW <= 600 ?1:0.5) ) : self.pWidth ), 
+		pH = ( !self.pHeight ? (wH * 0.5 ) : self.pHeight ), 
 		r = self.btn.r, cRc = (r * 0.5523), cRr = 0.81, 
-		sY = (isNaN(self.btn.y)?(wH*(self.res?0.5:0.5)):self.btn.y);
+		sY = (isNaN(self.btn.y)?(wH*0.5):self.btn.y);
 		var str =`M${wW},${wH}H0V0h${wW}V${wH}z 
-		M${(wW - pW) + r},${sY}c0-${cRc}-${(cRc * cRr)}-${r}-${r}-${r}
+		M${(wW - self.btn.x) + r},${sY}c0-${cRc}-${(cRc * cRr)}-${r}-${r}-${r}
 			c-${cRc},0-${r},${(cRc * cRr)}-${r},${r} 
 		c0,${cRc},${(cRc * cRr)},${r},${r},${r}
-			C${(wW - pW) + cRc},${(sY+r)},${(wW - pW)+r},${(sY + cRc)},
-			${((wW - pW) + r)},${sY}z`
+			C${(wW - self.btn.x) + cRc},${(sY+r)},${(wW - self.btn.x)+r},${(sY + cRc)},
+			${((wW - self.btn.x) + r)},${sY}z`
 		return str; }
 	},
 	resetView: function() {

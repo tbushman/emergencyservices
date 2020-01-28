@@ -18,7 +18,7 @@ var baseFunctions = {
 		var self = this;
 		self.wWidth = window.innerWidth;
 		self.wHeight = window.innerHeight;
-		self.pWidth = self.wWidth / 2;
+		self.pWidth = (self.wWidth > 600 ? self.wWidth / 2 : self.wWidth);
 		self.pHeight = self.wHeight / 2;
 		self.btn.x = self.wWidth / 2;
 		self.btn.y = self.wHeight / 2;
@@ -279,10 +279,12 @@ var baseFunctions = {
 		})
 	},
 	generateGraph: function(data){
+		var self = this;
+		
 		// set the dimensions and margins of the graph
-		var margin = {top: 20, right: 20, bottom: 30, left: 50},
-		width = 960 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+		var margin = {top: 20, right: 20, bottom: 30, left: 30},
+		width = self.pWidth - margin.left - margin.right,
+		height = self.pHeight - margin.top - margin.bottom;
 
 		// parse the date / time
 		var parseDate = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
@@ -330,13 +332,13 @@ var baseFunctions = {
 				.data(function(d) { return d; })
 				.enter().append("rect")
 				.attr("x", function(d) { 
-					console.log(d)
+					// console.log(d)
 					return xScale(parseTime(d.data.Date)); 
 				})
 				.attr("y", function(d) { return yScale(d[1]); })
 				.attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
 				.attr("width", function(){
-					return ((width - margin.left - margin.right) / data.length) - 20;
+					return ((width - margin.left - margin.right) / data.length) - 8;
 				});
 
 			var legend = svg.selectAll('.legend')

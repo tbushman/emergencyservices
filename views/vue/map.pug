@@ -18,6 +18,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				res: this.isResponsive(),
 				infowindow: this.parseObj(!{JSON.stringify(infowindow)}),
 				res: (window.innerWidth < 600),
 				id: 0,
@@ -31,7 +32,8 @@ script(type="text/javascript").
 				},
 				wWidth: window.innerWidth,
 				wHeight: window.innerHeight,
-				pWidth: (!this.res ? (window.innerWidth / 2) : (window.innerWidth / 2)),
+				pWidth: (window.innerWidth > 600 ? (window.innerWidth / 2) : window.innerWidth),
+				pHeight: window.innerHeight / 2,//(window.innerWidth > 600 ? (window.innerHeight / 2) : window.innerHeight ),
 				dPath: this.dPathAttr(),
 				menu: this.parseObj(!{JSON.stringify(menu)}),
 				data: this.parseObj(!{JSON.stringify(data)}),
@@ -44,7 +46,6 @@ script(type="text/javascript").
 				tileLayer: null,
 				dataLayer: '',
 				lMarker: '',
-				res: this.isResponsive(),
 				modal: {msg:null},
 				base: 0,
 				baseMaps: [
@@ -313,7 +314,7 @@ script(type="text/javascript").
 					
 					zoom = self.map.getZoom();
 					$.post('/zoom/'+zoom+'', function(data){
-						self.rePan(window.location.href.split('/')[1])
+						self.rePan(window.location.pathname.split('/')[1])
 					})
 				})
 				var colors = {
