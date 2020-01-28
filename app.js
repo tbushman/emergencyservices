@@ -103,7 +103,7 @@ var app = express();
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1) // trust first proxy	
 	app.use(function (req, res, next) {
-	    res.setHeader('Access-Control-Allow-Origin', /*'*'*/req.headers.origin);
+	    res.setHeader('Access-Control-Allow-Origin', '*');
 	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE');
 	    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control, Origin, Content-Type, Accept');
 	    res.setHeader('Access-Control-Allow-Credentials', true);
