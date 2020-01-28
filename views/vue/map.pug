@@ -3,7 +3,7 @@ script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
 	Vue.prototype.L = L;
-	
+	Vue.prototype.d3 = d3;
 	
 	//- $.get('/listing/'+self.id+'/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'').done(function(doc){
 	//- 	if (doc !== null) {
@@ -65,7 +65,8 @@ script(type="text/javascript").
 				viewerList: false,
 				clicked: '',
 				buf: [],
-				geo: []
+				geo: [],
+				gp: (this.parseObj(#{session.importgdrive}) !== '' ? this.parseObj(!{JSON.stringify(gp)}) : null),
 				
 			}
 		},
@@ -90,12 +91,16 @@ script(type="text/javascript").
 			self.loadMap(function(dataCoords){
 				/* TODO DRY this out: */
 				//- console.log(self.lMarker.getLatLng());
-				self.map.panTo(dataCoords);
+				//- self.map.panTo(dataCoords);
+				if (/editcontent/.test(window.location.href)) {
+					$('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
+				}
 				$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
 					format: 'h:i A',
 					formatSubmit: 'h:i A',
 					hiddenName: true,
 					onOpen: function() {
+						$('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
 						scrollIntoView( this.$node )
 					}
 				})
@@ -285,6 +290,10 @@ script(type="text/javascript").
 					
 				}
 				if (window.location.pathname.split('/')[2] === 'addfeature' || window.location.pathname.split('/')[2] === 'editcontent' || window.location.pathname.split('/')[2] === 'editcontent') {
+					var mp = self.lMarker.getLatLng();
+					setTimeout(function(){self.map.panTo(new L.LatLng(mp.lat, mp.lng))
+					}, 500)
+
 					self.lMarker.on('dragend', function(event){
 						var marker = event.target;
 							var position = marker.getLatLng();
@@ -304,12 +313,7 @@ script(type="text/javascript").
 					
 					zoom = self.map.getZoom();
 					$.post('/zoom/'+zoom+'', function(data){
-						if( /focus/.test(window.location.href)) {
-							setTimeout(function(){
-								var mll = self.lMarker.getLatLng();
-								self.map.panTo(mll);
-							}, 500);
-						}
+						self.rePan(window.location.href.split('/')[1])
 					})
 				})
 				var colors = {
@@ -354,6 +358,9 @@ script(type="text/javascript").
 				//- 	})
 				//- }
 				//- 
+				if (self.doc.properties.sw && self.doc.properties.sw.length > 0) {
+					self.generateGraph(self.doc.properties.sw);
+				}
 				$(document).on('click', '#select', function(){
 					var cat = $(this).attr('name');
 					var fillColor = self.catColor(cat);
@@ -524,6 +531,15 @@ script(type="text/javascript").
 					}, 200)
 							
 				});
+				if (self.gp && self.gp !== '') {
+					let script = document.createElement('script')
+					script.setAttribute('src', 'https://apis.google.com/js/api.js')
+					script.async = true
+					script.onload = () => {
+						self.onGapiLoad()
+					}
+					document.head.appendChild(script)
+				}
 
 			})
 

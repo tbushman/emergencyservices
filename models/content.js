@@ -73,7 +73,8 @@ var contentSchema = new Schema({
 		personalcare: Boolean,
 		showers: Boolean,
 		shelter: Boolean,
-		transportation: Boolean
+		transportation: Boolean,
+		sw: []
 	},
 	geometry: {
 		'type': {type: String},

@@ -349,15 +349,25 @@ var mapFunctions = {
 		}
 
 	},
+	rePan: function(href) {
+		var self = this;
+		if( /focus/.test(href)) {
+			setTimeout(function(){
+				var mll = self.lMarker.getLatLng();
+				self.map.panTo(mll);
+			}, 500);
+		}
+	},
 	dPathAttr: function() {
-		if (this.btn) {// make central clipping svg d value reactive
-			console.log(window.innerWidth)
-		var wW = ( !this.wWidth ? window.innerWidth : this.wWidth ), 
-		wH = ( !this.wHeight ? window.innerHeight : this.wHeight ), 
-		pW = ( !this.pWidth ? ( wW * (this.res?0.5:0.5) ) : this.pWidth ), 
-		pH = ( !this.pHeight ? (wH * (this.res?0.5:0.5) ) : this.pHeight ), 
-		r = this.btn.r, cRc = (r * 0.5523), cRr = 0.81, 
-		sY = (isNaN(this.btn.y)?(wH*(this.res?0.5:0.5)):this.btn.y);
+		var self = this;
+		if (self.btn) {// make central clipping svg d value reactive
+			// console.log(window.innerWidth)
+		var wW = ( !self.wWidth ? window.innerWidth : self.wWidth ), 
+		wH = ( !self.wHeight ? window.innerHeight : self.wHeight ), 
+		pW = ( !self.pWidth ? ( wW * (self.res?0.5:0.5) ) : self.pWidth ), 
+		pH = ( !self.pHeight ? (wH * (self.res?0.5:0.5) ) : self.pHeight ), 
+		r = self.btn.r, cRc = (r * 0.5523), cRr = 0.81, 
+		sY = (isNaN(self.btn.y)?(wH*(self.res?0.5:0.5)):self.btn.y);
 		var str =`M${wW},${wH}H0V0h${wW}V${wH}z 
 		M${(wW - pW) + r},${sY}c0-${cRc}-${(cRc * cRr)}-${r}-${r}-${r}
 			c-${cRc},0-${r},${(cRc * cRr)}-${r},${r} 
