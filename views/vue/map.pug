@@ -358,7 +358,7 @@ script(type="text/javascript").
 				//- 	})
 				//- }
 				//- 
-				if (self.doc.properties.sw && self.doc.properties.sw.length > 0) {
+				if (self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0) {
 					self.generateGraph(self.doc.properties.sw);
 				}
 				$(document).on('click', '#select', function(){
