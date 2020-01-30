@@ -549,6 +549,12 @@ hr {
 	z-index: -1;	
 }
 
+.stickytop {
+	position: -webkit-sticky;
+  position: sticky;
+	top: 0;
+}
+
 #sidepanel {
 	height: auto;
 	/* max-height: 51%; */
