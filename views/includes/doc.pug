@@ -7,8 +7,6 @@ div.tb-11-m0.stickytop(style="display:inline-block;")
 				i.ms-Icon.ms-Icon--link
 			a(v-else, :href="'http://'+doc.properties.website", target="_blank")
 				i.ms-Icon.ms-Icon--link
-			div#append(v-if="doc.properties.image !== ''", class= append)
-				img#if_missing(:src= "doc.properties.image")
 		div.tb-1-m0(style="display: inline-block;")
 			if (loggedin)
 				a#editbutton(v-if="doc && doc !== ''", :href="'/api/editcontent/'+doc._id")
@@ -23,6 +21,9 @@ div.tb-11-m0.stickytop(style="display:inline-block;")
 div.row#sidepanel(class= sidepanel)
 	
 	div.tb-11-m0
+		div#append(v-if="doc.properties.image !== ''", class= append)
+			img#if_missing(:src= "doc.properties.image")
+
 		p.ms-font-s.ms-fontWeight-semibold(v-text="doc.properties.city")
 			br
 			span.ms-font-s.ms-fontWeight-light(v-text="doc.properties.address1") 

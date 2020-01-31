@@ -22,7 +22,13 @@ var baseFunctions = {
 		self.pHeight = self.wHeight / 2;
 		self.btn.x = self.wWidth / 2;
 		self.btn.y = self.wHeight / 2;
-		self.dPath = self.dPathAttr()
+		self.dPath = self.dPathAttr();
+		var graph = document.getElementById('graph');
+		
+		if (graph && self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0) {
+			graph.innerHTML = ''
+			self.generateGraph(self.doc.properties.sw);
+		}
 	},
 	drop: function(code, e) {
 		var self = this;
@@ -282,7 +288,7 @@ var baseFunctions = {
 		var self = this;
 		
 		// set the dimensions and margins of the graph
-		var margin = {top: 20, right: 20, bottom: 30, left: 30},
+		var margin = {top: 20, right: 20, bottom: 30, left: 15},
 		width = self.pWidth - margin.left - margin.right,
 		height = self.pHeight - margin.top - margin.bottom;
 
@@ -337,15 +343,16 @@ var baseFunctions = {
 				})
 				.attr("y", function(d) { return yScale(d[1]); })
 				.attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
-				.attr("width", function(){
+				.attr("width", function(d){
+					var combinedMargins = (width - margin.left - margin.right) / (2 * d.values.length)
 					return ((width - margin.left - margin.right) / data.length) - 8;
 				});
 
-			var legend = svg.selectAll('.legend')
-				.data(layers)
-				.enter()
-				.append('g')
-				.attr('class', 'legend');
+		var legend = svg.selectAll('.legend')
+			.data(layers)
+			.enter()
+			.append('g')
+			.attr('class', 'legend');
 
 			legend.append('rect')
 				.attr('x', width - 200)
@@ -367,6 +374,7 @@ var baseFunctions = {
 					return d.key;
 				})
 				.style('fill', 'black');
+			
 			svg.append("g")
 			.attr("class", "axis axis--x")
 			.attr("transform", "translate(0," + (height+5) + ")")
@@ -376,151 +384,96 @@ var baseFunctions = {
 			.attr("class", "axis axis--y")
 			.attr("transform", "translate(0,0)")
 			.call(yAxis);
-		
-		
 
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// var valueLine1 = //["Geraldine King","Mens Shelter","Gail Miller","Overflow Center"].map(function(key) {
-		// 	d3.line()
-		// 	.x(function(d) { return x(parseTime(d.Date)); })
-		// 	.y(function(d) { 
-		// 		var ret = (!isNaN(+d["Geraldine King"]) ? d["Geraldine King"] : 0)
-		// 		return y(ret); 
-		// 	});
-		// //});
-		// var valueLine2 = d3.line()
-		// .x(function(d) { return x(parseTime(d.Date)); })
-		// .y(function(d) { 
-		// 	var ret = (!isNaN(+d["Mens Shelter"]) ? d["Mens Shelter"] : 0)
-		// 	return y(ret); });
-		// var valueLine3 = d3.line()
-		// .x(function(d) { return x(parseTime(d.Date)); })
-		// .y(function(d) { 
-		// 	var ret = (!isNaN(+d["Gail Miller"]) ? d["Gail Miller"] : 0)
-		// 	return y(ret); });
-		// var valueLine4 = d3.line()
-		// .x(function(d) { return x(parseTime(d.Date)); })
-		// .y(function(d) { 
-		// 	var ret = (!isNaN(+d["Overflow Center"]) ? d["Overflow Center"] : 0)
-		// 	return y(ret); });
-		// // append the svg obgect to the body of the page
-		// // appends a 'group' element to 'svg'
-		// // moves the 'group' element to the top left margin
-		// var svg = d3.select("#graph").append("svg")
-		// 	.attr("width", width + margin.left + margin.right)
-		// 	.attr("height", height + margin.top + margin.bottom)
+		// var mouseG = svg.append("g")
+		// 	.attr("class", "mouse-over-effects");
+		// 
+		// 	mouseG.append("path") // this is the black vertical line to follow mouse
+		// 		.attr("class", "mouse-line")
+		// 		.style("stroke", "black")
+		// 		.style("stroke-width", "1px")
+		// 		.style("opacity", "0");
+		// 
+		// var lines = document.getElementsByClassName('layer');
+		// 
+		// var mousePerLine = mouseG.selectAll('.mouse-per-line')
+		// 	.data(layers)
+		// 	.enter()
 		// 	.append("g")
-		// 	.attr("transform",
-		// 	"translate(" + margin.left + "," + margin.top + ")");
+		// 	.attr("class", "mouse-per-line");
 		// 
-		// 	// Scale the range of the data
-		// x.domain(d3.extent(data, function(d) { return parseTime(d.Date); }));
-		// y.domain([0, d3.max(data, function(d) {
-		// 	return d['Gail Miller'] })]);
+		// mousePerLine.append("circle")
+		// 	.attr("r", 7)
+		// 	.style("stroke", function(d) {
+		// 		return color(d.key);
+		// 	})
+		// 	.style("fill", "none")
+		// 	.style("stroke-width", "1px")
+		// 	.style("opacity", "0");
 		// 
-		// svg.append("path")
-		// .data([data])
-		// .attr("class", "line")
-		// .style("stroke", function(d){ return color("Geraldine King")})
-		// .attr("d", valueLine1);
-		// svg.append("path")
-		// .data([data])
-		// .attr("class", "line")
-		// .style("stroke", function(d){ return color("Mens Shelter")})
-		// .attr("d", valueLine2);
-		// svg.append("path")
-		// .data([data])
-		// .attr("class", "line")
-		// .style("stroke", function(d){ return color("Gail Miller")})
-		// .attr("d", valueLine3);
-		// svg.append("path")
-		// .data([data])
-		// .attr("class", "line")
-		// .style("stroke", function(d){ return color("Overflow Center")})
-		// .attr("d", valueLine4);
-		// // Add the X Axis
-		// svg.append("g")
-		// .attr("transform", "translate(0," + height + ")")
-		// .call(d3.axisBottom(x));
+		// mousePerLine.append("text")
+		// 	.attr("transform", "translate(10,3)");
 		// 
-		// // Add the Y Axis
-		// svg.append("g")
-		// .call(d3.axisLeft(y));
-
-
-		// var self = this;
-		// var w = 250;
-		// var h = 200;
-		// // set up size
-		// var margin = { top: 10, right: 10, bottom: 20, left: 10 };
-		// var width = w - margin.left - margin.right;
-		// var height = h - margin.top - margin.bottom;
+		// var mouse;
+		// mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+		// 	.attr('width', width) // can't catch mouse events on a g element
+		// 	.attr('height', height)
+		// 	.attr('fill', 'none')
+		// 	.attr('pointer-events', 'all')
+		// 	.on('mouseout', function() { // on mouse out hide line, circles and text
+		// 		d3.select(".mouse-line")
+		// 			.style("opacity", "0");
+		// 		d3.selectAll(".mouse-per-line circle")
+		// 			.style("opacity", "0");
+		// 		d3.selectAll(".mouse-per-line text")
+		// 			.style("opacity", "0");
+		// 	})
+		// 	.on('mouseover', function() { // on mouse in show line, circles and text
+		// 		d3.select(".mouse-line")
+		// 			.style("opacity", "1");
+		// 		d3.selectAll(".mouse-per-line circle")
+		// 			.style("opacity", "1");
+		// 		d3.selectAll(".mouse-per-line text")
+		// 			.style("opacity", "1");
+		// 	})
+		// 	.on('mousemove', function() { // mouse moving over canvas
+		// 		mouse = d3.mouse(this);
+		// 		d3.select(".mouse-line")
+		// 			.attr("d", function() {
+		// 				var d = "M" + mouse[0] + "," + height;
+		// 				d += " " + mouse[0] + "," + 0;
+		// 				return d;
+		// 			});
 		// 
-		// var color = d3.scaleOrdinal(d3.schemeCategory10);
-		// var colorD = d3.map(Object.keys(data[0]), function(d) { return d });
+		// d3.selectAll(".mouse-per-line")
+		// 	.attr("transform", function(d, i) {
+		// 		var xDate = xScale.invert(mouse[0]),
+		// 				bisect = d3.bisector(function(d) { return d.Date; }).right;
+		// 				idx = bisect(d.values, xDate);
 		// 
-		// color.domain(colorD);
-		// var svg = d3.select('#graph')
-		// .append('svg')
-		// .attr('width', width + margin.left + margin.right)
-		// .attr('height', height + margin.top + margin.bottom);
-		// console.log(svg)
-		// var g = svg
-		// .append('g')
-		// .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+		// 		var beginning = 0,
+		// 				end = width + margin.left + margin.right,//lines[i].getTotalLength(),
+		// 				target = null;
 		// 
-		// var minVal = d3.min(data, function(c) { return c['Gail Miller']; });
-		// var maxVal = d3.max(data, function(c) { return c['Gail Miller']; });
-		// var minDate = d3.min(data, function(c) { return new Date(c.Date); });
-		// var maxDate = d3.max(data, function(c) { return new Date(c.Date); });
+		// 		while (true){
+		// 			target = Math.floor((beginning + end) / 2);
+		// 			pos = {x: mouse[0], y: mouse[1]};//lines[i].getPointAtLength(target);
+		// 			if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+		// 					break;
+		// 			}
+		// 			if (pos.x > mouse[0])      end = target;
+		// 			else if (pos.x < mouse[0]) beginning = target;
+		// 			else break; //position found
+		// 		}
 		// 
-		// var x = d3.scaleTime().range([0, width]);
-		// var y = d3.scaleLinear().range([height, 0]);
+		// 		d3.select(this).select('text')
+		// 			.text(function(d) {
+		// 				console.log(d)
+		// 				return d.Date
+		// 			});
 		// 
-		// var line = d3.line()
-		// .x(function (d, i) {
-		// 	return x(new Date(d.Date));
-		// })
-		// .y(function (d, i) {
-		// 	return y(d['Gail Miller']);
+		// 		return "translate(" + mouse[0] + "," + pos.y +")";
+		// 	});
 		// });
-		// 
-		// x.domain(
-		// 	[minDate, maxDate]
-		// );
-		// y.domain(
-		// 	[minVal,maxVal]
-		// );
-		// 
-		// var xAxis = d3.axisBottom(x);
-		// 
-		// g.append('g').attr('class', 'x axis')
-		// .attr('transform', 'translate(0,' + height + ')')
-		// .call(xAxis);
-		// g.append('g').attr('class', 'y axis')
-		// .call(d3.axisLeft(y));
-		// 
-		// var serie = g.selectAll(".line")
-		// 		.data(data)
-		// 	.enter().append("g")
-		// 		.attr("class", "serie");
-		// 
-		// serie.append("path")
-		// 		.attr("class", "line")
-		// 		.style("stroke", function(d, i) { return color(d[Object.keys(data[0])[i]]); })
-		// 		.attr("d", d3.line()
-		// 				.x(function(d) { return x(d.Date); })
-		// 				.y(function(d) { return y(d['Geraldine King']); }));
-
 	}
 }
