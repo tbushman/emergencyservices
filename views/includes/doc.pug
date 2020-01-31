@@ -22,7 +22,7 @@ div.row#sidepanel(class= sidepanel)
 	
 	div.tb-11-m0
 		div#append(v-if="doc.properties.image !== ''", class= append)
-			img#if_missing(:src= "doc.properties.image")
+			img#if_missing(:src= "doc.properties.image + '?v=' + Math.random()")
 
 		p.ms-font-s.ms-fontWeight-semibold(v-text="doc.properties.city")
 			br
