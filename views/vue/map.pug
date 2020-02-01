@@ -20,7 +20,7 @@ script(type="text/javascript").
 			return {
 				res: this.isResponsive(),
 				infowindow: this.parseObj(!{JSON.stringify(infowindow)}),
-				res: (window.innerWidth < 600),
+				res: this.isResponsive(),//(window.innerWidth < 600),
 				id: 0,
 				dragging: {isDragging: false, y: 0},
 				dropped: {drop: false, layers: false, new: false},
