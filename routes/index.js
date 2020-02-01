@@ -1219,36 +1219,66 @@ router.post('/list/:id/:zoom/:lat/:lng', function(req, res, next){
 	
 })
 
-router.all('/search', function(req, res, next) {
-	return res.status(404).send(new Error('not found'))
+router.get('/search', function(req, res, next) {
+	return res.status(404).send(new Error('not found no params'))
+})
+router.post('/search', function(req, res, next) {
+	return res.status(404).send(new Error('not found no params'))
 })
 
-router.all('/search/:term', function(req, res, next){
+router.post('/search/:term', async function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
-	var term = req.params.term;
+	var term = decodeURIComponent(req.params.term);
+	if (term === '') term = 'null'//return res.status(404).send(new Error('not found'));
 	var regex = new RegExp(term);
-	Content.find({'properties.label': { $regex: regex }}, function(err, pu){
-		if (err) {
-			return next(err)
-		}
-		if (!err && pu.length === 0) {
-			var key = 'properties.'+term+'';
-			var query = {}
-			query[key] = true;
-			Content.find(query, function(er, doc){
+	const data = await 
+	Content.find({'properties.label': { $regex: regex }}).then(data => data)
+	.catch(err => console.log(err)//res.status(404).send(new Error('none by that label'))
+		// {
+		// 	if (err) {
+		// 		return res.status(404).send(new Error('not found'));//next(err)
+		// 	}
+		// }
+	)
+		// console.log(data)
+		var key = 'properties.'+term.toLowerCase()+'';
+		var query = {}
+		query[key] = true;
+	const doc = await
+		/* if (!err && data.length === 0) {
+			
+			Content.find(query).lean().exec(function(er, doc){
 				if (er) {
-					return next(err)
+					return next(er)
 				}
-				if (!err && pu === null) {
+				// console.log(doc)
+				if (!er && doc.length === 0) {
+					
 					return ('none')
 				}
 				return res.json(doc)
 			})			
-		} else {
-			return res.json(pu)			
-		}
-	})
+		} else {*/
+			Content.find(query).then(doc=>doc)
+			.catch(err=>console.log(err));
+			// function(er, doc){
+				// .catch(err => {
+				// 	if (er) {
+				// 	return res.status(404).send(new Error('not found'))
+				// 	}
+				// })
+				// console.log(doc)
+				if (doc.length === 0 && data.length === 0) {
+					
+					return res.status(404).send(new Error('no docs'))
+				}
+				var ret = [...data, ...doc];
+				// console.log(ret)
+				return res.json(ret)
+			// })
+		// }
+	// })
 })
 
 function convertTime(str, cb) {

@@ -190,16 +190,16 @@ var baseFunctions = {
 	searchThis: function(e) {
 		var self = this;
 		// e.preventDefault();
-		if (!$('.searchbox')) {
-			
-		} else {
-			$('.searchbox').slideUp(100);
-			$('.searchbox').remove();
-		}
 		var term = $(e.target).val();
 		console.log(term)
-		$.get('/search/'+term+'').done(function(response){
+		$.post('/search/'+encodeURIComponent(term)+'').then(function(response){
 			console.log(response)
+			if (!$('.searchbox')) {
+				
+			} else {
+				$('.searchbox').slideUp(100);
+				$('.searchbox').remove();
+			}
 			
 			$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
 			if (response == 'none') {
