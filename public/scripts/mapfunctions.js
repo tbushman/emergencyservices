@@ -255,6 +255,7 @@ var mapFunctions = {
 			})
 			if (self.geo && self.geo.length > 0) {
 				if (ll1._southWest && self.geo.length > 1) {
+					self.doc = ''
 					self.map.fitBounds(ll1);
 					console.log(self.geo[0])
 					var mark = L.latLngBounds(ll1).getCenter();
