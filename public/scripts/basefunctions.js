@@ -190,30 +190,32 @@ var baseFunctions = {
 	searchThis: function(e) {
 		var self = this;
 		// e.preventDefault();
-		var term = $(e.target).val();
+		var term = e.target.value;
 		console.log(term)
-		$.post('/search/'+encodeURIComponent(term)+'').then(function(response){
-			console.log(response)
-			if (!$('.searchbox')) {
+		if (term !== '' && term !== ' ') {
+			$.post('/search/'+encodeURIComponent(term)+'').then(function(response){
+				console.log(response)
+				if (!$('.searchbox')) {
+					
+				} else {
+					$('.searchbox').slideUp(100);
+					$('.searchbox').remove();
+				}
 				
-			} else {
-				$('.searchbox').slideUp(100);
-				$('.searchbox').remove();
-			}
-			
-			$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
-			if (response == 'none') {
-				$('.searchbox').slideDown(200);
-				$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No results</p>')
-			}
-			for (var i in response) {
-				$('.searchbox').slideDown(200);
-				$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/focus/'+response[i]._id+'/'+6+'/'+response[i].geometry.coordinates[1]+'/'+response[i].geometry.coordinates[0]+'"><span class="ms-font-l">'+response[i].properties.label+'</span></a>')
-			}
-		})
-		.catch(function(err){
-			console.log(err)
-		})
+				$(e.target).parent().append('<div id="dropdown" class="searchbox"></div>')
+				if (response == 'none') {
+					$('.searchbox').slideDown(200);
+					$('.searchbox').append('<p class="drop ms-Grid-col ms-u-sm12">No results</p>')
+				}
+				for (var i in response) {
+					$('.searchbox').slideDown(200);
+					$('.searchbox').append('<a class="drop ms-Grid-col ms-u-sm12" href="/focus/'+response[i]._id+'/'+6+'/'+response[i].geometry.coordinates[1]+'/'+response[i].geometry.coordinates[0]+'"><span class="ms-font-l">'+response[i].properties.label+'</span></a>')
+				}
+			})
+			.catch(function(err){
+				console.log(err)
+			})
+		}
 	},
 	onGapiLoad: function() {
 		var self = this;

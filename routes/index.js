@@ -1230,55 +1230,23 @@ router.post('/search/:term', async function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 	var term = decodeURIComponent(req.params.term);
-	if (term === '') term = 'null'//return res.status(404).send(new Error('not found'));
-	var regex = new RegExp(term);
-	const data = await 
-	Content.find({'properties.label': { $regex: regex }}).then(data => data)
-	.catch(err => console.log(err)//res.status(404).send(new Error('none by that label'))
-		// {
-		// 	if (err) {
-		// 		return res.status(404).send(new Error('not found'));//next(err)
-		// 	}
-		// }
-	)
-		// console.log(data)
-		var key = 'properties.'+term.toLowerCase()+'';
-		var query = {}
-		query[key] = true;
-	const doc = await
-		/* if (!err && data.length === 0) {
-			
-			Content.find(query).lean().exec(function(er, doc){
-				if (er) {
-					return next(er)
-				}
-				// console.log(doc)
-				if (!er && doc.length === 0) {
-					
-					return ('none')
-				}
-				return res.json(doc)
-			})			
-		} else {*/
-			Content.find(query).then(doc=>doc)
+	if (term === '' || term === ' ') return res.status(404).send(new Error('not found no params'))
+	var regex = new RegExp(term, 'gi');
+	// console.log(regex, term)
+	const data = await Content.find({'properties.label': { $regex: regex }}).then(data => data)
+	.catch(err => console.log(err))
+	var key = 'properties.'+term.toLowerCase()+'';
+	var query = {}
+	query[key] = true;
+	const doc = await Content.find(query).then(doc=>doc)
 			.catch(err=>console.log(err));
-			// function(er, doc){
-				// .catch(err => {
-				// 	if (er) {
-				// 	return res.status(404).send(new Error('not found'))
-				// 	}
-				// })
-				// console.log(doc)
-				if (doc.length === 0 && data.length === 0) {
-					
-					return res.status(404).send(new Error('no docs'))
-				}
-				var ret = [...data, ...doc];
-				// console.log(ret)
-				return res.json(ret)
-			// })
-		// }
-	// })
+	if (doc.length === 0 && data.length === 0) {
+		
+		return res.status(404).send(new Error('no docs'))
+	}
+	var ret = [...data, ...doc];
+	// console.log(ret)
+	return res.json(ret)
 })
 
 function convertTime(str, cb) {
