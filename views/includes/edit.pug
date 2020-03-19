@@ -435,7 +435,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.mo.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.mo.begin && !doc.properties.hours.mo.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.mo.allday === true)
 										input(id="mo_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="mo_a")
 									else
@@ -443,7 +443,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#mo_all(for="mo_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.mo.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.mo.begin && !doc.properties.hours.mo.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.mo.closed === true)
 										input(id="mo_c", type="checkbox", aria-checked="true", class="ms-ChoiceField-input is-checked", name="mo_c", "checked")
 									else
@@ -469,7 +469,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.tu.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.tu.begin && !doc.properties.hours.tu.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.tu.allday === true)
 										input(id="tu_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="tu_a")
 									else
@@ -477,7 +477,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#tu_all(for="tu_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.tu.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.tu.begin && !doc.properties.hours.tu.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.tu.closed === true)
 										input(id="tu_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="tu_c")
 									else
@@ -503,7 +503,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.we.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.we.begin && !doc.properties.hours.we.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.we.allday === true)
 										input(id="we_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="we_a")
 									else
@@ -511,7 +511,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#we_all(for="we_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.we.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.we.begin && !doc.properties.hours.we.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.we.closed === true)
 										input(id="we_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="we_c")
 									else
@@ -537,7 +537,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.th.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.th.begin && !doc.properties.hours.th.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.th.allday === true)
 										input(id="th_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="th_a")
 									else
@@ -545,7 +545,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#th_all(for="th_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.th.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.th.begin && !doc.properties.hours.th.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.th.closed === true)
 										input(id="th_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="th_c")
 									else
@@ -571,7 +571,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.fr.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.fr.begin && !doc.properties.hours.fr.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.fr.allday === true)
 										input(id="fr_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="fr_a")
 									else
@@ -579,7 +579,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#fr_all(for="fr_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.fr.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.fr.begin && !doc.properties.hours.fr.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.fr.closed === true)
 										input(id="fr_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="fr_c")
 									else
@@ -605,7 +605,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.sa.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.sa.begin && !doc.properties.hours.sa.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.sa.allday === true)
 										input(id="sa_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="sa_a")
 									else
@@ -613,7 +613,7 @@ if (infowindow === 'edit')
 									label.ms-ChoiceField-field#sa_all(for="sa_a")
 										span.ms-label 24-hr
 							div.tb-11-m0
-								div(class=(doc.properties.hours.sa.closed === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.sa.begin && !doc.properties.hours.sa.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.sa.closed === true)
 										input(id="sa_c", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="sa_c")
 									else
@@ -639,7 +639,7 @@ if (infowindow === 'edit')
 					div.tb-3-m0
 						div.row
 							div.tb-11-m0
-								div(class=(doc.properties.hours.su.allday === true)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
+								div(class=(!doc.properties.hours.su.begin && !doc.properties.hours.su.end)?"ms-ChoiceField":"ms-ChoiceField is-disabled")
 									if (doc.properties.hours.su.allday === true)
 										input(id="su_a", type="checkbox", "checked", aria-checked="true", class="ms-ChoiceField-input is-checked", name="su_a")
 									else
