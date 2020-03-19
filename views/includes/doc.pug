@@ -86,7 +86,7 @@ div.row#sidepanel(class= sidepanel)
 			span(v-if="doc.properties.hours.sa.begin !== null")
 				span.ms-font-s(v-text="moment(doc.properties.hours.sa.begin).format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.sa.begin !== null", v-text="moment(doc.properties.hours.sa.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.sa.begin !== null", v-text="moment(doc.properties.hours.sa.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.sa.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed

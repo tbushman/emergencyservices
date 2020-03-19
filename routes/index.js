@@ -1253,7 +1253,11 @@ function convertTime(str, cb) {
 	var str_hr;
 	var str_mn;
 	if (!/a/i.test(str) && !/p/i.test(str)) {
-		return moment({ hour: str.split(':')[0], minute: str.split(':')[1] }).utc().format()
+		var date = new Date();
+		date.setHours(str.split(':')[0]);
+		date.setMinutes(str.split(':')[1])
+		return date;
+		// return moment({ hour: str.split(':')[0], minute: str.split(':')[1] }).utc().format()
 	}
 	if (str.split('a')[1] !== undefined || str.split('A')[1] !== undefined) {
 		str = str.replace('am', '').replace('a', '').replace('AM', '');
