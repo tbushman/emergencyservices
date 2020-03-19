@@ -34,9 +34,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Monday: 
 			span(v-if="doc.properties.hours.mo.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.mo.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.mo.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.mo.begin !== null", v-text="moment(doc.properties.hours.mo.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.mo.begin !== null", v-text="moment(doc.properties.hours.mo.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.mo.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -44,9 +44,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Tuesday: 
 			span(v-if="doc.properties.hours.tu.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.tu.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.tu.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.tu.begin !== null", v-text="moment(doc.properties.hours.tu.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.tu.begin !== null", v-text="moment(doc.properties.hours.tu.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.tu.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -54,9 +54,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Wednesday: 
 			span(v-if="doc.properties.hours.we.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.we.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.we.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.we.begin !== null", v-text="moment(doc.properties.hours.we.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.we.begin !== null", v-text="moment(doc.properties.hours.we.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.we.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -64,9 +64,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Thursday: 
 			span(v-if="doc.properties.hours.th.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.th.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.th.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.th.begin !== null", v-text="moment(doc.properties.hours.th.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.th.begin !== null", v-text="moment(doc.properties.hours.th.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.th.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -74,9 +74,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Friday: 
 			span(v-if="doc.properties.hours.fr.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.fr.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.fr.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.fr.begin !== null", v-text="moment(doc.properties.hours.fr.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.fr.begin !== null", v-text="moment(doc.properties.hours.fr.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.fr.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -84,9 +84,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Saturday: 
 			span(v-if="doc.properties.hours.sa.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.sa.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.sa.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.sa.begin !== null", v-text="moment(doc.properties.hours.sa.end).utc().format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.sa.begin !== null", v-text="moment(doc.properties.hours.sa.end).utc().utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.sa.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
@@ -94,9 +94,9 @@ div.row#sidepanel(class= sidepanel)
 		div
 			span.ms-font-s.ms-fontWeight-semibold Sunday: 
 			span(v-if="doc.properties.hours.su.begin !== null")
-				span.ms-font-s(v-text="moment(doc.properties.hours.su.begin).format('LT')")
+				span.ms-font-s(v-text="moment(doc.properties.hours.su.begin).utc().format('LT')")
 				span  – 
-				span.ms-font-s(v-if="doc.properties.hours.su.begin !== null", v-text="moment(doc.properties.hours.su.end).format('LT')")
+				span.ms-font-s(v-if="doc.properties.hours.su.begin !== null", v-text="moment(doc.properties.hours.su.end).utc().format('LT')")
 			span(v-else)
 				span.ms-font-s(v-if="doc.properties.hours.su.allday === true") 24-hours
 				span.ms-font-s(v-else) Closed
