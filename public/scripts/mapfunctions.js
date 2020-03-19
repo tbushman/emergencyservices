@@ -311,10 +311,10 @@ var mapFunctions = {
 		var self = this;
 		var dataLayer;
 		var dataCoords;
-		console.log(window.location.href.split('/'), parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 2]))
-		var lat = (/focus/.test(window.location.href) ? parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 2]) : (!self.position || !self.position.lat ? 40.7608 : self.position.lat));
-		var lng = (/focus/.test(window.location.href) ? parseFloat(window.location.href.split('/')[window.location.href.split('/').length - 1]) : (!self.position || !self.position.lng ? -111.8910 : self.position.lng));
-		var zoom = (/focus/.test(window.location.href) ? parseInt(window.location.href.split('/')[window.location.href.split('/').length - 3], 10) : (!self.position || !self.position.zoom ? 6 : self.position.zoom));
+		console.log(window.location.pathname.split('/'), parseFloat(window.location.pathname.split('/')[window.location.pathname.split('/').length - 2]))
+		var lat = (/focus/.test(window.location.pathname) ? parseFloat(window.location.pathname.split('/')[window.location.pathname.split('/').length - 2]) : (!self.position || !self.position.lat ? 40.7608 : self.position.lat));
+		var lng = (/focus/.test(window.location.pathname) ? parseFloat(window.location.pathname.split('/')[window.location.pathname.split('/').length - 1]) : (!self.position || !self.position.lng ? -111.8910 : self.position.lng));
+		var zoom = (/focus/.test(window.location.pathname) ? parseInt(window.location.pathname.split('/')[window.location.pathname.split('/').length - 3], 10) : (!self.position || !self.position.zoom ? 6 : self.position.zoom));
 		var map = new L.map('map', { 
 			center: [
 				lat,

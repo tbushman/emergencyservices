@@ -547,7 +547,7 @@ async function convertTypeToArray(req, res, next) {
 
 //if logged in, go to edit profile
 //if not, go to global profile (home)
-router.get('/'/*, ensureCorrectImageDir*/, function (req, res) {
+router.get('/'/*, ensureCorrectImageDir*/, function (req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 
@@ -1252,6 +1252,9 @@ router.post('/search/:term', async function(req, res, next){
 function convertTime(str, cb) {
 	var str_hr;
 	var str_mn;
+	if (!/a/i.test(str) && !/p/i.test(str)) {
+		return moment({ hour: str.split(':')[0], minute: str.split(':')[1] }).utc().format()
+	}
 	if (str.split('a')[1] !== undefined || str.split('A')[1] !== undefined) {
 		str = str.replace('am', '').replace('a', '').replace('AM', '');
 		if (str.split(':')[1] !== undefined) {
@@ -1272,7 +1275,7 @@ function convertTime(str, cb) {
 			str_hr = parseInt(str, 10) + 12;
 		}
 	}
-	return moment({ hour: str_hr, minute: str_mn })
+	return moment({ hour: str_hr, minute: str_mn }).utc().format()
 }
 
 function separateHourFromMin(hours, cb) {
