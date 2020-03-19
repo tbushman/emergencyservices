@@ -4,8 +4,8 @@ block page
 	- var menudata = data[data.length-1]
 block content
 	- var zfactor = 0.15 * zoom;
-	script(type="text/javascript", src="/scripts/basefunctions.js")
-	script(type="text/javascript", src="/scripts/mapfunctions.js")
+	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/mapfunctions.js?v="+Math.random())
 	//- script(type="text/javascript", src="/scripts/adminfunctions.js")
 	
 	div.row#vue
