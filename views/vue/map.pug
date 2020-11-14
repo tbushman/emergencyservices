@@ -49,9 +49,13 @@ script(type="text/javascript").
 				modal: {msg:null},
 				base: 0,
 				baseMaps: [
+					//- {
+					//- 	attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>',
+					//- 	url: 'https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png'
+					//- },
 					{
-						attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>',
-						url: 'https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png'
+						url: 'https://api.mapbox.com/styles/v1/tbushman/ciq7gm0ov008kbfm580v9mm9c/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGJ1c2htYW4iLCJhIjoiSmI0aU94OCJ9.SZytljBzoWupPUYeu_OR9A',
+						attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 					},
 					{
 						url: 'https://api.mapbox.com/styles/v1/tbushman/ciq7gm0ov008kbfm580v9mm9c/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGJ1c2htYW4iLCJhIjoiSmI0aU94OCJ9.SZytljBzoWupPUYeu_OR9A',

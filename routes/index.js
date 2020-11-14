@@ -35,7 +35,7 @@ function ensureApiTokens(req, res, next){
 		if (!pu) {
 			return res.redirect('/logout')
 		}
-		if (!pu.google) {
+		if (!pu.google || pu.google.created < Date.now()) {
 			return res.redirect('/auth/google')
 		}
 		authClient.setCredentials({
