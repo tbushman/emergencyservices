@@ -382,5 +382,6 @@ var mapFunctions = {
 		var self = this;
 		self.doc = '';
 		self.geo = []// window.location.href = '/'
+		self.swactive = false;
 	}
 }

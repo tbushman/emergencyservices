@@ -939,6 +939,73 @@ router.get('/home', function(req, res, next) {
 	})
 })
 
+router.get('/shelterwatch', function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath)
+	var loc;
+	var info;
+	// Get data 
+	asynk.waterfall([
+		function(next){
+					loc = null;
+					info = 'Could not find your location'
+				next(null, loc, info)
+		},
+		function(loc, info, next){
+			
+			Content.find({}, function(err, data){
+				if (err) {
+					next(err)
+				}
+				if (!err && data.length === 0){
+					return res.redirect('/register')
+				}
+				var datarray = [];
+				for (var l in data) {
+					datarray.push(data[l])
+				}
+				loc = datarray[datarray.length-1].geometry.coordinates;
+				next(null, loc, info, datarray)
+				
+			})
+		}
+	], function(err, loc, info, data) {
+		var zoom;
+		var lat = loc[1]
+		var lng = loc[0]
+		if (req.session.zoom) {
+			zoom = req.session.zoom
+			info = 'Refreshed'
+		} else {
+			zoom = 3
+			
+		}
+
+		if (req.isAuthenticated()) {
+			return res.render('publish', {
+				swactive: true,
+				loggedin: req.session.loggedin,
+				data: data,
+				id: data.length - 1,
+				zoom: zoom,
+				lng: lng,
+				lat: lat,
+				info: info
+			})
+		} else {
+			return res.render('publish', {
+				swactive: true,
+				data: data,
+				id: data.length - 1,
+				zoom: zoom,
+				lng: lng,
+				lat: lat,
+				info: info
+			})
+		}		
+	})
+})
+
 router.post('/zoom/:zoom', function(req, res, next){
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)

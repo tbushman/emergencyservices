@@ -59,9 +59,15 @@ block content
 							p.ms-font-m.buttonlabel Travel
 							img(src="/images/travel.svg")
 		//- if (infowindow)
-		.container
+		.container(v-if="!swactive")
 			include includes/gallery.pug
 			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView", v-if="infowindow && infowindow !== 'new' && infowindow !== 'edit' && doc && doc !== '' || geo.length > 0")
+		.container.graph.row(v-if="swactive")
+			//- div.tb-10-m0
+				
+			div.tb-11-m0#graph
+				p.ms-font-m Number of beds available
+			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView" style="pointer-events: all;")
 	#map
 	
 	

@@ -484,6 +484,23 @@ hr {
 	clip-path: url(#clipPath);
 }
 
+#graph {
+  overflow-x: scroll;
+}
+.container.graph > #graph {
+  width: calc(100vw - 50px);
+  margin: 0 0 0 auto;
+  pointer-events: all;
+  background-color: #fff;
+  height: calc(50vh - 20px);
+  bottom: 0;
+  position: absolute;
+  top: auto;
+  display: inline-block;
+  vertical-align: bottom;
+  left: 0;
+  right: 0;
+}
 #mainpanel {
 	/* height: 50%;
 	width: 100%; */

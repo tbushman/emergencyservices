@@ -59,6 +59,11 @@ var baseFunctions = {
 		}
 		$('.submenu.drop').slideToggle(100);
 	},
+	switchSwactive: function() {
+		var self = this;
+		var swactive = self.swactive;
+		self.swactive = !swactive;
+	},
 	processImage: function () {
 		var self = this;
 		var dataurl = null;
@@ -288,12 +293,22 @@ var baseFunctions = {
 	},
 	generateGraph: function(data){
 		var self = this;
+		data.sort(function(a, b) { return b.Date - a.Date; });
+		var minyears = new Date(data[0].Date).getFullYear();
+		var maxyears = new Date(data[data.length-1].Date).getFullYear();
+		var yearstimesdays = (maxyears - minyears) * 365
+		if (yearstimesdays === 0) {
+			yearstimesdays = 365
+		}
 		
 		// set the dimensions and margins of the graph
-		var margin = {top: 20, right: 20, bottom: 30, left: 15},
-		width = self.pWidth - margin.left - margin.right,
-		height = self.pHeight - margin.top - margin.bottom;
+		var margin = {top: 20, right: 20, bottom: 30, left: 25},
+		barWidth = self.pWidth * 0.05,
+		width = (yearstimesdays * barWidth)  - margin.left - margin.right,
+		//self.pWidth - margin.left - margin.right,
+		height = self.pHeight - margin.top - margin.bottom - 50;
 
+		console.log(yearstimesdays, barWidth, width)
 		// parse the date / time
 		var parseDate = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
 		var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
@@ -323,11 +338,10 @@ var baseFunctions = {
 	
 		var layers= stack(data);
 		console.log(layers)
-		data.sort(function(a, b) { return b.Date - a.Date; });
 		xScale.domain(d3.extent(data, function(d) { return parseDate(d.Date); }));
 		yScale.domain(
 			[0, d3.max(data, function(d) {
-			return d['Gail Miller'] })]
+			return d['Geraldine King'] })]
 		);
 
 		var layer = svg.selectAll(".layer")
@@ -346,8 +360,9 @@ var baseFunctions = {
 				.attr("y", function(d) { return yScale(d[1]); })
 				.attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
 				.attr("width", function(d){
-					var combinedMargins = (width - margin.left - margin.right) / (2 * d.values.length)
-					return ((width - margin.left - margin.right) / data.length) - 8;
+					return barWidth
+					// var combinedMargins = (width - margin.left - margin.right) / (2 * d.values.length)
+					// return ((width - margin.left - margin.right) / data.length) - 8;
 				});
 
 		var legend = svg.selectAll('.legend')

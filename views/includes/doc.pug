@@ -139,7 +139,7 @@ div.row#sidepanel(class= sidepanel)
 			div.row
 				span.ms-font-s Transportation Assistance
 	
-	div.tb-11-m0(v-if="doc.properties.sw && doc.properties.sw.length > 0")
+	div.tb-11-m0(v-if="!swactive && doc.properties.sw && doc.properties.sw.length > 0")
 		div.row
 			p.ms-font-l Available beds
 			div.tb-10-m0#graph
