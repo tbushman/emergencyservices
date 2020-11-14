@@ -11,6 +11,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+const moment = require('moment');
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
 var routes = require('./routes/index');
@@ -37,8 +38,28 @@ passport.use(new GoogleStrategy({
 				if(err) {
 					console.log(err);  // handle errors!
 				}
+				console.log(moment(new Date()).utc().format(), moment.unix((+user.google.created/1000)).add(5, 'months').utc().format())
+				if (!err && user && user.google && moment(new Date()).utc().format() > moment.unix((+user.google.created/1000)).add(5, 'months').utc().format() ) {
+					user = await Publisher.findOne({_id: req.session.userId}).then(pu=>pu).catch(err=>next(err));
+					user.gaaccess = accessToken;
+					user.garefresh = refreshToken,
+					user.google = {
+						oauthID: profile.id,
+						name: profile.displayName,
+						created: Date.now()
+					}
+					user.admin = true;
+					user.save(function(err) {
+						if(err) {
+							console.log(err);  // handle errors!
+						} else {
+							console.log("saving user ...");
+							done(null, user);
+						}
+					});
+				}
 				//console.log(profile, user)
-				if (!err && user !== null) {
+				else if (!err && user !== null) {
 					done(null, user);
 				} else {
 					console.log(req.session)

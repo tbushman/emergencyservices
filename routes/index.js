@@ -35,7 +35,7 @@ function ensureApiTokens(req, res, next){
 		if (!pu) {
 			return res.redirect('/logout')
 		}
-		if (!pu.google || pu.google.created < Date.now()) {
+		if (!pu.google || moment(new Date()).utc().format() > moment.unix((+pu.google.created/1000)).add(5, 'months').utc().format()) {
 			return res.redirect('/auth/google')
 		}
 		authClient.setCredentials({
@@ -53,7 +53,9 @@ function ensureApiTokens(req, res, next){
 				if (err) {
 					return next(err)
 				}
-				if (req.session.importgdrive) {
+				console.log('!!! session.gp !!!')
+				console.log(req.session.gp)
+				// if (req.session.importgdrive) {
 					req.session.gp = {
 						google_key: process.env.GOOGLE_KEY,
 						scope: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 'https://www.googleapis.com/auth/drive.file'],
@@ -62,7 +64,7 @@ function ensureApiTokens(req, res, next){
 						picker_key: process.env.GOOGLE_KEY
 					}
 					req.session.authClient = true;
-				}
+				// }
 				return next()
 			})
 		})
