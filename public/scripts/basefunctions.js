@@ -24,10 +24,16 @@ var baseFunctions = {
 		self.btn.y = self.wHeight / 2;
 		self.dPath = self.dPathAttr();
 		var graph = document.getElementById('graph');
-		
-		if (graph && self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0) {
+		if (graph && self.sw) {
 			graph.innerHTML = ''
-			self.generateGraph(self.doc.properties.sw);
+			self.sw.sort(function(a, b) { return b.Date - a.Date; });
+			self.generateGraph(self.sw);
+		}
+		else if (graph && self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0) {
+			graph.innerHTML = ''
+			self.sw = self.doc.properties.sw;
+			self.sw.sort(function(a, b) { return b.Date - a.Date; });
+			self.generateGraph(self.sw);
 		}
 	},
 	drop: function(code, e) {
@@ -293,7 +299,7 @@ var baseFunctions = {
 	},
 	generateGraph: function(data){
 		var self = this;
-		data.sort(function(a, b) { return b.Date - a.Date; });
+		
 		var minyears = new Date(data[0].Date).getFullYear();
 		var maxyears = new Date(data[data.length-1].Date).getFullYear();
 		var yearstimesdays = (maxyears - minyears) * 365

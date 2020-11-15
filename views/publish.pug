@@ -30,34 +30,62 @@ block content
 
 				div.btn
 					div.row
-						a#geolocate.block.ms-Button(href="/near", name="geolocate", title="Geolocate") 
+						a#geolocate.block.ms-Button(v-if="!swactive" href="/near" name="geolocate" title="Geolocate") 
 							p.ms-font-m.buttonlabel Near
 							img(src="/images/geolocate.svg")
+						
+						a.block.ms-Button(v-if="swactive && sw")
+							
+							span.ms-font-xs.buttonlabel(v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('L')")
 				div.btn
 					div.row
-						a#select.all.block.ms-Button(href="#", name="all", title="All") 
+						a#select.all.block.ms-Button(v-if="!swactive" href="#" name="all" title="All") 
 							p.ms-font-m.buttonlabel ALL
 							img(src="/images/refresh.svg")
+						
+						a.all.block.ms-Button(v-if="swactive && sw")
+							span.ms-font-xs.buttonlabel(style="color:#fff;" v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('LT')")
 				div.btn
 					div.row
 						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
-							p.ms-font-m.buttonlabel Housing
-							img(src="/images/housing.svg")
+							div(v-if="!swactive")
+								p.ms-font-m.buttonlabel Housing
+								img(src="/images/housing.svg")
+							div(v-if="swactive && sw")
+								span.ms-font-m.buttonlabel Men's Shelter
+								img(src="/images/beds.svg")
+								span(v-text="sw[sw.length - 1]['Mens Shelter']") 
 				div.btn
 					div.row
 						a#select.m.block.ms-Button(href="#", name="M", title="Medical") 
-							p.ms-font-m.buttonlabel Medical
-							img(src="/images/medical.svg")
+							div(v-if="!swactive")
+								p.ms-font-m.buttonlabel Medical
+								img(src="/images/medical.svg")
+							div(v-if="swactive && sw")
+								span.ms-font-m.buttonlabel Overflow Shelter
+								img(src="/images/beds.svg")
+								span(v-text="sw[sw.length - 1]['Overflow Shelter']") 
 				div.btn
 					div.row
 						a#select.f.block.ms-Button(href="#", name="F", title="Food") 
-							p.ms-font-m.buttonlabel Food
-							img(src="/images/food.svg")
+							div(v-if="!swactive")
+								p.ms-font-m.buttonlabel Food
+								img(src="/images/food.svg")
+							div(v-if="swactive && sw")
+								span.ms-font-m.buttonlabel Gail Miller
+								img(src="/images/beds.svg")
+								span(v-text="+sw[sw.length - 1]['Gail Miller (Men)'] + +sw[sw.length - 1]['Gail Miller (Women)']") 
 				div.btn
 					div.row
 						a#select.b.block.ms-Button(href="#", name="B", title="Travel") 
-							p.ms-font-m.buttonlabel Travel
-							img(src="/images/travel.svg")
+							div(v-if="!swactive")
+								p.ms-font-m.buttonlabel Travel
+								img(src="/images/travel.svg")
+							div(v-if="swactive && sw")
+								span.ms-font-m.buttonlabel Geraldine King
+								img(src="/images/beds.svg")
+								span(v-text="sw[sw.length - 1]['Geraldine King']") 
+
 		//- if (infowindow)
 		.container(v-if="!swactive")
 			include includes/gallery.pug
