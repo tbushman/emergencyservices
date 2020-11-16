@@ -36,7 +36,7 @@ block content
 						
 						a.block.ms-Button(v-if="swactive && sw")
 							
-							span.ms-font-xs.buttonlabel(v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('L')")
+							span.ms-font-xs.buttonlabel(style="left:0;display:block;position:relative;text-align:left;" v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('L')")
 				div.btn
 					div.row
 						a#select.all.block.ms-Button(v-if="!swactive" href="#" name="all" title="All") 
@@ -44,7 +44,7 @@ block content
 							img(src="/images/refresh.svg")
 						
 						a.all.block.ms-Button(v-if="swactive && sw")
-							span.ms-font-xs.buttonlabel(style="color:#fff;" v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('LT')")
+							span.ms-font-xs.buttonlabel(style="left:0;display:block;position:relative;text-align:left;color:#fff;" v-text="sw[sw.length - 1].Time")
 				div.btn
 					div.row
 						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
