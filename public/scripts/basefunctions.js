@@ -309,7 +309,7 @@ var baseFunctions = {
 		
 		// set the dimensions and margins of the graph
 		var margin = {top: 20, right: 20, bottom: 30, left: 25},
-		barWidth = self.pWidth * 0.05,
+		barWidth = (self.pWidth - 50) * 0.05,
 		width = (yearstimesdays * barWidth)  - margin.left - margin.right,
 		//self.pWidth - margin.left - margin.right,
 		height = self.pHeight - margin.top - margin.bottom - 50;
@@ -333,7 +333,8 @@ var baseFunctions = {
 		// set the ranges
 		var xScale = d3.scaleTime().range([0, width]);
 		var yScale = d3.scaleLinear().range([height, 0]);
-		var xAxis = d3.axisBottom(xScale);
+		var xAxis = d3.axisBottom(xScale).ticks(d3.timeDay.every(7))
+		//.ticks(d3.timeDay.filter(d => d3.timeDay.count(0, d) % 10 === 0));
 		var yAxis =  d3.axisLeft(yScale);
 		// console.log(Object.keys(data[0]))
 		
@@ -363,8 +364,8 @@ var baseFunctions = {
 					// console.log(d)
 					return xScale(parseTime(d.data.Date)); 
 				})
-				.attr("y", function(d) { return yScale(d[1]); })
-				.attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+				.attr("y", function(d) { return (!isNaN(+d[1]) ? yScale(d[1]) : 0); })
+				.attr("height", function(d) { return (!isNaN(+d[0]) && !isNaN(+d[1]) ? (yScale(d[0]) - yScale(d[1])) : 0 )  })
 				.attr("width", function(d){
 					return barWidth
 					// var combinedMargins = (width - margin.left - margin.right) / (2 * d.values.length)
@@ -380,7 +381,7 @@ var baseFunctions = {
 			legend.append('rect')
 				.attr('x', width - 200)
 				.attr('y', function(d, i) {
-					return i * 20;
+					return (!isNaN((i*20)) ? (i * 20) : 0);
 				})
 				.attr('width', 10)
 				.attr('height', 10)
@@ -391,7 +392,7 @@ var baseFunctions = {
 			legend.append('text')
 				.attr('x', width - 180)
 				.attr('y', function(d, i) {
-					return (i * 20) + 9;
+					return (!isNaN(((i * 20) + 9)) ? ((i * 20) + 9) : 0);
 				})
 				.text(function(d) {
 					return d.key;

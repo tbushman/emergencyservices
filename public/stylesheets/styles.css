@@ -748,6 +748,10 @@ a.username:hover > .ms-font-l {
 	width: 33%;
 }
 
+.container.graph > #graph {
+  width: 50vw;
+}
+
 }
 
 @media (min-width: 1024px) and (orientation: landscape) {
