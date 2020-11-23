@@ -5,15 +5,6 @@ script(type="text/javascript").
 	Vue.prototype.L = L;
 	Vue.prototype.d3 = d3;
 	
-	//- $.get('/listing/'+self.id+'/'+self.position.zoom+'/'+self.position.lat+'/'+self.position.lng+'').done(function(doc){
-	//- 	if (doc !== null) {
-	//- 		$('img#if_missing').attr('src', ''+doc.properties.image+'').on('error', function() {
-	//- 			$('img#if_missing').attr( 'src', '' );
-	//- 		})
-	//- 	}
-	//- 
-	//- })
-	
 	new Vue({
 		el: '#vue',
 		data: function data(){
@@ -121,47 +112,7 @@ script(type="text/javascript").
 				$('.list').css({display: 'none'})
 				$('#dropdown').slideUp(100); 
 				$('#menu').removeClass('selected');
-				
-				//- $.fn.Panel = function () {
-				//- 		return this.each(function () {
-				//- 		var $panel = $(this);
-				//- 		var $panelMain = $panel.find("#mainpanel");
-				//- 		$panelMain.css({display: "block"});
-				//- 		$panel.addClass("is-open");
-				//- 		$panelMain.on("animationend webkitAnimationEnd MSAnimationEnd", function(event) {
-				//- 			if (event.originalEvent.animationName === "fadeOut") {
-				//- 				$(this).css({display: "none"});
-				//- 				$panelMain.css({display: "none"});
-				//- 				$('.list > .ms-Panel-main').css({display: 'none'})
-				//- 				$('.list').removeClass('is-open')
-				//- 				$('.list').css({display: 'none'})
-				//- 				$('.js-togglePanel').remove()
-				//- 			}
-				//- 		});
-				//- 		$('.js-togglePanel').click(function(){
-				//- 			console.log('clicked shadow')
-				//- 			$panel.toggleClass("is-open");
-				//- 			$panelMain.css({display: "none"});
-				//- 			$('.list > .ms-Panel-main').css({display: 'none'})
-				//- 			$('.list').removeClass('is-open')
-				//- 			$('.list').css({display: 'none'})
-				//- 			$('.js-togglePanel').remove()
-				//- 		})
-				//- 		$(document).on('click', '#closepanel', function(){
-				//- 			$panel.toggleClass("is-open");
-				//- 			$panelMain.css({display: "none"});
-				//- 			$('.js-togglePanel').remove();
-				//- 			if (window.location.pathname.split('/')[1] === 'api') {
-				//- 				window.location.href = '/api/publish';
-				//- 			} else {
-				//- 				window.location.href = '/'
-				//- 			}
-				//- 		})
-				//- 	});
-				//- };
-				//- if ($.fn.Panel) {
-				//- 	$('.ms-Panel').Panel();
-				//- }
+
 				$(document).on('click', '#menu > li > a', function (e) { 
 					e.preventDefault()
 
@@ -181,44 +132,7 @@ script(type="text/javascript").
 
 					e.stopPropagation();
 				});
-				
-				//- var map;
-				
-				//- self.map = new L.map('map', { 
-				//- 		zoomControl: true,
-				//- 		center: [self.position.lat, self.position.lng], 
-				//- 		zoom: self.position.zoom,
-				//- 	minZoom: 2,
-				//- 		maxZoom: 18
-				//- });
-				//- var options3 = {
-				//- 	attribution: 'Map tiles by <a href="https://carto.com/">Carto</a><a href="https://carto.com/attributions"</a>'
-				//- };
-				//- 
-				//- L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', options3).addTo(self.map);
-				//- //- L.tileLayer('https://{s}.tiles.mapbox.com/v3/tbushman.1pnqxgvi/{z}/{x}/{y}.png').addTo(self.map); //slc transit
-				
-				//- var featurePane = self.map.createPane('featurePane');
-				//- featurePane.style.zIndex = 20000;
-				//- 
-				//- var MyControl = L.Control.extend({
-				//- 		options: {
-				//- 				position: 'topright'
-				//- 		},
-				//- 
-				//- 		onAdd: function (map) {
-				//- 				var container = L.DomUtil.create('div', 'ms-Panel ms-Panel--small list')
-				//- 		var shadow = L.DomUtil.create('div', 'ms-Overlay ms-Overlay--dark js-togglePanel')
-				//- 		var content = L.DomUtil.create('div', 'ms-Panel-main ms-Grid')
-				//- 		var inner = L.DomUtil.create('div', 'row ms-Panel-contentInner')
-				//- 
-				//- 		content.append(inner);
-				//- 		container.append(shadow);
-				//- 		container.append(content);
-				//- 				return container;
-				//- 		}
-				//- });
-				//- self.map.addControl(new MyControl());
+
 				self.map.dragging.enable();
 				self.map.touchZoom.enable();
 				self.map.doubleClickZoom.enable();
@@ -232,11 +146,7 @@ script(type="text/javascript").
 					self.clicked = e.latlng;
 				})
 				
-				//- $(document).on('click', '.leaflet-interactive', function(e){
-				//- 	self.onClick(e)
-				//- 
-				//- })
-				
+
 				var datalength = self.data.length
 				console.log(datalength)
 				//- var dataLayer;

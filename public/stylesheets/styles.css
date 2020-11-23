@@ -680,11 +680,11 @@ a.username:hover > .ms-font-l {
 	float: right;
 }
 
-@media (orientation: landscape) {
+/* @media (orientation: landscape) {
   .buttonbox > .row > div {
     display: inline-block;
   }
-}
+} */
 
 @media (min-width: 640px) and (orientation: landscape) {
 .tb-10-m1 {
@@ -748,9 +748,9 @@ a.username:hover > .ms-font-l {
 	width: 33%;
 }
 
-.container.graph > #graph {
+/* .container.graph > #graph {
   width: 50vw;
-}
+} */
 
 }
 

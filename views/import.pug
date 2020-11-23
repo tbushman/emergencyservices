@@ -256,30 +256,30 @@ block content
 						console.log(dat)
 						self.importkeys = Object.keys(dat.fieldAliases)
 					})
-						}
-					}
-				})*/
-			},
-
-			methods: {
-				determineSelection: function(key) {
-					var self = this;
-					return self.importkeys.filter(function(k){ 
-						return self.datakeys.filter(function(d){ 
-							var rx = new RegExp(k.toLowerCase());
-							return rx.test(d)
-						}).length > 0
-					}).length > 0
-				},
-				loadDataUri: function(e){
-					var self = this;
-					e.preventDefault();
-					var uri = $(e.target).val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
-					$.getJSON(uri, function(dat){
-						console.log(dat)
-						self.importkeys = Object.keys(dat.fieldAliases)
-					})
-		
+				}
 			}
 		})
+		//- 	},
+		//- 
+		//- 	methods: {
+		//- 		determineSelection: function(key) {
+		//- 			var self = this;
+		//- 			return self.importkeys.filter(function(k){ 
+		//- 				return self.datakeys.filter(function(d){ 
+		//- 					var rx = new RegExp(k.toLowerCase());
+		//- 					return rx.test(d)
+		//- 				}).length > 0
+		//- 			}).length > 0
+		//- 		},
+		//- 		loadDataUri: function(e){
+		//- 			var self = this;
+		//- 			e.preventDefault();
+		//- 			var uri = $(e.target).val() + '/query?where=1%3D1&&outFields=*&geometryType=esriGeometryEnvelope&returnGeometry=true&f=pjson'
+		//- 			$.getJSON(uri, function(dat){
+		//- 				console.log(dat)
+		//- 				self.importkeys = Object.keys(dat.fieldAliases)
+		//- 			})
+		//- 
+		//- 	}
+		//- })
 		
