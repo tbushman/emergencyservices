@@ -230,7 +230,7 @@ var baseFunctions = {
 	},
 	onGapiLoad: function() {
 		var self = this;
-		console.log(gapi)
+		// console.log(gapi)
 		self.initPicker(self.gp.access_token)
 	},
 	initPicker: function(authresult) {
@@ -252,7 +252,7 @@ var baseFunctions = {
 	},
 	// Create and render a Picker object for picking user Photos.
 	createPicker: function(authresult) {
-		console.log(authresult)
+		// console.log(authresult)
 		var self = this;
 		if (self.gp && self.gp.access_token) {
 			var picker = new google.picker.PickerBuilder().
@@ -294,7 +294,7 @@ var baseFunctions = {
 		$.post('/api/importgdoc/'+file.id, function(data){
 			console.log(data);
 			// self.generateGraph(data)
-			// window.location.href = '/'
+			window.location.href = '/shelterwatch'
 		})
 	},
 	generateGraph: function(data){

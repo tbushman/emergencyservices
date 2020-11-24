@@ -180,8 +180,13 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 								}
 							} else if (hr[j] === 'Time') {
 								newRow[hr[j]] = c
+							} else if (/cots/i.test(c)) {
+								var d = c.split(/\s{0,5}cots/ig)[0];
+								newRow[hr[j]] = +d;
 							} else if (isNaN(+c)) {
-								var womens, mens;
+								// console.log('is NaN')
+								// console.log(c)
+								var womens, mens, cots;
 								if (/women/i.test(c)) {
 									
 									var women = c.split(/women|womens/i)[0].replace(',', '');
@@ -192,7 +197,7 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 											womens = parseInt(women.split(/men|mens/i)[1].replace(',',''), 10);
 											// console.log(womens)
 										} else {
-											console.log(men)
+											// console.log(men)
 										}
 									} else {
 										if (!isNaN(+women)) {
@@ -207,12 +212,12 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 										// }
 										mens = parseInt(c.split(/women|womens/i)[1].replace(',','').replace('s','').split(/men|mens/i)[0], 10);
 										if (isNaN(mens)) {
-											mens = 0;
+											mens = '';
 										}
 										// console.log(mens, c.split(/women|womens/i))
 									}
 									if (!womens) {
-										newRow[hr[j]] = 0;
+										newRow[hr[j]] = '';
 									}
 									newRow[hr[j]] = mens + womens
 								} else {
@@ -230,7 +235,7 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 								// console.log(parseInt(+c, 10))
 								newRow[hr[j]] = +c;
 							} else {
-								console.log(c)
+								// console.log(c)
 								newRow[hr[j]] = c;
 							}
 						}
@@ -238,7 +243,7 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 					return newRow;
 				})
 				.filter(row => Object.keys(row).length > 0)
-				console.log(newRows)
+				// console.log(newRows)
 				// 	// let r = row.join(',');
 				// 	// csvContent += r + '\n' 
 					req.session.importgdrive = false;
@@ -253,7 +258,8 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 						})
 					}
 				});
-				return res.redirect('/');
+				return res.status(200).send('ok')
+				// return res.redirect('/');
 				
 					// return res.status(200).send(newRows);
 					//console.log(`${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}, ${row[4]}, ${row[5]}, ${row[6]}, ${row[7]}, ${row[8]}, ${row[9]}, ${row[10]}, ${row[11]}`);
