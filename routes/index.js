@@ -170,6 +170,7 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 						if (c !== hr[j]) {
 							if (hr[j] === 'Date') {
 								if (c.split('/')[c.split('/').length - 1] !== '2019' || c.split('/')[c.split('/').length - 1] !== '20' || c.split('/')[c.split('/').length - 1] !== '20') {
+									// todo better way of accommodating contributors who wish not to include the year when entering the date
 									if (c.split('/')[c.split('/').length - 1] === '28') {
 										newRow[hr[j]] = new Date(c + '/2019');
 									} else if (c.split('/')[c.split('/').length - 1] === '15') {
@@ -218,8 +219,9 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 									}
 									if (!womens) {
 										newRow[hr[j]] = '';
+									} else {
+										newRow[hr[j]] = mens + womens
 									}
-									newRow[hr[j]] = mens + womens
 								} else {
 									// console.log(hr[j], c)
 									if (/unknown|capacity|not/i.test(c)) {
@@ -250,6 +252,7 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 				const data = await Content.find({}).then(data=>data).catch(err=>next(err));
 				await data.forEach(doc=>{
 					if (doc.properties.cat.indexOf('H') !== -1) {
+						// todo save to separate shelterwatch collection
 						Content.findOneAndUpdate({_id: doc._id}, {$set:{'properties.sw': newRows}}, {new: true, safe: true}, function(err, doc){
 							if (err) {
 								return next(err)
@@ -1462,18 +1465,18 @@ function convertAvailableServices(str) {
 
 router.all('/api/*', ensureAuthenticated)
 
-router.get('/api/publish', function(req, res, next){
+router.get('/api/publish', async (req, res, next) => {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 	req.session.username = req.user.username;
 	var arp = spawn('arp', ['-a']);
 	//console.log(arp.stdio[0].Pipe)
 	var mac;
-	arp.stdout.on('data', function(data){
+	await arp.stdout.on('data', function(data){
 		data += '';
 		data = data.split('\n');
 		mac = data[0].split(' ')[3];
-	})
+	}).on('error', (err)=> console.log(err))
 	// Configure API parameters 
 	const params = {
 		wifiAccessPoints: [{
@@ -1584,14 +1587,15 @@ router.get('/api/publish', function(req, res, next){
 		if (err) {
 			return next(err)
 		}
-		Content.find({}, function(err, data){
+		Content.find({}).lean().exec(function(err, data){
 			if (err) {
 				return next(err)
 			}
-			var datarray = [];
-			for (var l in data) {
-				datarray.push(data[l])
-			}
+			var datarray = data;
+			// [];
+			// for (var l in data) {
+			// 	datarray.push(data[l])
+			// }
 			var loc = datarray[0].geometry.coordinates;
 			var zoom;
 			var lat;
