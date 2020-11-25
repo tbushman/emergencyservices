@@ -629,7 +629,7 @@ a.username:hover > .ms-font-l {
   width: 42px;
   vertical-align: top;
 }
-#select, #geolocate {
+.select, #geolocate {
 	height: auto;
 	min-width: auto;
 	width: 100%;
@@ -637,10 +637,10 @@ a.username:hover > .ms-font-l {
 	border: 0px solid #000;
 	border-right: 0px solid #000;
 }
-#select p, #geolocate p {
+.select p, #geolocate p {
 	display: none;
 }
-#select img, #geolocate img {
+.select img, #geolocate img {
 	width: 25px;
 	height: 25px;
 	margin: 0px auto;
@@ -718,7 +718,7 @@ a.username:hover > .ms-font-l {
 	width: 10%;
 }
 
-#select p, #geolocate p {
+.select p, #geolocate p {
 	display: block;
 }
 .list.leaflet-control {

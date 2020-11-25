@@ -170,7 +170,6 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 						if (c !== hr[j]) {
 							if (hr[j] === 'Date') {
 								if (c.split('/')[c.split('/').length - 1] !== '2019' || c.split('/')[c.split('/').length - 1] !== '20' || c.split('/')[c.split('/').length - 1] !== '20') {
-									// todo better way of accommodating contributors who wish not to include the year when entering the date
 									if (c.split('/')[c.split('/').length - 1] === '28') {
 										newRow[hr[j]] = new Date(c + '/2019');
 									} else if (c.split('/')[c.split('/').length - 1] === '15') {
@@ -184,6 +183,8 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 							} else if (/cots/i.test(c)) {
 								var d = c.split(/\s{0,5}cots/ig)[0];
 								newRow[hr[j]] = +d;
+							} else if (c === '') {
+								newRow[hr[j]] = c;
 							} else if (isNaN(+c)) {
 								// console.log('is NaN')
 								// console.log(c)
@@ -219,18 +220,26 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 									}
 									if (!womens) {
 										newRow[hr[j]] = '';
-									} else {
-										newRow[hr[j]] = mens + womens
 									}
+									newRow[hr[j]] = mens + womens
 								} else {
 									// console.log(hr[j], c)
 									if (/unknown|capacity|not/i.test(c)) {
 										newRow[hr[j]] = 0;
 									} else if (/\d/.test(c)) {
-										var d = +c.match(/\d/)[0];
-										newRow[hr[j]] = d;
+										var d = null;
+										if (c.match(/\d/).length > 0) {
+											if (c.split(/\d/).length > 2) {
+												d = +c.match(/\d/)[0];
+											} else {
+												d = +c.split(/\D/)[0];
+											}
+											newRow[hr[j]] = d;
+										} else {
+											newRow[hr[j]] = '';
+										}
 									} else {
-										newRow[hr[j]] = 0;
+										newRow[hr[j]] = '';
 									}
 								}
 							} else if (!isNaN(parseInt(+c, 10))) {

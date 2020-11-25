@@ -34,22 +34,22 @@ block content
 							p.ms-font-m.buttonlabel Near
 							img(src="/images/geolocate.svg")
 						
-						a.block.ms-Button(v-if="swactive && sw")
+						a#geolocate.block.ms-Button(v-if="swactive && sw")
 							
 							span.ms-font-xs.buttonlabel(style="left:0;display:block;position:relative;text-align:left;" v-text="moment(new Date(sw[sw.length - 1].Date)).utc().format('L')")
 							img(src="/images/geolocate.svg")
 				div.btn
 					div.row
-						a#select.all.block.ms-Button(v-if="!swactive" href="#" name="all" title="All") 
+						a.select.all.block.ms-Button(v-if="!swactive" href="#" name="all" title="All") 
 							p.ms-font-m.buttonlabel ALL
 							img(src="/images/refresh.svg")
 						
-						a.all.block.ms-Button(v-if="swactive && sw")
+						a.select.all.block.ms-Button(v-if="swactive && sw")
 							span.ms-font-xs.buttonlabel(style="left:0;display:block;position:relative;text-align:left;color:#fff;" v-text="sw[sw.length - 1].Time")
 							img(src="/images/refresh.svg")
 				div.btn
 					div.row
-						a#select.h.block.ms-Button(href="#", name="H", title="Housing") 
+						a.select.h.block.ms-Button(href="#", name="H", title="Housing") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Housing
 								img(src="/images/housing.svg")
@@ -59,7 +59,7 @@ block content
 								span(v-text="sw[sw.length - 1]['Mens Shelter']") 
 				div.btn
 					div.row
-						a#select.m.block.ms-Button(href="#", name="M", title="Medical") 
+						a.select.m.block.ms-Button(href="#", name="M", title="Medical") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Medical
 								img(src="/images/medical.svg")
@@ -69,7 +69,7 @@ block content
 								span(v-text="sw[sw.length - 1]['Overflow Shelter']") 
 				div.btn
 					div.row
-						a#select.f.block.ms-Button(href="#", name="F", title="Food") 
+						a.select.f.block.ms-Button(href="#", name="F", title="Food") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Food
 								img(src="/images/food.svg")
@@ -79,7 +79,7 @@ block content
 								span(v-text="+sw[sw.length - 1]['Gail Miller (Men)'] + +sw[sw.length - 1]['Gail Miller (Women)']") 
 				div.btn
 					div.row
-						a#select.b.block.ms-Button(href="#", name="B", title="Travel") 
+						a.select.b.block.ms-Button(href="#", name="B", title="Travel") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Travel
 								img(src="/images/travel.svg")
