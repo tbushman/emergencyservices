@@ -180,8 +180,13 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 								}
 							} else if (hr[j] === 'Time') {
 								newRow[hr[j]] = c
-							} else if (/cots/i.test(c)) {
-								var d = c.split(/\s{0,5}cots/ig)[0];
+							} else if (/cot/i.test(c)) {
+								var d = c.split(/\s{0,5}cot/ig)[0];
+								newRow[hr[j]] = +d;
+							} else if (/mat/i.test(c)) {
+								var d = c.split(/\s{0,5}mat/ig)[0];
+								console.log('mats')
+								console.log(c, d)
 								newRow[hr[j]] = +d;
 							} else if (c === '') {
 								newRow[hr[j]] = c;
@@ -226,13 +231,17 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 									// console.log(hr[j], c)
 									if (/unknown|capacity|not/i.test(c)) {
 										newRow[hr[j]] = 0;
-									} else if (/\d/.test(c)) {
+									} else if (/\d/g.test(c)) {
 										var d = null;
-										if (c.match(/\d/).length > 0) {
-											if (c.split(/\d/).length > 2) {
-												d = +c.match(/\d/)[0];
+										if (c.match(/\d/g).length > 0) {
+											if (c.split(/\d/g).length > 2) {
+												if (c.match(/\d/g).indexOf(c.split(/\d/g)[1]) === 1) {
+													d = +c.match(/\d/g).join('')
+												} else {
+													d = +c.match(/\d/g)[0];
+												}
 											} else {
-												d = +c.split(/\D/)[0];
+												d = +c.split(/\D/g)[0];
 											}
 											newRow[hr[j]] = d;
 										} else {
