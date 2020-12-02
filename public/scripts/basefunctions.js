@@ -318,7 +318,9 @@ var baseFunctions = {
 		// parse the date / time
 		var parseDate = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
 		var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
-		var color = d3.scaleOrdinal(d3.schemeCategory10);
+		var color = d3.scaleOrdinal(["#3D7AB4","#E79404","#229701","#DA1912"]
+			// d3.schemeCategory10
+		);
 		// var colorD = d3.map(["Geraldine King","Mens Shelter","Gail Miller","Overflow Center"], function(d) { return d });
 		
 		// 
