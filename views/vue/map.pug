@@ -294,7 +294,7 @@ script(type="text/javascript").
 						self.generateGraph(self.sw);
 					}
 				}
-				$(document).on('click', '#select', function(){
+				$(document).on('click', '.select', function(){
 					var cat = $(this).attr('name');
 					var fillColor = self.catColor(cat);
 
@@ -336,6 +336,8 @@ script(type="text/javascript").
 						},100)
 					})
 				});
+				
+				// TODO de-jQuerify
 				
 				$(document).on('click', '.list > .js-togglePanel', function(){
 					//- $('.list > .ms-Panel-main').css({display: 'none'})

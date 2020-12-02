@@ -49,44 +49,42 @@ block content
 							img(src="/images/refresh.svg")
 				div.btn
 					div.row
-						a.select.h.block.ms-Button(href="#", name="H", title="Housing") 
+						a.select.h.block.ms-Button(@click="category('H')" href="#" name="H" title="Housing") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Housing
 								img(src="/images/housing.svg")
-							div(v-if="swactive && sw")
-								span.ms-font-m.buttonlabel Men's Shelter
-								img(src="/images/beds.svg")
-								span(v-text="sw[sw.length - 1]['Mens Shelter']") 
+						a.select.h.block.ms-Button(v-if="swactive && sw" @click="category('Men')" href="#" name="Men" title="Men's shelter") 
+							span.ms-font-m.buttonlabel Men's Shelter
+							img(src="/images/beds.svg")
+							span(v-text="sw[sw.length - 1]['Mens Shelter']") 
 				div.btn
 					div.row
-						a.select.m.block.ms-Button(href="#", name="M", title="Medical") 
+						a.select.m.block.ms-Button(@click="category('M')" href="#" name="M" title="Medical") 
 							div(v-if="!swactive")
 								p.ms-font-m.buttonlabel Medical
 								img(src="/images/medical.svg")
-							div(v-if="swactive && sw")
-								span.ms-font-m.buttonlabel Overflow Shelter
-								img(src="/images/beds.svg")
-								span(v-text="sw[sw.length - 1]['Overflow Shelter']") 
+						a.select.m.block.ms-Button(v-if="swactive && sw" @click="category('Overflow')" href="#" name="Overflow" title="Overflow shelter") 
+							span.ms-font-m.buttonlabel Overflow Shelter
+							img(src="/images/beds.svg")
+							span(v-text="sw[sw.length - 1]['Overflow Shelter']") 
 				div.btn
 					div.row
-						a.select.f.block.ms-Button(href="#", name="F", title="Food") 
-							div(v-if="!swactive")
-								p.ms-font-m.buttonlabel Food
-								img(src="/images/food.svg")
-							div(v-if="swactive && sw")
-								span.ms-font-m.buttonlabel Gail Miller
-								img(src="/images/beds.svg")
-								span(v-text="+sw[sw.length - 1]['Gail Miller (Men)'] + +sw[sw.length - 1]['Gail Miller (Women)']") 
+						a.select.f.block.ms-Button(v-if="!swactive" @click="category('F')" href="#" name="F" title="Food") 
+							p.ms-font-m.buttonlabel Food
+							img(src="/images/food.svg")
+						a.select.f.block.ms-Button(v-if="swactive && sw" @click="category('Miller')" href="#" name="Miller" title="Gail Miller Men's and Women's Resource Center")
+							span.ms-font-m.buttonlabel Gail Miller
+							img(src="/images/beds.svg")
+							span(v-text="+sw[sw.length - 1]['Gail Miller (Men)'] + +sw[sw.length - 1]['Gail Miller (Women)']") 
 				div.btn
 					div.row
-						a.select.b.block.ms-Button(href="#", name="B", title="Travel") 
-							div(v-if="!swactive")
-								p.ms-font-m.buttonlabel Travel
-								img(src="/images/travel.svg")
-							div(v-if="swactive && sw")
-								span.ms-font-m.buttonlabel Geraldine King
-								img(src="/images/beds.svg")
-								span(v-text="sw[sw.length - 1]['Geraldine King']") 
+						a.select.b.block.ms-Button(v-if="!swactive" @click="category('B')" href="#" name="B" title="Travel") 
+							p.ms-font-m.buttonlabel Travel
+							img(src="/images/travel.svg")
+						a.select.b.block.ms-Button(v-if="swactive && sw" @click="category('King')" href="#" name="C" title="Geraldine King Women's Resource Center") 
+							span.ms-font-m.buttonlabel Geraldine King
+							img(src="/images/beds.svg")
+							span(v-text="sw[sw.length - 1]['Geraldine King']") 
 
 		//- if (infowindow)
 		.container(v-if="!swactive")
