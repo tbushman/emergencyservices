@@ -344,8 +344,14 @@ var baseFunctions = {
 			.keys(['Geraldine King','Mens Shelter','Gail Miller','Overflow Center'])
 			.order(d3.stackOrderNone)
 			.offset(d3.stackOffsetNone);
-	
-		var layers= stack(data);
+		
+		var adjustedData = data.map(function(d){
+			if (d['Gail Miller (Men)'] >= 0 && d['Gail Miller (Women)'] >= 0 && d['Gail Miller'] === '') {
+				d['Gail Miller'] = parseInt(d['Gail Miller (Men)'], 10) + parseInt(d['Gail Miller (Women)'], 10)
+			}
+			return d
+		})
+		var layers= stack(adjustedData);
 		console.log(layers)
 		xScale.domain(d3.extent(data, function(d) { return parseDate(d.Date); }));
 		yScale.domain(
