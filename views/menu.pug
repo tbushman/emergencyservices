@@ -1,23 +1,23 @@
-if (menu === 'profile' || menu === 'home')
-	#menu.row.tb-6-m0
-		li.tb-2-m0.tb-1-m2
-			//- input#mySearch.catchphrase(type="search", placeholder="search", @change="searchThis")
-			a(href="#", title="Menu")
-				img(src="https://pu.bli.sh/images/menu_button.svg")
+//- if (menu === 'profile' || menu === 'home')
+#menu.row.tb-6-m0
+	li.tb-2-m0.tb-1-m2
+		//- input#mySearch.catchphrase(type="search", placeholder="search", @change="searchThis")
+		a(href="#", title="Menu")
+			img(src="https://pu.bli.sh/images/menu_button.svg")
 
-			div#dropdown.row
-				a.drop.tb-11-m0#shelterwatch(href="/shelterwatch")
-					spab.ms-font-l Shelter Watch
-				a.drop.tb-11-m0#contact(href="/") 
-					span.ms-font-l Home
-				if (loggedin)
-					a.drop.tb-11-m0#addfeature(href="/api/addfeature/"+zoom+"/"+lat+"/"+lng+"") 
-						span.ms-font-l Add Feature
-					a.drop.tb-11-m0#logout(href="/logout") 
-						span.ms-font-l Log out
-					
-				else
-					a.drop.tb-11-m0#cv(href="/login") 
-						span.ms-font-l Login
-					a.drop.tb-11-m0#gallery(href="/register") 
-						span.ms-font-l Register
+		div#dropdown.row
+			a.drop.tb-11-m0#shelterwatch(href="/shelterwatch")
+				span.ms-font-l Shelter Watch
+			a.drop.tb-11-m0#contact(href="/") 
+				span.ms-font-l Home
+			if (loggedin)
+				a.drop.tb-11-m0#addfeature(href="/api/addfeature/"+zoom+"/"+lat+"/"+lng+"") 
+					span.ms-font-l Add Feature
+				a.drop.tb-11-m0#logout(href="/logout") 
+					span.ms-font-l Log out
+				
+			else
+				a.drop.tb-11-m0#cv(href="/login") 
+					span.ms-font-l Login
+				a.drop.tb-11-m0#gallery(href="/register") 
+					span.ms-font-l Register
