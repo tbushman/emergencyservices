@@ -14,7 +14,12 @@ html
 		link(rel="stylesheet" href="/scripts/pickadate/default.date.css")
 		link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
 		link(rel="stylesheet", href="/stylesheets/styles.css?v="+ Math.random())
-		script(type="text/javascript", src="/scripts/vue.js")
+
+		if (env && env === 'production')
+			script(type="text/javascript", src="/scripts/vue.min.js")
+		else
+			script(type="text/javascript", src="/scripts/vue.js")
+
 		script(type="text/javascript", src="/scripts/jquery.min.js")
 		script(type="text/javascript", src="/scripts/leaflet.js")
 		//- script(type="text/javascript", src="/scripts/d3.v3.min.js")
