@@ -419,9 +419,10 @@ router.get('/auth/google', passport.authenticate('google', {
 	scope: 
 		[
 			//'https://www.googleapis.com/auth/plus.login', 
-			'https://www.googleapis.com/auth/userinfo.email', 
+			// 'https://www.googleapis.com/auth/userinfo.email', 
 			'https://www.googleapis.com/auth/userinfo.profile', 
-			'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 'https://www.googleapis.com/auth/drive.file'
+			// 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata', 'https://www.googleapis.com/auth/drive.metadata', 
+			'https://www.googleapis.com/auth/drive.file'
 		],
 		authType: 'rerequest',
 		accessType: 'offline',
@@ -978,7 +979,7 @@ router.get('/home', function(req, res, next) {
 	})
 })
 
-router.post('/api/addsw', upload.array(), async(req, res, next) => {
+router.post('/api/addsw', ensureApiTokens, upload.array(), async(req, res, next) => {
 	const keys = Object.keys(ShelterWatch.schema.paths);
 	let entry = {}
 	await keys.forEach(key=>{
