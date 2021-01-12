@@ -94,9 +94,39 @@ block content
 			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView", v-if="infowindow && infowindow !== 'new' && infowindow !== 'edit' && doc && doc !== '' || geo.length > 0")
 		.container.graph.row(v-if="swactive")
 			//- div.tb-10-m0
-				
-			div.tb-11-m0#graph
+			div.tb-11-m0#graph(v-if="swgraph")
 				p.ms-font-m Number of beds available
+			div.row#sw(v-if="loggedin && loggedin !== null &&  loggedin !== undefined" style="z-index:999999;")
+				div.tb-10-m0
+					a(role="button" @click="switchSwedit")
+						span.tb-font-m Add bed availability data
+
+				div.tb-10-m0(v-if="swedit")
+					form#form.row(enctype="multipart/form-data" method="POST" action="/api/addsw" style="margin-bottom: 50px")
+
+						//- label.tb-10-m0(for="input-sw_date") Date
+						input#input-sw_date.tb-10-m0(type="hidden" name="Date" :value="new Date()")
+						label.tb-10-m0(for="input-sw_time") Time
+						input#input-sw_time.tb-10-m0(type="text" name="Time" :value="moment().format('LT')")
+						//- label.tb-10-m0(for="temp") Temperature @ Call Time (F)
+						input.tb-10-m0(id="temp" name="Temperature @ Call Time (F)" type="hidden")
+						//- label.tb-10-m0(for="temp_low") Daily Temp Low
+						input.tb-10-m0(id="temp_low" name="Daily Temp Low" type="hidden")
+						label.tb-10-m0(for="voa_men") Men's Shelter
+						input.tb-10-m0(id="voa_men" name="Mens Shelter" type="number" min="0")
+						label.tb-10-m0(for="miller_men") Gail Miller (Men)
+						input.tb-10-m0(id="miller_men" name="Gail Miller (Men)" type="number" min="0")
+						label.tb-10-m0(for="miller_women") Gail Miller (Women)
+						input.tb-10-m0(id="miller_women" name="Gail Miller (Women)" type="number" min="0")
+						label.tb-10-m0(for="king_women") Geraldine King
+						input.tb-10-m0(id="king_women" name="Geraldine King" type="number" min="0")
+						label.tb-10-m0(for="overflow") Overflow Center
+						input.tb-10-m0(id="overflow" name="Overflow Center" type="number" min="0")
+						label.tb-10-m0(for="total") Total (non-site-specific)
+						input.tb-10-m0(id="total" name="Total (non-site-specific)" type="number" min="0")
+						label.tb-10-m0(for="notes") Notes
+						input.tb-10-m0(type="text" name="notes")
+						button.ms-Button.ms-Button--primary(type="submit")
 			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView" style="pointer-events: all;")
 	#map
 	

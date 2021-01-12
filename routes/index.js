@@ -13,9 +13,10 @@ var dotenv = require('dotenv');
 var Publisher = require('../models/publishers.js');
 var Content = require('../models/content.js');
 var Import = require('../models/import.js');
+const ShelterWatch = require('../models/shelterwatch.js');
 var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
-var Client = require('node-rest-client').Client;
+// var Client = require('node-rest-client').Client;
 var {google} = require('googleapis');
 
 //Todo: user remove triggers userindex $inc -1
@@ -966,6 +967,19 @@ router.get('/home', function(req, res, next) {
 	})
 })
 
+router.post('/api/addsw', upload.array(), async(req, res, next) => {
+	const keys = Object.keys(ShelterWatch.schema.paths);
+	let entry = {}
+	await keys.forEach(key=>{
+		if (req.body[key]) {
+			entry[key] = req.body[key]
+		}
+	});
+	const sw = new ShelterWatch(entry);
+	await sw.save(err=>console.log(err));
+	return res.redirect('/shelterwatch')
+})
+
 router.get('/shelterwatch', function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
@@ -1010,6 +1024,7 @@ router.get('/shelterwatch', function(req, res, next) {
 
 		if (req.isAuthenticated()) {
 			return res.render('publish', {
+				owkey: process.env.OPEN_WEATHER_KEY,
 				swactive: true,
 				loggedin: req.session.loggedin,
 				data: data,
@@ -1021,6 +1036,7 @@ router.get('/shelterwatch', function(req, res, next) {
 			})
 		} else {
 			return res.render('publish', {
+				owkey: process.env.OPEN_WEATHER_KEY,
 				swactive: true,
 				data: data,
 				id: data.length - 1,

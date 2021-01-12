@@ -1,14 +1,34 @@
 script(type="text/javascript").
+	$(document).ready(function(){
+		$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
+			format: 'h:i A',
+			formatSubmit: 'HH:i',
+			hiddenName: true,
+			onOpen: function() {
+				//- $('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
+				//- scrollIntoView( this.$node )
+			}
+		})
+	});
+	function scrollIntoView( $node ) {
+		$('html,body').animate({
+			scrollTop: ~~$node.offset().top - 60
+		})
+	}
 	Vue.prototype.window = window;
 	Vue.prototype.$ = $;
 	Vue.prototype.moment = moment;
 	Vue.prototype.L = L;
 	Vue.prototype.d3 = d3;
-	
+	Vue.prototype.Picker = Picker;
 	new Vue({
 		el: '#vue',
 		data: function data(){
 			return {
+				loggedin: this.parseObj(!{JSON.stringify(loggedin)}),
+				owkey: this.parseObj(!{JSON.stringify(owkey)}),
+				swedit: false,
+				swgraph: true,
 				swactive: (this.parseBool(!{JSON.stringify(swactive)})),
 				sw: null,
 				res: this.isResponsive(),
@@ -82,7 +102,8 @@ script(type="text/javascript").
 				setTimeout(function(){
 					$('.submenu.drop').slideUp(100);
 					$('.slidedown').slideUp(100);
-				},3000)
+
+				},3000);
 
 			})
 			$(document).on('click', '.href', function(e){
@@ -94,23 +115,10 @@ script(type="text/javascript").
 				/* TODO DRY this out: */
 				//- console.log(self.lMarker.getLatLng());
 				//- self.map.panTo(dataCoords);
-				if (/editcontent/.test(window.location.href)) {
-					$('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
-				}
-				$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
-					format: 'h:i A',
-					formatSubmit: 'HH:i',
-					hiddenName: true,
-					onOpen: function() {
-						$('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
-						scrollIntoView( this.$node )
-					}
-				})
-				function scrollIntoView( $node ) {
-					$('html,body').animate({
-						scrollTop: ~~$node.offset().top - 60
-					})
-				}
+				//- if (/editcontent/.test(window.location.href)) {
+				//- 	$('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
+				//- }
+				
 				$('.list > .ms-Panel-main').css({display: 'none'})
 				$('.list').removeClass('is-open')
 				$('.list').css({display: 'none'})

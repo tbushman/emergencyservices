@@ -494,12 +494,34 @@ hr {
   background-color: #fff;
   height: calc(50vh - 20px);
   bottom: 0;
-  position: absolute;
+  /* position: absolute; */
   top: auto;
   display: inline-block;
   vertical-align: bottom;
   left: 0;
   right: 0;
+}
+.container.graph.row {
+  margin: 0 50px;
+  clip-path: none;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0 50px 50px 0;
+  background-color: #fff;
+}
+#sw {
+  pointer-events: all;
+  padding: 10px;
+}
+#sw input {
+  margin: 5px 0 10px 0;
+  height: 30px;
+  background-color: #e9e9e9;
+  font-size: 22px;
+  padding-left: 3px;
+}
+#sw input:focus {
+  background-color: #fff;
 }
 #mainpanel {
 	/* height: 50%;
