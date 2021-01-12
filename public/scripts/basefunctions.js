@@ -65,6 +65,32 @@ var baseFunctions = {
 		}
 		$('.submenu.drop').slideToggle(100);
 	},
+	switchSwedit: function() {
+		var self = this;
+		var swedit = self.swedit;
+		self.swedit = !swedit;
+		if (self.swedit && self.swedit === true) {
+			var slcut = encodeURIComponent('84101,us');
+			// $.getJSON('https://api.openweathermap.org/data/2.5/weather?zip='+slcut+'&units=imperial&appid='+self.owkey, function(result){
+			// 	console.log(result)
+			// })
+			$.ajax({
+				type: "GET",
+				url: 'https://api.openweathermap.org/data/2.5/weather?zip='+slcut+'&units=imperial&appid='+self.owkey,
+				dataType: "json",
+				success: function (result, status, xhr) {
+					console.log(result)
+					var temp = result["main"]["temp"];
+					var temp_min = result["main"]["temp_min"];
+					$('#temp').val(temp);
+					$('#temp_low').val(temp_min);
+				},
+				error: function (xhr, status, error) {
+					alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+				}
+			});
+		}
+	},
 	switchSwactive: function() {
 		var self = this;
 		var swactive = self.swactive;

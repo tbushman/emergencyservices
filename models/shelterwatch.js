@@ -1,4 +1,6 @@
-{
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ShelterWatch = new Schema({
 	Date:Date,
 	Time:String,
 	"Geraldine King":Number,
@@ -10,4 +12,5 @@
 	"Total (non-site-specific)":Number,
 	"Temperature @ Call Time (F)":Number,
 	"Daily Temp Low":Number
-}
+}, {collection: 'sw'});
+module.exports = mongoose.model('ShelterWatch', ShelterWatch);
