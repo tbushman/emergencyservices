@@ -988,7 +988,44 @@ router.post('/api/addsw', upload.array(), async(req, res, next) => {
 	});
 	const sw = new ShelterWatch(entry);
 	await sw.save(err=>console.log(err));
-	return res.redirect('/shelterwatch')
+	var OAuth2 = google.auth.OAuth2;
+	const pu = await Publisher.findOne({_id: req.session.userId}).then(pu=>pu).catch(err=>next(err));
+	var authClient = new OAuth2(process.env.GOOGLE_OAUTH_CLIENTID, process.env.GOOGLE_OAUTH_SECRET, (process.env.NODE_ENV === 'production' ? process.env.GOOGLE_CALLBACK_URL : process.env.GOOGLE_CALLBACK_URL_DEV));
+	authClient.setCredentials({refresh_token: pu.garefresh, access_token: pu.gaaccess});
+	// google.options({auth:authClient})
+	req.session.authClient = true;
+	const sheets = google.sheets({version: 'v4', auth: authClient});
+	const spreadsheetId = process.env.SPREADSHEET_ID;
+	const range = 'Morning & Night Log!A91:K91';
+	const majorDimension = 'ROWS';
+	// const allSw = await ShelterWatch.find({}).then(sw=>sw).catch(err=>next(err));
+	const v = await keys.map(k=>{
+		if (k === 'Date') {
+			const newDate = new Date(entry[k])
+			return moment(newDate).format('M/D/YY');
+		} else {
+			return entry[k]
+		}
+	})
+	const values = [  v ];
+	const payload = {
+		auth: authClient,
+		spreadsheetId: spreadsheetId,
+		range: range,
+		valueInputOption: 'USER_ENTERED',
+		resource: {
+			majorDimension: majorDimension,
+			values: values
+		}
+		
+	}
+	await sheets.spreadsheets.values.append(payload, (err, result) => {
+		if (err) {
+			return next(err)
+		} else {
+			return res.redirect('/shelterwatch')
+		}
+	})
 })
 
 router.get('/shelterwatch', function(req, res, next) {
