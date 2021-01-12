@@ -30,7 +30,7 @@ script(type="text/javascript").
 				swedit: false,
 				swgraph: true,
 				swactive: (this.parseBool(!{JSON.stringify(swactive)})),
-				sw: null,
+				sw: this.parseObj(!{JSON.stringify(sw)}),
 				res: this.isResponsive(),
 				infowindow: this.parseObj(!{JSON.stringify(infowindow)}),
 				res: this.isResponsive(),//(window.innerWidth < 600),
@@ -287,21 +287,24 @@ script(type="text/javascript").
 				//- 	})
 				//- }
 				//- 
-				if (self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0) {
-					self.sw = self.doc.properties.sw;
-					self.generateGraph(self.doc.properties.sw);
-				} else if (self.swactive) {
-					var housingdata = self.data.filter(function(d){return d.properties.cat.indexOf('H') !== -1});
-					var housingdoc = housingdata[0];
-					
-					if (!housingdoc) {
-						return
-					} else {
-						self.sw = housingdoc.properties.sw;
-						self.sw.sort(function(a, b) { return b.Date - a.Date; });
-						self.generateGraph(self.sw);
-					}
+				if (
+					self.sw && self.sw.length > 0
+					//- self.doc && self.doc.properties.sw && self.doc.properties.sw.length > 0
+				) {
+					self.generateGraph(self.sw);
 				}
+				//-  else if (self.swactive) {
+				//- 	var housingdata = self.data.filter(function(d){return d.properties.cat.indexOf('H') !== -1});
+				//- 	var housingdoc = housingdata[0];
+				//- 
+				//- 	if (!housingdoc) {
+				//- 		return
+				//- 	} else {
+				//- 		self.sw = housingdoc.properties.sw;
+				//- 		self.sw.sort(function(a, b) { return b.Date - a.Date; });
+				//- 		self.generateGraph(self.sw);
+				//- 	}
+				//- }
 				$(document).on('click', '.select', function(){
 					var cat = $(this).attr('name');
 					var fillColor = self.catColor(cat);
