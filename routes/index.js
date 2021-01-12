@@ -165,6 +165,12 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 				});
 				// rows[0].map((col, i) => rows.map(row => row[i]));
 				// console.log(rows)
+				const sw = await ShelterWatch.find({}).then(sw=>sw).catch(err=>next(err));
+				// const latest = new Date(sw[sw.length-1]['Date']);
+				// if (sw.length > 0 && latest && newRow['Date'].getFullYear() === latest.getFullYear() && newRow['Date'].getMonth() === latest.getMonth() && newRow['Date'].getDate() === latest.getDate()) {
+				// 	return newRow;
+				// }
+				const noSwYet = sw.length === 0;
 				const newRows = await rows.map((row, i) => {
 					let newRow = {}
 					row.forEach((c, j) => {
@@ -260,8 +266,13 @@ router.post('/api/importgdoc/:fileid', function(req, res, next) {
 								newRow[hr[j]] = c;
 							}
 						}
-					})
+					});
+					if (noSwYet) {
+						const swNew = new ShelterWatch(newRow);
+						swNew.save(err=>next(err));
+					}
 					return newRow;
+					
 				})
 				.filter(row => Object.keys(row).length > 0)
 				// console.log(newRows)
@@ -1010,7 +1021,7 @@ router.get('/shelterwatch', function(req, res, next) {
 				
 			})
 		}
-	], function(err, loc, info, data) {
+	], async function(err, loc, info, data) {
 		var zoom;
 		var lat = loc[1]
 		var lng = loc[0]
@@ -1021,7 +1032,7 @@ router.get('/shelterwatch', function(req, res, next) {
 			zoom = 3
 			
 		}
-
+		const sw = await ShelterWatch.find({}).then(sw=>sw).catch(err=>next(err));
 		if (req.isAuthenticated()) {
 			return res.render('publish', {
 				owkey: process.env.OPEN_WEATHER_KEY,
@@ -1032,7 +1043,8 @@ router.get('/shelterwatch', function(req, res, next) {
 				zoom: zoom,
 				lng: lng,
 				lat: lat,
-				info: info
+				info: info,
+				sw: sw
 			})
 		} else {
 			return res.render('publish', {
@@ -1043,7 +1055,8 @@ router.get('/shelterwatch', function(req, res, next) {
 				zoom: zoom,
 				lng: lng,
 				lat: lat,
-				info: info
+				info: info,
+				sw: sw
 			})
 		}		
 	})

@@ -98,8 +98,8 @@ block content
 				p.ms-font-m Number of beds available
 			div.row#sw(v-if="loggedin && loggedin !== null &&  loggedin !== undefined" style="z-index:999999;")
 				div.tb-10-m0
-					a(role="button" @click="switchSwedit")
-						span.tb-font-m Add bed availability data
+					a.ms-Button.ms-Button--primary(role="button" @click="switchSwedit")
+						span(style="color:#fff;") Add bed availability data
 
 				div.tb-10-m0(v-if="swedit")
 					form#form.row(enctype="multipart/form-data" method="POST" action="/api/addsw" style="margin-bottom: 50px")
@@ -126,7 +126,7 @@ block content
 						input.tb-10-m0(id="total" name="Total (non-site-specific)" type="number" min="0")
 						label.tb-10-m0(for="notes") Notes
 						input.tb-10-m0(type="text" name="notes")
-						button.ms-Button.ms-Button--primary(type="submit")
+						button.ms-Button.ms-Button--primary(type="submit" style="color:#fff;") Submit
 			div.ms-Overlay.ms-Overlay--dark.js-togglePanel(@click="resetView" style="pointer-events: all;")
 	#map
 	

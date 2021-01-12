@@ -325,7 +325,7 @@ var baseFunctions = {
 	},
 	generateGraph: function(data){
 		var self = this;
-		
+		data = data.filter(function(d){return d['Date'] && d['Date'] !== undefined})
 		var minyears = new Date(data[0].Date).getFullYear();
 		var maxyears = new Date(data[data.length-1].Date).getFullYear();
 		var yearstimesdays = (maxyears - minyears) * 365
