@@ -983,9 +983,7 @@ router.post('/api/addsw', ensureApiTokens, upload.array(), async(req, res, next)
 	const keys = Object.keys(ShelterWatch.schema.paths);
 	let entry = {}
 	await keys.forEach(key=>{
-		if (req.body[key]) {
-			entry[key] = req.body[key]
-		}
+		entry[key] = (!req.body[key] ? '' : req.body[key])
 	});
 	const sw = new ShelterWatch(entry);
 	await sw.save(err=>console.log(err));
