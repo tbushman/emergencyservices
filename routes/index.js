@@ -1004,7 +1004,10 @@ router.post('/api/addsw', ensureApiTokens, upload.array(), async(req, res, next)
 		if (k === 'Date') {
 			const newDate = new Date(entry[k])
 			return moment(newDate).format('M/D/YY');
-		} else {
+		} else if (/specific/gi.test(k) || /overflow/gi.test(k)) {
+			return (!entry[k] || entry[k] === '' ? 'unknown' : entry[k])
+		}
+		else {
 			return entry[k]
 		}
 	})

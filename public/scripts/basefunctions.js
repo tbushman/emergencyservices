@@ -334,11 +334,11 @@ var baseFunctions = {
 		}
 		
 		// set the dimensions and margins of the graph
-		var margin = {top: 20, right: 20, bottom: 30, left: 25},
+		var margin = {top: 20, right: 20, bottom: 50, left: 25},
 		barWidth = (self.pWidth - 50) * 0.05,
-		width = (yearstimesdays * barWidth)  - margin.left - margin.right,
+		width = (yearstimesdays * barWidth)  - (margin.left + margin.right),
 		//self.pWidth - margin.left - margin.right,
-		height = self.pHeight - margin.top - margin.bottom - 50;
+		height = self.pHeight - (margin.top + margin.bottom + 50);
 
 		console.log(yearstimesdays, barWidth, width)
 		// parse the date / time
