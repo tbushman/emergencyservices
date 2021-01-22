@@ -18,8 +18,18 @@ var publishers = path.join(__dirname, '/../../..');
 var upload = multer();
 // var Client = require('node-rest-client').Client;
 var {google} = require('googleapis');
-
+// var {VueTimepicker} = import('vue-timepicker');
+// const VueTimepicker = require('vue2-timepicker');
 //Todo: user remove triggers userindex $inc -1
+function ensureTimepicker(req, res, next) {
+	// console.log(VueTimepicker)
+	// req.session.VueTimepicker = VueTimepicker;
+	return next()
+}
+
+function ensureSwSync(req, res, next) {
+	
+}
 
 //todo: google drive auth
 function ensureApiTokens(req, res, next){
@@ -71,6 +81,8 @@ function ensureApiTokens(req, res, next){
 		})
 	})
 }
+
+router.get('*', ensureTimepicker);
 
 router.get('/importgdrive', ensureApiTokens, function(req, res, next){
 	req.session.importgdrive = true;

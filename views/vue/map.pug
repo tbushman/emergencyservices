@@ -1,28 +1,20 @@
 script(type="text/javascript").
-	$(document).ready(function(){
-		$('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
-			format: 'h:i A',
-			formatSubmit: 'HH:i',
-			hiddenName: true,
-			onOpen: function() {
-				//- $('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
-				//- scrollIntoView( this.$node )
-			}
-		})
-	});
-	function scrollIntoView( $node ) {
-		$('html,body').animate({
-			scrollTop: ~~$node.offset().top - 60
-		})
-	}
 	Vue.prototype.window = window;
 	Vue.prototype.$ = $;
+	Vue.prototype.jQuery = $;
 	Vue.prototype.moment = moment;
 	Vue.prototype.L = L;
 	Vue.prototype.d3 = d3;
-	Vue.prototype.Picker = Picker;
+	Vue.prototype.VueTimepicker = VueTimepicker;//'#{VueTimepicker}';//'#{session.VueTimepicker}';
+	//- Vue.prototype.OfficeUIFabricVue = OfficeUIFabricVue.default;
+	Vue.component('vue-timepicker', VueTimepicker.default);
+	//- Vue.use(OfficeUIFabricVue.default);
 	new Vue({
 		el: '#vue',
+		//- components: {
+		//- 	VueTimepicker
+		//- 	//- !{JSON.stringify(VueTimepicker)}
+		//- },
 		data: function data(){
 			return {
 				loggedin: this.parseObj(!{JSON.stringify(loggedin)}),
@@ -94,6 +86,13 @@ script(type="text/javascript").
 		},
 		mounted: function(){
 			var self = this;
+
+			function scrollIntoView( $node ) {
+				$('html,body').animate({
+					scrollTop: ~~$node.offset().top - 60
+				})
+			}
+
 			$(document).ready(function(){
 				document.addEventListener('keydown', function(event) {
 					var keyName = event.key;
@@ -104,6 +103,18 @@ script(type="text/javascript").
 					$('.slidedown').slideUp(100);
 
 				},3000);
+				//- $('#input-su_b, #input-su_e, #input-mo_b, #input-mo_e, #input-tu_b, #input-tu_e, #input-we_b, #input-we_e, #input-th_b, #input-th_e, #input-fr_b, #input-fr_e, #input-sa_b, #input-sa_e').pickatime({
+				//- 	format: 'h:i A',
+				//- 	formatSubmit: 'HH:i',
+				//- 	hiddenName: true,
+				//- 	onRender: function() {
+				//- 		console.log('Whoa.. rendered anew')
+				//- 	},
+				//- 	onOpen: function() {
+				//- 		//- $('head').append('<link rel="stylesheet" href="/scripts/pickadate/default.css"/>')
+				//- 		//- scrollIntoView( this.$node )
+				//- 	}
+				//- })
 
 			})
 			$(document).on('click', '.href', function(e){
@@ -373,91 +384,91 @@ script(type="text/javascript").
 						$('#deletefeature span').css('display', 'block')
 					}
 				})
-				$(document).on('focus', 'textarea', function(){
-					var text = $(this).attr('placeholder');
-					$(this).val(text)
-					$(this).css('max-width', '100%')
-				});
-				$(document).on('change', '.ms-TextField-field', function(){
-					var id = $(this).attr('id');
-					if (id.split('-')[1] !== undefined) {
-						var thisid = id.split('-')[1];
-						var day = thisid.split('_')[0];
-						var status = thisid.split('_')[1];
-						switch (status) {
-							case "b":
-								if ($(this).val() === '' && $('#input-'+day+'_e').val() === '') {
-									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
-									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
-									
-								} else {
-									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
-									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
-								}
-								break;
-							case "e":
-								if ($(this).val() === '' && $('#input-'+day+'_b').val() === '') {
-									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
-									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
-									
-								} else {
-									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
-									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
-								}
-								break;
-							default:
-								break;
-						}
-										
-					}
-				})
-				
-				
-				$(document).on('click', '.ms-ChoiceField-field', function(e){
-					var that = $(this);
-					var id = that.attr('id');
-					if (id !== undefined) {
-						var day = id.split('_')[0];
-						var status = id.split('_')[1];
-						if (that.siblings('input').hasClass('is-checked')) {
-							that.siblings('input').removeClass('is-checked')
-							that.siblings('input').attr('aria-checked', 'false')
-							that.siblings('input').attr('checked', '')
-							switch (status) {
-								case "all":
-									$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
-									$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
-									$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
-									break;
-								case "closed":
-									$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
-									$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
-									$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
-										break;
-								default:
-										break;
-							}
-						} else {
-							that.siblings('input').addClass('is-checked')
-							that.siblings('input').attr('aria-checked', 'true');
-							//that.siblings('input').attr('checked', 'checked');
-							switch (status) {
-								case "all":
-									$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
-									$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
-									$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
-									break;
-								case "closed":
-									$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
-									$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
-									$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
-										break;
-								default:
-										break;
-							}
-						}
-					}
-				})
+				//- $(document).on('focus', 'textarea', function(){
+				//- 	var text = $(this).attr('placeholder');
+				//- 	$(this).val(text)
+				//- 	$(this).css('max-width', '100%')
+				//- });
+				//- $(document).on('change', '.ms-TextField-field', function(){
+				//- 	var id = $(this).attr('id');
+				//- 	if (id.split('-')[1] !== undefined) {
+				//- 		var thisid = id.split('-')[1];
+				//- 		var day = thisid.split('_')[0];
+				//- 		var status = thisid.split('_')[1];
+				//- 		switch (status) {
+				//- 			case "b":
+				//- 				if ($(this).val() === '' && $('#input-'+day+'_e').val() === '') {
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 
+				//- 				} else {
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 				}
+				//- 				break;
+				//- 			case "e":
+				//- 				if ($(this).val() === '' && $('#input-'+day+'_b').val() === '') {
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 
+				//- 				} else {
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 				}
+				//- 				break;
+				//- 			default:
+				//- 				break;
+				//- 		}
+				//- 
+				//- 	}
+				//- })
+				//- 
+				//- 
+				//- $(document).on('click', '.ms-ChoiceField-field', function(e){
+				//- 	var that = $(this);
+				//- 	var id = that.attr('id');
+				//- 	if (id !== undefined) {
+				//- 		var day = id.split('_')[0];
+				//- 		var status = id.split('_')[1];
+				//- 		if (that.siblings('input').hasClass('is-checked')) {
+				//- 			that.siblings('input').removeClass('is-checked')
+				//- 			that.siblings('input').attr('aria-checked', 'false')
+				//- 			that.siblings('input').attr('checked', '')
+				//- 			switch (status) {
+				//- 				case "all":
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 					$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+				//- 					$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+				//- 					break;
+				//- 				case "closed":
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').removeClass('is-disabled');
+				//- 					$('#input-'+day+'_b').parent('.ms-TextField').removeClass('is-disabled');
+				//- 					$('#input-'+day+'_e').parent('.ms-TextField').removeClass('is-disabled');
+				//- 						break;
+				//- 				default:
+				//- 						break;
+				//- 			}
+				//- 		} else {
+				//- 			that.siblings('input').addClass('is-checked')
+				//- 			that.siblings('input').attr('aria-checked', 'true');
+				//- 			//that.siblings('input').attr('checked', 'checked');
+				//- 			switch (status) {
+				//- 				case "all":
+				//- 					$('#'+day+'_c').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 					$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+				//- 					$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+				//- 					break;
+				//- 				case "closed":
+				//- 					$('#'+day+'_a').parent('.ms-ChoiceField').addClass('is-disabled');
+				//- 					$('#input-'+day+'_b').parent('.ms-TextField').addClass('is-disabled');
+				//- 					$('#input-'+day+'_e').parent('.ms-TextField').addClass('is-disabled');
+				//- 						break;
+				//- 				default:
+				//- 						break;
+				//- 			}
+				//- 		}
+				//- 	}
+				//- })
 				var uploadurl;
 				var index;
 				var img;

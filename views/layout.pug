@@ -8,14 +8,15 @@ html
 		//- link(rel="stylesheet", href="/stylesheets/jquery-ui.min.css")
 		link(rel="stylesheet", href="/stylesheets/leaflet.css")
 		link(href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet")
-		link(rel="stylesheet", href="/stylesheets/fabric.css")
+		link(rel="stylesheet", href="/stylesheets/fabric.min.css")
 		link(rel="stylesheet", href="/stylesheets/fabric.components.css")
 		//- link(rel="stylesheet" href="/scripts/pickadate/default.css")
 
-		link(rel="stylesheet" href="/scripts/pickadate/default.date.css")
-		link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
+		//- link(rel="stylesheet" href="/scripts/pickadate/default.date.css")
+		//- link(rel="stylesheet" href="/scripts/pickadate/default.time.css")
 		link(rel="stylesheet", href="/stylesheets/styles.css?v="+ Math.random())
-
+		link(rel="stylesheet" href="/stylesheets/vue2-timepicker/VueTimepicker.css")
+		//- link(rel="stylesheet" href="/stylesheets/office-ui-fabric-vue/index.css")
 		script(type="text/javascript", src="/scripts/jquery.min.js")
 		if (env && env === 'production')
 			script(type="text/javascript", src="/scripts/vue.min.js")
@@ -26,11 +27,12 @@ html
 		script(type="text/javascript", src="/scripts/moment-with-locales.min.js")
 		script(src="https://d3js.org/d3.v4.min.js")
 		//- script(src="https://code.jquery.com/ui/1.11.1/jquery-ui.js")
-		script(type="text/javascript", src="/scripts/pickadate/picker.js")
-		script(type="text/javascript", src="/scripts/pickadate/picker.date.js")
-		script(type="text/javascript", src="/scripts/pickadate/picker.time.js")
+		//- script(type="text/javascript", src="/scripts/pickadate/picker.js")
+		//- script(type="text/javascript", src="/scripts/pickadate/picker.date.js")
+		//- script(type="text/javascript", src="/scripts/pickadate/picker.time.js")
 		//- script(type="text/javascript", src="/scripts/d3.v3.min.js")
-
+		script(type="text/javascript" src="/scripts/office-ui-fabric-vue/index.js")
+		script(type="text/javascript" src="/scripts/vue2-timepicker/VueTimepicker.umd.js")
 		script.
 			// Polyfill Object.assign 
 			if (typeof Object.assign !== 'function') {
