@@ -178,7 +178,7 @@ app.use('/publishers/emergencyservices/images/full', express.static(path.join(__
 app.use('/publishers/emergencyservices/images/thumbs', express.static(path.join(__dirname, '../../pu/publishers/emergencyservices/images/thumbs')));
 app.use(function (req, res, next) {
 	// console.log(VueTimepicker)
-	console.log(VueTimepicker.default)
+	// console.log(VueTimepicker.default)
 	// app.locals.VueTimepicker = VueTimepicker;
 	// app.locals.OfficeUIFabricVue = OfficeUIFabricVue;
 	// app.locals.VueTimepicker = VueTimepicker;

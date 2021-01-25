@@ -42,10 +42,24 @@ p, #mainpanel > a.tb-11-m0 {
 	padding-top: 3px;
 	padding-bottom: 8px;
 }
+.clearfix {
+  clear: both;
+}
+.clearfix:after{
+  clear: both;
+  content: "";
+  display: table;
+}
+.vue__time-picker .dropdown {
+  position: relative!important;
+  top: 0!important;
+  z-index: 999!important;
+}
 .row {
 	width: 100%;
 	height: auto;
-	overflow-y: hidden;
+  height: max-content;
+	overflow-y: visible;
 	overflow-x: hidden;
 	padding-bottom: 10px;
 }

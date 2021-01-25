@@ -82,7 +82,7 @@ function ensureApiTokens(req, res, next){
 	})
 }
 
-router.get('*', ensureTimepicker);
+// router.get('*', ensureTimepicker);
 
 router.get('/importgdrive', ensureApiTokens, function(req, res, next){
 	req.session.importgdrive = true;
