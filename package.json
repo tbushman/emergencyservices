@@ -35,7 +35,7 @@
     "express-session": "^1.17.1",
     "google-geolocation": "^1.0.2",
     "googleapis": "^47.0.0",
-    "i": "^0.3.6",
+    "i": "^0.3.7",
     "ip": "^1.1.5",
     "jquery": "^3.5.1",
     "leaflet": "^1.7.1",
