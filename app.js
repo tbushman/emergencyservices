@@ -6,7 +6,7 @@ var path = require('path');
 var url = require('url');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
-var promise = require('bluebird');
+// var promise = require('bluebird');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ var VueTimepicker = require('vue2-timepicker');
 var pug = require('pug');
 dotenv.load();
 
-mongoose.Promise = promise;
+// mongoose.Promise = promise;
 passport.use(new LocalStrategy(Publisher.authenticate()));
 passport.use(new GoogleStrategy({
 	clientID: process.env.GOOGLE_OAUTH_CLIENTID,
@@ -211,16 +211,33 @@ app.use(function (err, req, res) {
 
 var uri = process.env.DEVDB;
 
-var promise = mongoose.connect(uri, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false
-	// useMongoClient: true 
-}/*, {authMechanism: 'ScramSHA1'}*/);
-promise.then(function(db){
-	console.log('connected es')
-	// db.on('error', console.error.bind(console, 'connection error:'));
-})
-.catch(err => console.log(err));
+// var promise = mongoose.connect(uri, {
+// 	useNewUrlParser: true,
+// 	useUnifiedTopology: true,
+// 	useFindAndModify: false
+// 	// useMongoClient: true 
+// }/*, {authMechanism: 'ScramSHA1'}*/);
+// promise.then(function(db){
+// 	console.log('connected es')
+// 	// db.on('error', console.error.bind(console, 'connection error:'));
+// })
+// .catch(err => console.log(err));
+
+const promise = async () => {
+		return await new mongoose.connect(uri, { 
+			useNewUrlParser: true, 
+			useUnifiedTopology: true,
+			useFindAndModify: false 
+		})
+	};
+
+	promise()
+		.then(() => {
+			console.log('MongoDB is connected');
+		})
+		.catch(err => {
+			console.log(err);
+			console.log('MongoDB connection unsuccessful');
+		});
 
 module.exports = app;
