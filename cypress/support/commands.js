@@ -23,3 +23,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', () => {
+	cy.visit('/login');
+	var usr = Cypress.env('USR');
+	var pw = Cypress.env('PW');
+	cy.request('POST', '/login', {
+		username: usr,
+		password: pw,
+	})
+	.then($url => {
+		expect($url).to.not.be.empty;
+		window.loggedInPage = $url
+	});
+	cy.getCookie('escookie').then($cookie => {
+		window.appCookie = $cookie.value;
+	});
+});

@@ -658,7 +658,7 @@ router.get('/login', function(req, res, next){
 
 router.post('/login', upload.array(), passport.authenticate('local'), function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
-	// console.log(outputPath)
+	console.log(outputPath)
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
 	req.session.username = req.user.username;
@@ -1076,8 +1076,8 @@ router.get('/shelterwatch', function(req, res, next) {
 		}
 	], async function(err, loc, info, data) {
 		var zoom;
-		var lat = loc[1]
-		var lng = loc[0]
+		var lat = !loc ? -111.8911 : loc[1]
+		var lng = !loc ? 40.7608 : loc[0]
 		if (req.session.zoom) {
 			zoom = req.session.zoom
 			info = 'Refreshed'
@@ -1707,8 +1707,8 @@ router.get('/api/publish', async (req, res, next) => {
 				info = 'Refreshed'
 			} else {
 				zoom = 3
-				lat = loc[1]
-				lng = loc[0]
+				lat = !loc ? -111.8911 : loc[1]
+				lng = !loc ? 40.7608 : loc[0]
 			}
 			return res.render('publish', {
 				loggedin: req.session.loggedin,
@@ -1787,8 +1787,8 @@ router.get('/api/editcontent/:id', function(req, res, next){
 				zoom: (req.session.zoom)?req.session.zoom:6,
 				doc: doc,
 				data: data,
-				lng: loc[0],
-				lat: loc[1],
+				lat: !loc ? -111.8911 : loc[1],
+				lng: !loc ? 40.7608 : loc[0],
 				info: 'Edit your entry.'
 			})
 		})
@@ -1969,8 +1969,8 @@ router.post('/api/editcontent/:id', upload.array(), function(req, res, next){
 			zoom: (req.session.zoom)?req.session.zoom:6,
 			doc: doc,
 			data: datarray,
-			lng: loc[0],
-			lat: loc[1],
+			lat: !loc ? -111.8911 : loc[1],
+			lng: !loc ? 40.7608 : loc[0],
 			info: ':)'
 		})
 	})	
@@ -1995,6 +1995,7 @@ router.get('/api/addfeature/:zoom/:lat/:lng', function(req, res, next) {
 				id: data.length - 1,
 				zoom: req.params.zoom,
 				data: data,
+				doc: data[0],
 				lng: req.params.lng,
 				lat: req.params.lat,
 				info: 'drag the feature to the desired location'
@@ -2191,8 +2192,8 @@ router.post('/api/addcontent/:id', upload.array(), function(req, res, next){
 			zoom: (req.session.zoom)?req.session.zoom:6,
 			doc: entry,
 			data: datarray,
-			lng: loc[0],
-			lat: loc[1],
+			lat: !loc ? -111.8911 : loc[1],
+			lng: !loc ? 40.7608 : loc[0],
 			info: ':)'
 		})
 	})	

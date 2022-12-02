@@ -1,7 +1,7 @@
 var express = require('express');
 
 var session = require('express-session');
-var MongoDBStore = require('connect-mongodb-session')(session);
+var MongoDBStore = require('connect-mongo');
 var path = require('path');
 var url = require('url');
 var dotenv = require('dotenv');
@@ -150,18 +150,19 @@ app.locals.$ = require('jquery');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-var store = new MongoDBStore(
+var store = MongoDBStore.create(
 	{
-		uri: process.env.DEVDB,
-        collection: 'esSession'
+		clientPromise: mongoose.connection,
+		mongoUrl: process.env.DEVDB,
+    collection: 'esSession'
 	}
 )
 store.on('error', function(error, next){
 	next(error)
 })
 var sess = {
-	secret: '12345QWERTY-SECRET',
-	name: 'nodecookie',
+	secret: process.env.COOKIESECRET,
+	name: 'escookie',
 	resave: false,
 	saveUninitialized: false,
 	store: store

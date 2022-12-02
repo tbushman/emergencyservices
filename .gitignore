@@ -33,3 +33,5 @@ plan
 # robots
 robots.txt
 sitemap.txt
+# cypress
+cypress.env.json
