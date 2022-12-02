@@ -956,8 +956,8 @@ router.get('/home', function(req, res, next) {
 		}
 	], function(err, loc, info, data) {
 		var zoom;
-		var lat = loc[1]
-		var lng = loc[0]
+		var lat = !loc ? -111.8911 : loc[1]
+		var lng = !loc ? 40.7608 : loc[0]
 		if (req.session.zoom) {
 			zoom = req.session.zoom
 			//lat = req.session.lat

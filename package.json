@@ -3,9 +3,14 @@
   "version": "0.0.1",
   "description": "MongoDB-based public Emergency Service inventory editor ",
   "main": "./bin/www",
+  "engines": {
+    "node": "16.13.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./bin/www"
+    "test": "npx cypress open",
+    "start": "node ./bin/www",
+    "start-server": "npm start",
+    "ci": "start-server-and-test start-server http://localhost:8010 test"
   },
   "repository": {
     "type": "git",
@@ -38,7 +43,7 @@
     "i": "^0.3.7",
     "ip": "^1.1.8",
     "jquery": "^3.6.1",
-    "leaflet": "^1.9.2",
+    "leaflet": "^1.9.3",
     "mammoth": "^1.5.1",
     "mkdirp": "^0.5.6",
     "moment": "^2.29.4",
@@ -60,6 +65,6 @@
     "vue2-timepicker": "^1.1.6"
   },
   "devDependencies": {
-    "cypress": "^10.11.0"
+    "cypress": "^11.2.0"
   }
 }
