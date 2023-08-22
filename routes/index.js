@@ -649,6 +649,7 @@ router.post('/register', upload.array(), function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next){
+	return res.redirect('/');
 	var outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath)
 	return res.render('login', { 
